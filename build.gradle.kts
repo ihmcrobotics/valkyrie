@@ -7,7 +7,10 @@ plugins {
 }
 
 ihmc {
-   loadProductProperties("../product.properties")
+   group = "us.ihmc"
+   version = "0.14.0"
+   vcsUrl = "https://github.com/ihmcrobotics/ihmc-open-robotics-software"
+   openSource = true
 
    configureDependencyResolution()
    configurePublications()
