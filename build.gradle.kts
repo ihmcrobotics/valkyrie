@@ -16,6 +16,8 @@ ihmc {
    configurePublications()
 }
 
+val ihmcOpenRoboticsSoftwareVersion = "0.14.0-231219"
+
 mainDependencies {
    api("com.martiansoftware:jsap:2.1")
    api("org.yaml:snakeyaml:1.17") //1.11
@@ -32,24 +34,11 @@ mainDependencies {
    api("us.ihmc:euclid-frame-shape:0.21.0")
    api("us.ihmc:ihmc-realtime:1.6.0")
    api("us.ihmc:ihmc-ros-control:0.7.1")
-   api("us.ihmc:ihmc-communication:source")
-   api("us.ihmc:ihmc-humanoid-robotics:source")
-   api("us.ihmc:ihmc-system-identification:source")
-   api("us.ihmc:ihmc-state-estimation:source")
-   api("us.ihmc:ihmc-common-walking-control-modules:source")
-   api("us.ihmc:ihmc-avatar-interfaces:source")
-   api("us.ihmc:ihmc-ros-tools:source")
-   api("us.ihmc:ihmc-model-file-loader:source")
-   api("us.ihmc:ihmc-sensor-processing:source")
-   api("us.ihmc:ihmc-perception:source")
-   api("us.ihmc:ihmc-whole-body-controller:source")
-   api("us.ihmc:ihmc-java-toolkit:source")
-   api("us.ihmc:ihmc-robotics-toolkit:source")
-   api("us.ihmc:ihmc-robot-models:source")
-   api("us.ihmc:ihmc-robot-data-visualizer:source")
-   api("us.ihmc:ihmc-simulation-toolkit:source")
-   api("us.ihmc:ihmc-footstep-planning-visualizers:source")
-   api("us.ihmc:ihmc-parameter-tuner:source")
+
+   api("us.ihmc:ihmc-system-identification:$ihmcOpenRoboticsSoftwareVersion")
+   api("us.ihmc:ihmc-avatar-interfaces:$ihmcOpenRoboticsSoftwareVersion")
+   api("us.ihmc:ihmc-footstep-planning-visualizers:$ihmcOpenRoboticsSoftwareVersion")
+   api("us.ihmc:ihmc-parameter-tuner:$ihmcOpenRoboticsSoftwareVersion")
 }
 
 testDependencies {
@@ -58,8 +47,8 @@ testDependencies {
    api("us.ihmc:euclid-frame:0.21.0")
    api("us.ihmc:euclid-shape:0.21.0")
    api("us.ihmc:euclid-frame-shape:0.21.0")
-   api("us.ihmc:ihmc-robotics-toolkit-test:source")
-   api("us.ihmc:ihmc-avatar-interfaces-test:source")
+
+   api("us.ihmc:ihmc-avatar-interfaces-test:$ihmcOpenRoboticsSoftwareVersion")
 }
 
 ihmc.jarWithLibFolder()
@@ -102,7 +91,7 @@ tasks.create("deployLocal") {
       val binFolder = File(System.getProperty("user.home"), "valkyrie/bin")
       binFolder.delete()
       binFolder.mkdirs()
-      
+
       copy {
          from("build/install/valkyrie/bin")
          into(binFolder)
@@ -193,24 +182,25 @@ fun deployNetworkProcessor()
       exec("ls -halp /home/val/.ihmc/Configurations")
    }
 
-   if (local_bronn_ip != null) {
-       remote.session(local_bronn_ip, valkyrie_realtime_username, valkyrie_realtime_password) // perception
+   if (local_bronn_ip != null)
+   {
+      remote.session(local_bronn_ip, valkyrie_realtime_username, valkyrie_realtime_password) // perception
       {
          exec("mkdir -p $directory")
-   
+
          exec("rm -rf $directory/bin")
          exec("rm -rf $directory/lib")
-   
+
          put(file("build/install/valkyrie/bin").toString(), "$directory/bin")
          exec("chmod +x $directory/bin/valkyrie-network-processor")
          put(file("build/install/valkyrie/lib").toString(), "$directory/lib")
          exec("ls -halp $directory/lib")
-   
+
          put(file("build/libs/valkyrie-$version.jar").toString(), "$directory/ValkyrieController.jar")
          put(file("launchScripts").toString(), directory)
          exec("chmod +x $directory/runNetworkProcessor.sh")
          exec("ls -halp $directory")
-   
+
          exec("rm -rf /home/val/.ihmc/Configurations")
          exec("mkdir -p /home/val/.ihmc/Configurations")
          put(file("saved-configurations/defaultREAModuleConfiguration.txt").toString(), ".ihmc/Configurations")
