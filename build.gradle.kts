@@ -9,7 +9,7 @@ plugins {
 ihmc {
    group = "us.ihmc"
    version = "0.14.0"
-   vcsUrl = "https://github.com/ihmcrobotics/ihmc-open-robotics-software"
+   vcsUrl = "https://github.com/ihmcrobotics/valkyrie"
    openSource = true
 
    configureDependencyResolution()
