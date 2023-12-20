@@ -1,0 +1,17 @@
+name: CI - main - humanoid-rough-terrain
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-humanoid-rough-terrain:
+    uses: ihmcrobotics/valkyrie/.github/workflows/main-GradleCI-base.yml@main
+    with:
+      test-category: "humanoid-rough-terrain"
