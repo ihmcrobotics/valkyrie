@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-fast:
     uses: ihmcrobotics/valkyrie/.github/workflows/main-GradleCI-base.yml@main
     with:
       test-category: "fast"
