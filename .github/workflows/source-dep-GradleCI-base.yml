@@ -28,7 +28,7 @@ jobs:
       - name: Checkout ihmc-open-robotics-software
         uses: actions/checkout@v4
         with:
-          name: ihmcrobotics/ihmc-open-robotics-software
+          repository: ihmcrobotics/ihmc-open-robotics-software
           ref: refs/heads/${{ inputs.open-robotics-branch }}
 
       - name: Setup JDK 17
