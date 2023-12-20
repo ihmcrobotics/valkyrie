@@ -39,8 +39,12 @@ mainDependencies {
    api("us.ihmc:ihmc-ros-control:0.7.1")
 
    api("us.ihmc:ihmc-system-identification:$ihmcOpenRoboticsSoftwareVersion")
-   api("us.ihmc:ihmc-avatar-interfaces:$ihmcOpenRoboticsSoftwareVersion")
-   api("us.ihmc:ihmc-footstep-planning-visualizers:$ihmcOpenRoboticsSoftwareVersion")
+   api("us.ihmc:ihmc-avatar-interfaces:$ihmcOpenRoboticsSoftwareVersion") {
+      exclude(group = "us.ihmc", module = "javacpp")
+   }
+   api("us.ihmc:ihmc-footstep-planning-visualizers:$ihmcOpenRoboticsSoftwareVersion") {
+      exclude(group = "us.ihmc", module = "javacpp")
+   }
    api("us.ihmc:ihmc-parameter-tuner:$ihmcOpenRoboticsSoftwareVersion")
 }
 
@@ -51,7 +55,9 @@ testDependencies {
    api("us.ihmc:euclid-shape:0.21.0")
    api("us.ihmc:euclid-frame-shape:0.21.0")
 
-   api("us.ihmc:ihmc-avatar-interfaces-test:$ihmcOpenRoboticsSoftwareVersion")
+   api("us.ihmc:ihmc-avatar-interfaces-test:$ihmcOpenRoboticsSoftwareVersion") {
+      exclude(group = "us.ihmc", module = "javacpp")
+   }
 }
 
 ihmc.jarWithLibFolder()
