@@ -24,14 +24,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          path: main
 
       - name: Checkout ihmc-open-robotics-software
         uses: actions/checkout@v4
         with:
           name: ihmcrobotics/ihmc-open-robotics-software
-          path: ${{ inputs.open-robotics-branch }}
+          ref: refs/heads/${{ inputs.open-robotics-branch }}
 
       - name: Setup JDK 17
         uses: actions/setup-java@v3
