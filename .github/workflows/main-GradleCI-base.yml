@@ -3,12 +3,18 @@ name: CI - main - base
 
 on:
   workflow_call:
+    inputs:
+      test-category:
+        description: 'Test category to run'
+        required: true
+        type: string
 
 permissions:
   contents: read
 
 jobs:
-  main-setup-build:
+  build:
+
     runs-on: ubuntu-latest
 
     steps:
@@ -25,3 +31,6 @@ jobs:
         id: setup-gradle
         with:
           gradle-version: 8.5
+
+      - name: Gradle test ${{ inputs.test-category }}
+        run: gradle test -Pcategory=${{ inputs.test-category }}
