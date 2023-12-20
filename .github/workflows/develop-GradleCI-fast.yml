@@ -1,10 +1,10 @@
-name: CI - main - fast
+name: CI - develop - fast
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "develop" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "develop" ]
   schedule:
     # Run every day at midnight. Add another cron entry to run at a different time.
     - cron: '0 0 * * *'
@@ -12,6 +12,7 @@ on:
 
 jobs:
   build:
-    uses: ihmcrobotics/valkyrie/.github/workflows/version-dep-GradleCI-base.yml@main
+    uses: ihmcrobotics/valkyrie/.github/workflows/source-dep-GradleCI-base.yml@develop
     with:
       test-category: "fast"
+      open-robotics-branch: "develop"

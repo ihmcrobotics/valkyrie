@@ -1,4 +1,4 @@
-name: CI - main - slow allocation
+name: CI - develop - slow controller-api-4
 
 on:
   schedule:
@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    uses: ihmcrobotics/valkyrie/.github/workflows/version-dep-GradleCI-base.yml@main
+    uses: ihmcrobotics/valkyrie/.github/workflows/source-dep-GradleCI-base.yml@develop
     with:
-      test-category: "allocation-slow"
+      test-category: "controller-api-slow-4"
 

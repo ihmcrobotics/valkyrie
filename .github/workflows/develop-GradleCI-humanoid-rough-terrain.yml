@@ -1,20 +1,18 @@
-name: CI - main - humanoid-rough-terrain
+name: CI - develop - humanoid-rough-terrain
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "develop" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "develop" ]
   schedule:
     # Run every day at midnight. Add another cron entry to run at a different time.
     - cron: '0 0 * * *'
   workflow_dispatch:
 
-permissions:
-  contents: read
-
 jobs:
   build:
-    uses: ihmcrobotics/valkyrie/.github/workflows/version-dep-GradleCI-base.yml@main
+    uses: ihmcrobotics/valkyrie/.github/workflows/source-dep-GradleCI-base.yml@develop
     with:
       test-category: "humanoid-rough-terrain"
+      open-robotics-branch: "develop"
