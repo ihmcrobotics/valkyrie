@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build-slow-humanoid-obstacle:
-    uses: ihmcrobotics/valkyrie/.github/workflows/main-GradleCI-base.yml@main
+    uses: ihmcrobotics/valkyrie/.github/workflows/version-dep-GradleCI-base.yml@main
     with:
       test-category: "humanoid-obstacle-slow"
 

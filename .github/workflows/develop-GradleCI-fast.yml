@@ -1,0 +1,15 @@
+name: CI - develop - fast
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+  workflow_dispatch:
+
+jobs:
+  build-fast:
+    uses: ihmcrobotics/valkyrie/.github/workflows/source-dep-GradleCI-base.yml@develop
+    with:
+      test-category: "fast"
+      open-robotics-branch: "develop"

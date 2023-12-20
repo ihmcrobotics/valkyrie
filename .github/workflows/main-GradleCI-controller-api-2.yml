@@ -12,6 +12,6 @@ permissions:
 
 jobs:
   build-controller-api-2:
-    uses: ihmcrobotics/valkyrie/.github/workflows/main-GradleCI-base.yml@main
+    uses: ihmcrobotics/valkyrie/.github/workflows/version-dep-GradleCI-base.yml@main
     with:
       test-category: "controller-api-2"
