@@ -4,9 +4,10 @@ name: CI - main - base
 on:
   workflow_call:
     inputs:
-      secrets:
-        testCategory:
-          required: true
+      testCategory:
+        description: 'Test category to run'
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -31,19 +32,5 @@ jobs:
         with:
           gradle-version: 8.5
 
-      - name: Gradle test fast
-        run: gradle test -Pcategory=fast
-      - name: Gradle test controller-api
-        run: gradle test -Pcategory=controller-api
-      - name: Gradle test controller-api-2
-        run: gradle test -Pcategory=controller-api-2
-      - name: Gradle test humanoid-flat-ground
-        run: gradle test -Pcategory=humanoid-flat-ground
-      - name: Gradle test humanoid-obstacle
-        run: gradle test -Pcategory=humanoid-obstacle
-      - name: Gradle test humanoid-push-recovery
-        run: gradle test -Pcategory=humanoid-push-recovery
-      - name: Gradle test humanoid-rough-terrain
-        run: gradle test -Pcategory=humanoid-rough-terrain
-      - name: Gradle test humanoid-toolbox
-        run: gradle test -Pcategory=humanoid-toolbox
+      - name: Gradle test ${{ testCategory }}
+        run: gradle test -Pcategory=${{ testCategory }}
