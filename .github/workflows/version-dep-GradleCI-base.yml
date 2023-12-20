@@ -10,8 +10,8 @@ on:
         type: string
 
 permissions:
-  contents: read
   checks: write
+  contents: read
 
 jobs:
   build:
