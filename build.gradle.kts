@@ -1,3 +1,6 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+import us.ihmc.cd.LogTools
+
 plugins {
    id("us.ihmc.ihmc-build")
    id("us.ihmc.ihmc-ci") version "8.3"
@@ -8,7 +11,7 @@ plugins {
 
 ihmc {
    group = "us.ihmc"
-   version = "0.14.0"
+   version = "0.14.0-231219"
    vcsUrl = "https://github.com/ihmcrobotics/valkyrie"
    openSource = true
 
@@ -36,8 +39,12 @@ mainDependencies {
    api("us.ihmc:ihmc-ros-control:0.7.1")
 
    api("us.ihmc:ihmc-system-identification:$ihmcOpenRoboticsSoftwareVersion")
-   api("us.ihmc:ihmc-avatar-interfaces:$ihmcOpenRoboticsSoftwareVersion")
-   api("us.ihmc:ihmc-footstep-planning-visualizers:$ihmcOpenRoboticsSoftwareVersion")
+   api("us.ihmc:ihmc-avatar-interfaces:$ihmcOpenRoboticsSoftwareVersion") {
+      exclude(group = "us.ihmc", module = "javacpp")
+   }
+   api("us.ihmc:ihmc-footstep-planning-visualizers:$ihmcOpenRoboticsSoftwareVersion") {
+      exclude(group = "us.ihmc", module = "javacpp")
+   }
    api("us.ihmc:ihmc-parameter-tuner:$ihmcOpenRoboticsSoftwareVersion")
 }
 
@@ -48,11 +55,14 @@ testDependencies {
    api("us.ihmc:euclid-shape:0.21.0")
    api("us.ihmc:euclid-frame-shape:0.21.0")
 
-   api("us.ihmc:ihmc-avatar-interfaces-test:$ihmcOpenRoboticsSoftwareVersion")
+   api("us.ihmc:ihmc-avatar-interfaces-test:$ihmcOpenRoboticsSoftwareVersion") {
+      exclude(group = "us.ihmc", module = "javacpp")
+   }
 }
 
 ihmc.jarWithLibFolder()
 tasks.getByPath("installDist").dependsOn("compositeJar")
+val installDistOutputFolder = "${project.projectDir}/build/install/valkyrie"
 
 app.entrypoint("IHMCValkyrieJoystickApplication", "us.ihmc.valkyrie.joystick.ValkyrieJoystickBasedSteppingApplication")
 app.entrypoint("valkyrie-network-processor", "us.ihmc.valkyrie.ValkyrieNetworkProcessor")
@@ -66,7 +76,7 @@ tasks.create("deployOCUApplications") {
       appFolder.delete()
       appFolder.mkdirs()
       copy {
-         from("build/install/valkyrie")
+         from(installDistOutputFolder)
          into(appFolder)
       }
       println("-------------------------------------------------------------------------")
@@ -84,7 +94,7 @@ tasks.create("deployLocal") {
       libFolder.mkdirs()
 
       copy {
-         from("build/install/valkyrie/lib")
+         from("$installDistOutputFolder/lib")
          into(libFolder)
       }
 
@@ -93,7 +103,7 @@ tasks.create("deployLocal") {
       binFolder.mkdirs()
 
       copy {
-         from("build/install/valkyrie/bin")
+         from("$installDistOutputFolder/bin")
          into(binFolder)
       }
 
@@ -130,7 +140,7 @@ tasks.create("deploy") {
          exec("mkdir -p $directory")
 
          exec("rm -rf $directory/lib")
-         put(file("build/install/valkyrie/lib").toString(), "$directory/lib")
+         put(file("$installDistOutputFolder/lib").toString(), "$directory/lib")
          exec("ls -halp $directory/lib")
 
          put(file("build/libs/valkyrie-$version.jar").toString(), "$directory/ValkyrieController.jar")
@@ -166,9 +176,9 @@ fun deployNetworkProcessor()
       exec("rm -rf $directory/bin")
       exec("rm -rf $directory/lib")
 
-      put(file("build/install/valkyrie/bin").toString(), "$directory/bin")
+      put(file("$installDistOutputFolder/bin").toString(), "$directory/bin")
       exec("chmod +x $directory/bin/valkyrie-network-processor")
-      put(file("build/install/valkyrie/lib").toString(), "$directory/lib")
+      put(file("$installDistOutputFolder/lib").toString(), "$directory/lib")
       exec("ls -halp $directory/lib")
 
       put(file("build/libs/valkyrie-$version.jar").toString(), "$directory/ValkyrieController.jar")
@@ -191,9 +201,9 @@ fun deployNetworkProcessor()
          exec("rm -rf $directory/bin")
          exec("rm -rf $directory/lib")
 
-         put(file("build/install/valkyrie/bin").toString(), "$directory/bin")
+         put(file("$installDistOutputFolder/bin").toString(), "$directory/bin")
          exec("chmod +x $directory/bin/valkyrie-network-processor")
-         put(file("build/install/valkyrie/lib").toString(), "$directory/lib")
+         put(file("$installDistOutputFolder/lib").toString(), "$directory/lib")
          exec("ls -halp $directory/lib")
 
          put(file("build/libs/valkyrie-$version.jar").toString(), "$directory/ValkyrieController.jar")
@@ -207,4 +217,130 @@ fun deployNetworkProcessor()
          exec("ls -halp /home/val/.ihmc/Configurations")
       }
    }
+}
+
+val debianName = "valkyrie-simulation-${ihmc.version}"
+val simulationApplicationName = "ValkyrieObstacleCourseSCS2"
+app.entrypoint(simulationApplicationName, "us.ihmc.valkyrie.ValkyrieObstacleCourseNoUISCS2", listOf("-Djdk.gtk.version=2", "-Dprism.vsync=false"))
+
+tasks.create("buildDebianSimulationPackage") {
+   dependsOn("installDist")
+
+   doLast {
+      val deploymentFolder = "${project.projectDir}/deployment"
+
+      val debianFolder = "$deploymentFolder/debian"
+      File(debianFolder).deleteRecursively()
+
+      val baseFolder = "$deploymentFolder/debian/$debianName/"
+      val sourceFolder = "$baseFolder/opt/$debianName/"
+
+      copy {
+         from("${project.projectDir}/logo/scs-icon.png")
+         into("$sourceFolder/icon/")
+      }
+
+      copy {
+         from(installDistOutputFolder)
+         into(sourceFolder)
+      }
+
+      fileTree("$sourceFolder/bin").matching {
+         exclude(simulationApplicationName)
+      }.forEach(File::delete)
+
+      addJavaFXVsyncHack(File("$sourceFolder/bin/$simulationApplicationName"))
+
+      File("$baseFolder/DEBIAN").mkdirs()
+      LogTools.info("Created directory $baseFolder/DEBIAN/: ${File("${baseFolder}/DEBIAN").exists()}")
+
+      File("$baseFolder/DEBIAN/control").writeText(
+         """
+         Package: valkyrie-simulation
+         Version: ${ihmc.version}
+         Section: base
+         Architecture: all
+         Depends: default-jre (>= 2:1.17) | java17-runtime
+         Maintainer: IHMC Robotics
+         Description: Simulation environments for Valkyrie
+         Homepage: ${ihmc.vcsUrl}
+         
+         """.trimIndent()
+      )
+
+      File("$baseFolder/DEBIAN/postinst").writeText(
+         """
+         #!/bin/bash
+         # Without this, the desktop file does not appear in the system menu.
+         sudo desktop-file-install /usr/share/applications/$simulationApplicationName.desktop
+         echo "-----------------------------------------------------------------------------------------"
+         echo "---------------------------- Installation Notes: ----------------------------------------"
+         echo "Add the following to your .bashrc to run simulations from the command line:"
+         echo "   export PATH=\${'$'}PATH:/opt/$debianName/bin/"
+         echo "Then try to run the command '$simulationApplicationName'"
+         echo "-----------------------------------------------------------------------------------------"
+         echo "-----------------------------------------------------------------------------------------"
+         """.trimIndent()
+      )
+
+      createDesktopApplicationFile(
+         "$baseFolder/usr/share/applications/",
+         debianName,
+         simulationApplicationName,
+         "Valkyrie Obstacle Course",
+         "Launch simulation of Valkyrie Obstacle Course using SCS2"
+      )
+
+      if (Os.isFamily(Os.FAMILY_UNIX))
+      {
+         exec {
+            commandLine("chmod", "+x", "$baseFolder/DEBIAN/postinst")
+         }
+         exec {
+            commandLine("chmod", "+x", "$sourceFolder/bin/$simulationApplicationName")
+         }
+         exec {
+            workingDir(File(debianFolder))
+            commandLine("dpkg", "--build", debianName)
+         }
+      }
+   }
+}
+
+/**
+ * This is a workaround for a bug in JavaFX 17.0.1, disabling vsync to improve framerate with multiple windows.
+ * @param launchScriptFile the launch script to modify.
+ */
+fun addJavaFXVsyncHack(launchScriptFile: File)
+{
+   var originalScript = launchScriptFile.readText()
+   originalScript = originalScript.replaceFirst(
+      "#!/bin/sh", """
+         #!/bin/bash
+         # This is a workaround for a bug in JavaFX 17.0.1, disabling vsync to improve framerate with multiple windows.
+         export __GL_SYNC_TO_VBLANK=0
+         
+      """.trimIndent()
+   )
+
+   launchScriptFile.delete()
+   launchScriptFile.writeText(originalScript)
+}
+
+fun createDesktopApplicationFile(destination: String, debianName: String, applicationName: String, title: String, description: String)
+{
+   File("$destination/").mkdirs()
+   File("$destination/$applicationName.desktop").writeText(
+      """
+         [Desktop Entry]
+         Name=$title
+         Comment=$description
+         Exec=/opt/$debianName/bin/$applicationName
+         Icon=/opt/$debianName/icon/scs-icon.png
+         Version=1.0
+         Terminal=true
+         Type=Application
+         Categories=Utility;Application;
+         """.trimIndent()
+   )
 }
