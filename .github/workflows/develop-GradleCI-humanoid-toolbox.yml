@@ -1,4 +1,4 @@
-name: CI - develop - fast
+name: CI - develop - humanoid-toolbox
 
 on:
   push:
@@ -14,5 +14,5 @@ jobs:
   build:
     uses: ihmcrobotics/valkyrie/.github/workflows/source-dep-GradleCI-base.yml@develop
     with:
-      test-category: "fast"
+      test-category: "humanoid-toolbox"
       open-robotics-branch: "develop"

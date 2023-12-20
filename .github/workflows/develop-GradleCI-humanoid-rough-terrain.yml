@@ -1,4 +1,4 @@
-name: CI - develop - fast
+name: CI - develop - humanoid-rough-terrain
 
 on:
   push:
@@ -14,5 +14,5 @@ jobs:
   build:
     uses: ihmcrobotics/valkyrie/.github/workflows/source-dep-GradleCI-base.yml@develop
     with:
-      test-category: "fast"
+      test-category: "humanoid-rough-terrain"
       open-robotics-branch: "develop"

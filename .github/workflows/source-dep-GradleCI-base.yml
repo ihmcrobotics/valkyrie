@@ -49,4 +49,4 @@ jobs:
       - name: Gradle test ${{ inputs.test-category }}
         run: |
           cd main
-          gradle test -Pcategory=${{ inputs.test-category }}
+          gradle test --stacktrace --info --no-daemon -PrunningOnCIServer=true -Pcategory=${{ inputs.test-category }}
