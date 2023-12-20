@@ -289,15 +289,17 @@ tasks.create("buildDebianSimulationPackage") {
 
       createDesktopApplicationFile(
          "$baseFolder/usr/share/applications/",
+         debianName,
          scs1ApplicationName,
          "Valkyrie Obstacle Course (SCS1)",
-         "Valkyrie Obstacle Course (SCS1)"
+         "Launch simulation of Valkyrie Obstacle Course using SCS1"
       )
       createDesktopApplicationFile(
          "$baseFolder/usr/share/applications/",
+         debianName,
          scs2ApplicationName,
          "Valkyrie Obstacle Course (SCS2)",
-         "Valkyrie Obstacle Course (SCS2)"
+         "Launch simulation of Valkyrie Obstacle Course using SCS2"
       )
 
       if (Os.isFamily(Os.FAMILY_UNIX))
@@ -339,7 +341,7 @@ fun addJavaFXVsyncHack(launchScriptFile: File)
    launchScriptFile.writeText(originalScript)
 }
 
-fun createDesktopApplicationFile(destination: String, applicationName: String, title: String, description: String)
+fun createDesktopApplicationFile(destination: String, debianName: String, applicationName: String, title: String, description: String)
 {
    File("$destination/").mkdirs()
    File("$destination/$applicationName.desktop").writeText(
@@ -347,8 +349,8 @@ fun createDesktopApplicationFile(destination: String, applicationName: String, t
          [Desktop Entry]
          Name=$title
          Comment=$description
-         Exec=/opt/scs2-${ihmc.version}/bin/$applicationName
-         Icon=/opt/scs2-${ihmc.version}/icon/scs-icon.png
+         Exec=/opt/$debianName/bin/$applicationName
+         Icon=/opt/$debianName/icon/scs-icon.png
          Version=1.0
          Terminal=true
          Type=Application
