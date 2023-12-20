@@ -1,4 +1,4 @@
-name: CI - main - category fast
+name: CI - main - humanoid-push-recovery
 
 on:
   push:
