@@ -10,5 +10,6 @@ on:
 jobs:
   build-fast:
     uses: ihmcrobotics/valkyrie/.github/workflows/main-GradleCI-base.yml@main
-    secrets:
-      testCategory: "fast"
+    with:
+      inputs:
+        testCategory: "fast"
