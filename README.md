@@ -1,5 +1,12 @@
-![valkyrie](https://maven-badges.herokuapp.com/maven-central/us.ihmc/scs2-definition/badge.svg?style=plastic)
-![buildstatus](https://github.com/ihmcrobotics/simulation-construction-set-2/actions/workflows/gradle.yml/badge.svg)
+![valkyrie](https://maven-badges.herokuapp.com/maven-central/us.ihmc/valkyrie/badge.svg?style=plastic)
+![buildstatus](https://github.com/ihmcrobotics/valkyrie/actions/workflows/main-GradleCI-fast.yml/badge.svg)
+![buildstatus](https://github.com/ihmcrobotics/valkyrie/actions/workflows/main-GradleCI-controller-api.yml/badge.svg)
+![buildstatus](https://github.com/ihmcrobotics/valkyrie/actions/workflows/main-GradleCI-controller-api-2.yml/badge.svg)
+![buildstatus](https://github.com/ihmcrobotics/valkyrie/actions/workflows/main-GradleCI-humanoid-flat-ground.yml/badge.svg)
+![buildstatus](https://github.com/ihmcrobotics/valkyrie/actions/workflows/main-GradleCI-humanoid-obstacle.yml/badge.svg)
+![buildstatus](https://github.com/ihmcrobotics/valkyrie/actions/workflows/main-GradleCI-humanoid-push-recovery.yml/badge.svg)
+![buildstatus](https://github.com/ihmcrobotics/valkyrie/actions/workflows/main-GradleCI-humanoid-rough-terrain.yml/badge.svg)
+![buildstatus](https://github.com/ihmcrobotics/valkyrie/actions/workflows/main-GradleCI-humanoid-toolbox.yml/badge.svg)
 
 # Install standalone application on Ubuntu 22.04 (Recommended)
 
