@@ -23,6 +23,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           name: ihmcrobotics/ihmc-open-robotics-software
           ref: refs/heads/${{ inputs.open-robotics-branch }}
