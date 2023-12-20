@@ -4,7 +4,7 @@ name: CI - main - base
 on:
   workflow_call:
     inputs:
-      testCategory:
+      test-category:
         description: 'Test category to run'
         required: true
         type: string
@@ -32,5 +32,5 @@ jobs:
         with:
           gradle-version: 8.5
 
-      - name: Gradle test ${{ testCategory }}
-        run: gradle test -Pcategory=${{ testCategory }}
+      - name: Gradle test ${{ test-category }}
+        run: gradle test -Pcategory=${{ test-category }}
