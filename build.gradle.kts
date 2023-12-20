@@ -221,7 +221,7 @@ fun deployNetworkProcessor()
 
 val debianName = "valkyrie-simulation-${ihmc.version}"
 val simulationApplicationName = "ValkyrieObstacleCourseSCS2"
-app.entrypoint(simulationApplicationName, "us.ihmc.valkyrie.ValkyrieObstacleCourseNoUISCS2")
+app.entrypoint(simulationApplicationName, "us.ihmc.valkyrie.ValkyrieObstacleCourseNoUISCS2", listOf("-Djdk.gtk.version=2", "-Dprism.vsync=false"))
 
 tasks.create("buildDebianSimulationPackage") {
    dependsOn("installDist")
