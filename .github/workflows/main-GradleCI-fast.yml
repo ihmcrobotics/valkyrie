@@ -12,4 +12,4 @@ jobs:
     uses: ihmcrobotics/valkyrie/.github/workflows/main-GradleCI-base.yml@main
     with:
       inputs:
-        testCategory: "fast"
+        testCategory: fast
