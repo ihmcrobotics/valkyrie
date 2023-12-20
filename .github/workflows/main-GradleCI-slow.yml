@@ -1,0 +1,17 @@
+name: CI - main - slow allocation
+
+on:
+  schedule:
+    # Run every day at midnight. Add another cron entry to run at a different time.
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-slow-allocation:
+    uses: ihmcrobotics/valkyrie/.github/workflows/main-GradleCI-base.yml@main
+    with:
+      test-category: "allocation-slow"
+
