@@ -1,4 +1,4 @@
-name: CI - main - category fast
+name: CI - main - humanoid-push-recovery
 
 on:
   push:
@@ -11,6 +11,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  checks: write
   contents: read
 
 jobs:
