@@ -220,10 +220,8 @@ fun deployNetworkProcessor()
 }
 
 val debianName = "valkyrie-simulation-${ihmc.version}"
-val scs1ApplicationName = "ValkyrieObstacleCourseSCS1"
-val scs2ApplicationName = "ValkyrieObstacleCourseSCS2"
-app.entrypoint(scs1ApplicationName, "us.ihmc.valkyrie.ValkyrieObstacleCourseNoUI")
-app.entrypoint(scs2ApplicationName, "us.ihmc.valkyrie.ValkyrieObstacleCourseNoUISCS2")
+val simulationApplicationName = "ValkyrieObstacleCourseSCS2"
+app.entrypoint(simulationApplicationName, "us.ihmc.valkyrie.ValkyrieObstacleCourseNoUISCS2")
 
 tasks.create("buildDebianSimulationPackage") {
    dependsOn("installDist")
@@ -248,11 +246,10 @@ tasks.create("buildDebianSimulationPackage") {
       }
 
       fileTree("$sourceFolder/bin").matching {
-         exclude(scs1ApplicationName)
-         exclude(scs2ApplicationName)
+         exclude(simulationApplicationName)
       }.forEach(File::delete)
 
-      addJavaFXVsyncHack(File("$sourceFolder/bin/$scs2ApplicationName"))
+      addJavaFXVsyncHack(File("$sourceFolder/bin/$simulationApplicationName"))
 
       File("$baseFolder/DEBIAN").mkdirs()
       LogTools.info("Created directory $baseFolder/DEBIAN/: ${File("${baseFolder}/DEBIAN").exists()}")
@@ -275,13 +272,12 @@ tasks.create("buildDebianSimulationPackage") {
          """
          #!/bin/bash
          # Without this, the desktop file does not appear in the system menu.
-         sudo desktop-file-install /usr/share/applications/$scs1ApplicationName.desktop
-         sudo desktop-file-install /usr/share/applications/$scs2ApplicationName.desktop
+         sudo desktop-file-install /usr/share/applications/$simulationApplicationName.desktop
          echo "-----------------------------------------------------------------------------------------"
          echo "---------------------------- Installation Notes: ----------------------------------------"
          echo "Add the following to your .bashrc to run simulations from the command line:"
          echo "   export PATH=\${'$'}PATH:/opt/$debianName/bin/"
-         echo "Then try to run the command '$scs1ApplicationName' or '$scs2ApplicationName'"
+         echo "Then try to run the command '$simulationApplicationName'"
          echo "-----------------------------------------------------------------------------------------"
          echo "-----------------------------------------------------------------------------------------"
          """.trimIndent()
@@ -290,15 +286,8 @@ tasks.create("buildDebianSimulationPackage") {
       createDesktopApplicationFile(
          "$baseFolder/usr/share/applications/",
          debianName,
-         scs1ApplicationName,
-         "Valkyrie Obstacle Course (SCS1)",
-         "Launch simulation of Valkyrie Obstacle Course using SCS1"
-      )
-      createDesktopApplicationFile(
-         "$baseFolder/usr/share/applications/",
-         debianName,
-         scs2ApplicationName,
-         "Valkyrie Obstacle Course (SCS2)",
+         simulationApplicationName,
+         "Valkyrie Obstacle Course",
          "Launch simulation of Valkyrie Obstacle Course using SCS2"
       )
 
@@ -308,10 +297,7 @@ tasks.create("buildDebianSimulationPackage") {
             commandLine("chmod", "+x", "$baseFolder/DEBIAN/postinst")
          }
          exec {
-            commandLine("chmod", "+x", "$sourceFolder/bin/$scs1ApplicationName")
-         }
-         exec {
-            commandLine("chmod", "+x", "$sourceFolder/bin/$scs2ApplicationName")
+            commandLine("chmod", "+x", "$sourceFolder/bin/$simulationApplicationName")
          }
          exec {
             workingDir(File(debianFolder))
