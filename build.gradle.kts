@@ -46,6 +46,10 @@ mainDependencies {
       exclude(group = "us.ihmc", module = "javacpp")
    }
    api("us.ihmc:ihmc-parameter-tuner:$ihmcOpenRoboticsSoftwareVersion")
+
+   // This is required to get the binaries for Linux.
+   var javaFXVersion = "17.0.2"
+   api(ihmc.javaFXModule("graphics", javaFXVersion))
 }
 
 testDependencies {
