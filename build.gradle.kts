@@ -225,7 +225,7 @@ fun deployNetworkProcessor()
 
 val debianName = "valkyrie-simulation-${ihmc.version}"
 val simulationApplicationName = "ValkyrieObstacleCourseSCS2"
-app.entrypoint(simulationApplicationName, "us.ihmc.valkyrie.ValkyrieObstacleCourseNoUISCS2", listOf("-Djdk.gtk.version=2", "-Dprism.vsync=false"))
+app.entrypoint(simulationApplicationName, "us.ihmc.valkyrie.ValkyrieObstacleCourseNoUISCS2", listOf("-Djdk.gtk.version=2", "-Dprism.vsync=false", "-Dprism.forceGPU=true"))
 
 tasks.create("buildDebianSimulationPackage") {
    dependsOn("installDist")
@@ -259,7 +259,7 @@ tasks.create("buildDebianSimulationPackage") {
       LogTools.info("Created directory $baseFolder/DEBIAN/: ${File("${baseFolder}/DEBIAN").exists()}")
 
       File("$baseFolder/DEBIAN/control").writeText(
-         """
+            """
          Package: valkyrie-simulation
          Version: ${ihmc.version}
          Section: base
@@ -273,7 +273,7 @@ tasks.create("buildDebianSimulationPackage") {
       )
 
       File("$baseFolder/DEBIAN/postinst").writeText(
-         """
+            """
          #!/bin/bash
          # Without this, the desktop file does not appear in the system menu.
          sudo desktop-file-install /usr/share/applications/$simulationApplicationName.desktop
@@ -288,11 +288,11 @@ tasks.create("buildDebianSimulationPackage") {
       )
 
       createDesktopApplicationFile(
-         "$baseFolder/usr/share/applications/",
-         debianName,
-         simulationApplicationName,
-         "Valkyrie Obstacle Course",
-         "Launch simulation of Valkyrie Obstacle Course using SCS2"
+            "$baseFolder/usr/share/applications/",
+            debianName,
+            simulationApplicationName,
+            "Valkyrie Obstacle Course",
+            "Launch simulation of Valkyrie Obstacle Course using SCS2"
       )
 
       if (Os.isFamily(Os.FAMILY_UNIX))
@@ -319,7 +319,7 @@ fun addJavaFXVsyncHack(launchScriptFile: File)
 {
    var originalScript = launchScriptFile.readText()
    originalScript = originalScript.replaceFirst(
-      "#!/bin/sh", """
+         "#!/bin/sh", """
          #!/bin/bash
          # This is a workaround for a bug in JavaFX 17.0.1, disabling vsync to improve framerate with multiple windows.
          export __GL_SYNC_TO_VBLANK=0
@@ -335,7 +335,7 @@ fun createDesktopApplicationFile(destination: String, debianName: String, applic
 {
    File("$destination/").mkdirs()
    File("$destination/$applicationName.desktop").writeText(
-      """
+         """
          [Desktop Entry]
          Name=$title
          Comment=$description
