@@ -55,7 +55,7 @@ rosURI=http://127.0.0.1:11311
 
 The `rosURI` is the URI of the ROS 1 master.
 
-You can also configure the ROS 1 communication using the `IHMC_ROS_URI` environment variable.
+You can also configure the ROS 1 communication using the `ROS_MASTER_URI` environment variable.
 
 # Further information and documentation
 
