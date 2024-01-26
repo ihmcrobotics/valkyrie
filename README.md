@@ -57,6 +57,32 @@ The `rosURI` is the URI of the ROS 1 master.
 
 You can also configure the ROS 1 communication using the `ROS_MASTER_URI` environment variable.
 
+# Launch options
+
+When launching the simulation, a popup window will appear as follows:
+
+![screenshot](docs/images/SimObstacleCourseDemo_launch_options.png)
+
+Some of the options are obsolete and will be removed in the future. Here's a description of the options:
+
+- `Simulation`: whether to run the simulation or not. You want it checked.
+- `NetworkProcessor`: whether to start ROS2 communication. You want it checked.
+- `SensorModule`: whether to start the simulated sensor suite. Note that depth sensors are currently not supported.
+- `RosModule`: whether to start ROS1 communication. This is optional and we don't fully support ROS1.
+- `KinematicsToolbox`: Starts the Kinematics Toolbox. It provides a solver for inverse kinematics that is ROS2 enabled.
+- `FootstepPlanningToolbox`: Starts the Footstep Planning Toolbox. It provides a solver for footstep planning that is ROS2 enabled.
+- `DirectionalControlToolbox`: Starts a module that is ROS2 enabled and allows to control the robot using a joystick.
+- `OperatorInterface`: [Obsolete] You can ignore it and leave unchecked.
+- `BehaviorVisualizer`: [Obsolete] You can ignore it and leave unchecked.
+- `BehaviorModule`: [Obsolete] You can ignore it and leave unchecked.
+- `ZeroPoseProducer`: [Obsolete] You can ignore it and leave unchecked.
+- `ReaModule`: [Obsolete] You can ignore it and leave unchecked.
+- `ReaUi`: [Obsolete] You can ignore it and leave unchecked.
+- `KinematicsPlanningToolbox`: [Obsolete] You can ignore it and leave unchecked.
+- `WholeBodyTrajectoryToolbox`: [Obsolete] You can ignore it and leave unchecked.
+- `FiducialDetector`: [Obsolete] You can ignore it and leave unchecked.
+- `ObjectDetector`: [Obsolete] You can ignore it and leave unchecked.
+
 # Further information and documentation
 
 This is a work in progress, we'll be adding more documentation and tutorials soon.
