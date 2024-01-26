@@ -1,10 +1,5 @@
 package us.ihmc.valkyrie.parameters;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import gnu.trove.map.hash.TObjectDoubleHashMap;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.commonWalkingControlModules.capturePoint.controller.ICPControllerParameters;
@@ -36,6 +31,11 @@ import us.ihmc.robotics.partNames.NeckJointName;
 import us.ihmc.robotics.partNames.SpineJointName;
 import us.ihmc.robotics.robotSide.RobotSide;
 import us.ihmc.robotics.sensors.FootSwitchFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ValkyrieWalkingControllerParameters extends WalkingControllerParameters
 {
@@ -85,14 +85,12 @@ public class ValkyrieWalkingControllerParameters extends WalkingControllerParame
       nominalHeightAboveGround = jointMap.getModelScale() * (0.675 + 0.23 - 0.01 + 0.08) + 0.09;
       maximumHeightAboveGround = jointMap.getModelScale() * (0.735 + 0.23 + 0.08) + 0.09;
 
-
       kneePrivilegedConfigurationParameters = new OneDoFJointPrivilegedConfigurationParameters();
       kneePrivilegedConfigurationParameters.setConfigurationGain(target == RobotTarget.REAL_ROBOT ? 40.0 : 150.0);
       kneePrivilegedConfigurationParameters.setVelocityGain(6.0);
       kneePrivilegedConfigurationParameters.setWeight(5.0);
       kneePrivilegedConfigurationParameters.setMaxAcceleration(Double.POSITIVE_INFINITY);
       kneePrivilegedConfigurationParameters.setPrivilegedConfigurationOption(PrivilegedConfigurationCommand.PrivilegedConfigurationOption.AT_MID_RANGE);
-
    }
 
    @Override
@@ -129,10 +127,7 @@ public class ValkyrieWalkingControllerParameters extends WalkingControllerParame
    @Override
    public boolean allowUpperBodyMotionDuringLocomotion()
    {
-      if (target == RobotTarget.SCS)
-         return false;
-      else
-         return true;
+      return target != RobotTarget.SCS;
    }
 
    @Override
@@ -216,7 +211,7 @@ public class ValkyrieWalkingControllerParameters extends WalkingControllerParame
 
    /** {@inheritDoc} */
    @Override
-   public List<GroupParameter<PIDGainsReadOnly>> getHighLevelJointSpaceControlGains()
+   public List<GroupParameter<PIDGainsReadOnly>> getJointSpaceControlGains()
    {
       PIDGains spineGains = createSpineControlGains();
       PIDGains neckGains = createNeckControlGains();
@@ -279,7 +274,7 @@ public class ValkyrieWalkingControllerParameters extends WalkingControllerParame
 
       double kp = runningOnRealRobot ? 200.0 : 120.0; // 200.0
       double zeta = runningOnRealRobot ? 1.0 : 0.7;
-      double ki = runningOnRealRobot ? 0.0 : 0.0;
+      double ki = 0.0;
       double maxIntegralError = 0.0;
       double maxAccel = runningOnRealRobot ? 100.0 : Double.POSITIVE_INFINITY;
       double maxJerk = runningOnRealRobot ? 2000.0 : Double.POSITIVE_INFINITY;
@@ -298,21 +293,21 @@ public class ValkyrieWalkingControllerParameters extends WalkingControllerParame
    {
       PIDGains armGains = new PIDGains();
       boolean runningOnRealRobot = target == RobotTarget.REAL_ROBOT;
-      
+
       double kp = runningOnRealRobot ? 200.0 : 120.0; // 200.0
       double zeta = runningOnRealRobot ? 1.0 : 0.7;
-      double ki = runningOnRealRobot ? 0.0 : 0.0;
+      double ki = 0.0;
       double maxIntegralError = 0.0;
       double maxAccel = runningOnRealRobot ? 100.0 : Double.POSITIVE_INFINITY;
       double maxJerk = runningOnRealRobot ? 2000.0 : Double.POSITIVE_INFINITY;
-      
+
       armGains.setKp(kp);
       armGains.setZeta(zeta);
       armGains.setKi(ki);
       armGains.setMaxIntegralError(maxIntegralError);
       armGains.setMaximumFeedback(maxAccel);
       armGains.setMaximumFeedbackRate(maxJerk);
-      
+
       return armGains;
    }
 
@@ -341,10 +336,10 @@ public class ValkyrieWalkingControllerParameters extends WalkingControllerParame
    {
       boolean runningOnRealRobot = target == RobotTarget.REAL_ROBOT;
 
-      double kpXY = runningOnRealRobot ? 100.0 : 100.0; // Was 100.0 before tuneup of sep 2018
+      double kpXY = 100.0; // Was 100.0 before tuneup of sep 2018
       double kpZ = runningOnRealRobot ? 90.0 : 100.0; // Was 80.0 before tuneup of sep 2018
-      double zetaXY = runningOnRealRobot ? 0.8 : 0.8; // Was 0.9 before tuneup of sep 2018
-      double zetaZ = runningOnRealRobot ? 0.8 : 0.8;
+      double zetaXY = 0.8; // Was 0.9 before tuneup of sep 2018
+      double zetaZ = 0.8;
       double maxAccel = runningOnRealRobot ? 100.0 : 18.0; // Was 18.0 before tuneup of sep 2018
       double maxJerk = runningOnRealRobot ? 1500.0 : 270.0; // Was 270.0 before tuneup of sep 2018
 
@@ -380,8 +375,8 @@ public class ValkyrieWalkingControllerParameters extends WalkingControllerParame
 
       double kpXY = runningOnRealRobot ? 80.0 : 100.0; // Was 80.0 before tuneup of sep 2018
       double kpZ = runningOnRealRobot ? 80.0 : 100.0; // Was 60.0 before tuneup of sep 2018
-      double zetaXY = runningOnRealRobot ? 0.8 : 0.8; // Was 0.8 before tuneup of sep 2018
-      double zetaZ = runningOnRealRobot ? 0.8 : 0.8; // Was 0.8 before tuneup of sep 2018
+      double zetaXY = 0.8; // Was 0.8 before tuneup of sep 2018
+      double zetaZ = 0.8; // Was 0.8 before tuneup of sep 2018
       double maxAccel = runningOnRealRobot ? 12.0 : 18.0;
       double maxJerk = runningOnRealRobot ? 360.0 : 270.0;
 
@@ -513,7 +508,7 @@ public class ValkyrieWalkingControllerParameters extends WalkingControllerParame
       double kpY = runningOnRealRobot ? 100.0 : 150.0; // Was 100.0 before tuneup of sep 2018
       double kpZ = runningOnRealRobot ? 250.0 : 200.0; // Was 200.0 before tuneup of sep 2018
       // zeta was [0.8, 0.5, 0.8] before tuneup of sep 2018
-      double zetaXY = runningOnRealRobot ? 0.7 : 0.7;
+      double zetaXY = 0.7;
       double zetaZ = runningOnRealRobot ? 0.8 : 0.7;
       double kpXYOrientation = runningOnRealRobot ? 200.0 : 300.0;
       double kpZOrientation = runningOnRealRobot ? 150.0 : 200.0; // 160
@@ -572,7 +567,7 @@ public class ValkyrieWalkingControllerParameters extends WalkingControllerParame
       double zetaXYZ = runningOnRealRobot ? 0.7 : 0.4;
       double kpXYOrientation = runningOnRealRobot ? 40.0 : 200.0;
       double kpZOrientation = runningOnRealRobot ? 40.0 : 200.0;
-      double zetaOrientation = runningOnRealRobot ? 0.4 : 0.4;
+      double zetaOrientation = 0.4;
       double maxLinearAcceleration = runningOnRealRobot ? 10.0 : Double.POSITIVE_INFINITY;
       double maxLinearJerk = runningOnRealRobot ? 150.0 : Double.POSITIVE_INFINITY;
       double maxAngularAcceleration = runningOnRealRobot ? 100.0 : Double.POSITIVE_INFINITY;

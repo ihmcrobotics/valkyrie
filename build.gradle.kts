@@ -11,7 +11,7 @@ plugins {
 
 ihmc {
    group = "us.ihmc"
-   version = "0.14.0-231219-1"
+   version = "0.14.0-240126"
    vcsUrl = "https://github.com/ihmcrobotics/valkyrie"
    openSource = true
 
@@ -19,7 +19,7 @@ ihmc {
    configurePublications()
 }
 
-val ihmcOpenRoboticsSoftwareVersion = "0.14.0-231219"
+val ihmcOpenRoboticsSoftwareVersion = "0.14.0-240126"
 
 mainDependencies {
    api("com.martiansoftware:jsap:2.1")
