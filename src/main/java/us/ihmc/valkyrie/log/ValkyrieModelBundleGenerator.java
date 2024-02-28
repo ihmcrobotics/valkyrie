@@ -22,7 +22,7 @@ public class ValkyrieModelBundleGenerator
       Properties properties = new Properties();
       properties.setProperty("modelName", logModelProvider.getModelName());
       properties.setProperty("loader", logModelProvider.getLoader().getCanonicalName());
-      properties.setProperty("resourceDirectories", StringUtils.join(logModelProvider.getResourceDirectories(), ","));
+      properties.setProperty("resourceDirectories", StringUtils.join(logModelProvider.getTopLevelResourceDirectories(), ","));
       
       File dir = new File("../RobotDataCommunication/RobotModels/Valkyrie");
       dir.mkdirs();
