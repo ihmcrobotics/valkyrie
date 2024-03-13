@@ -36,7 +36,7 @@ RTPSSubnet=192.168.1.0/24
 
 - The `RTPSDomainID` is the ROS 2 domain ID (set to 0 in the example above).
   Make it match the domain ID of your ROS 2 network.
-  If the environment variable `ROS_DAMAIN_ID` is specified, it will **override** whatever is in the parameter file.
+  If the environment variable `ROS_DOMAIN_ID` is specified, it will **override** whatever is in the parameter file.
   If not specified, it will be set to a random value.
 - The `RTPSSubnet` is the subnet of the network interface used to communicate with the robot.
   This can be useful if you have multiple network interfaces on your computer and you want to force the IHMC controller stack to use a specific one.
