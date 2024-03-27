@@ -13,7 +13,7 @@ import us.ihmc.commonWalkingControlModules.highLevelHumanoidControl.factories.Hi
 import us.ihmc.commonWalkingControlModules.highLevelHumanoidControl.highLevelStates.HighLevelControllerState;
 import us.ihmc.commonWalkingControlModules.highLevelHumanoidControl.highLevelStates.JointspacePositionControllerState;
 import us.ihmc.commonWalkingControlModules.momentumBasedController.HighLevelHumanoidControllerToolbox;
-import us.ihmc.communication.IHMCROS2Publisher;
+import us.ihmc.ros2.ROS2PublisherBasics;
 import us.ihmc.communication.ROS2Tools;
 import us.ihmc.communication.controllerAPI.CommandInputManager;
 import us.ihmc.communication.controllerAPI.StatusMessageOutputManager;
@@ -49,7 +49,7 @@ public class ValkyrieWholeBodyPositionControlSimulation
    private final ValkyrieRobotModel robotModel;
 
    private final ROS2Node ros2Node = ROS2Tools.createROS2Node(PubSubImplementation.FAST_RTPS, "ground_plane_node");
-   private final IHMCROS2Publisher<GroundPlaneMessage> groundPlanePublisher = ROS2Tools.createPublisher(ros2Node,
+   private final ROS2PublisherBasics<GroundPlaneMessage> groundPlanePublisher = ROS2Tools.createPublisher(ros2Node,
                                                                                                         ROS2Tools.IHMC_ROOT.withTypeName(GroundPlaneMessage.class));
    private final GroundPlaneMessage groundPlaneMessage = new GroundPlaneMessage();
 

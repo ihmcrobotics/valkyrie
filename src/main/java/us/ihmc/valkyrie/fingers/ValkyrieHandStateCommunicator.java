@@ -3,7 +3,7 @@ package us.ihmc.valkyrie.fingers;
 import java.util.EnumMap;
 
 import controller_msgs.msg.dds.HandJointAnglePacket;
-import us.ihmc.communication.IHMCRealtimeROS2Publisher;
+import us.ihmc.ros2.ROS2PublisherBasics;
 import us.ihmc.communication.ROS2Tools;
 import us.ihmc.humanoidRobotics.communication.packets.HumanoidMessageTools;
 import us.ihmc.mecano.multiBodySystem.interfaces.OneDoFJointBasics;
@@ -19,7 +19,7 @@ public class ValkyrieHandStateCommunicator implements RobotController
    private final SideDependentList<EnumMap<ValkyrieHandJointName, OneDoFJointBasics>> handJoints = SideDependentList.createListOfEnumMaps(ValkyrieHandJointName.class);
 
    private final HandJointAnglePacket packet;
-   private final IHMCRealtimeROS2Publisher<HandJointAnglePacket> publisher;
+   private final ROS2PublisherBasics<HandJointAnglePacket> publisher;
 
    public ValkyrieHandStateCommunicator(String robotName, FullHumanoidRobotModel fullRobotModel, ValkyrieHandModel handModel, RealtimeROS2Node realtimeROS2Node)
    {

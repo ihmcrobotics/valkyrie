@@ -12,7 +12,7 @@ import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.avatar.networkProcessor.externalForceEstimationToolboxModule.ExternalForceEstimationToolboxModule;
 import us.ihmc.avatar.simulationStarter.DRCSimulationStarter;
 import us.ihmc.commons.thread.ThreadTools;
-import us.ihmc.communication.IHMCRealtimeROS2Publisher;
+import us.ihmc.ros2.ROS2PublisherBasics;
 import us.ihmc.communication.ROS2Tools;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.tuple3D.Vector3D;
@@ -110,12 +110,12 @@ public class ValkyrieExternalForceEstimationSimulation
       simulationStarter.getSimulationConstructionSet().addYoGraphicsListRegistry(graphicsListRegistry);
       simulationStarter.getAvatarSimulation().getSimulationConstructionSet().setDT(simDT, (int) (controllerDT / simDT));
 
-      IHMCRealtimeROS2Publisher<ToolboxStateMessage> toolboxStatePublisher = ROS2Tools.createPublisherTypeNamed(ros2Node,
+      ROS2PublisherBasics<ToolboxStateMessage> toolboxStatePublisher = ROS2Tools.createPublisherTypeNamed(ros2Node,
                                                                                                                 ToolboxStateMessage.class,
                                                                                                                 ExternalForceEstimationToolboxModule.getInputTopic(
                                                                                                              robotModel.getSimpleRobotName()));
 
-      IHMCRealtimeROS2Publisher<ExternalForceEstimationConfigurationMessage> configurationMessagePublisher = ROS2Tools.createPublisherTypeNamed(ros2Node,
+      ROS2PublisherBasics<ExternalForceEstimationConfigurationMessage> configurationMessagePublisher = ROS2Tools.createPublisherTypeNamed(ros2Node,
                                                                                                                                                 ExternalForceEstimationConfigurationMessage.class,
                                                                                                                                                 ExternalForceEstimationToolboxModule
                                                                                                                                              .getInputTopic(
