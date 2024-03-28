@@ -49,8 +49,10 @@ public class ValkyrieWholeBodyPositionControlSimulation
    private final ValkyrieRobotModel robotModel;
 
    private final ROS2Node ros2Node = ROS2Tools.createROS2Node(PubSubImplementation.FAST_RTPS, "ground_plane_node");
-   private final ROS2PublisherBasics<GroundPlaneMessage> groundPlanePublisher = ROS2Tools.createPublisher(ros2Node,
-                                                                                                        ROS2Tools.IHMC_ROOT.withTypeName(GroundPlaneMessage.class));
+   private final ROS2PublisherBasics<GroundPlaneMessage> groundPlanePublisher
+         = ros2Node.createPublisher(ROS2Tools.IHMC_ROOT.withTypeName(GroundPlaneMessage.class));
+
+
    private final GroundPlaneMessage groundPlaneMessage = new GroundPlaneMessage();
 
    public ValkyrieWholeBodyPositionControlSimulation()
