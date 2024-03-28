@@ -3,6 +3,7 @@ package us.ihmc.valkyrie.fingers;
 import java.util.EnumMap;
 
 import controller_msgs.msg.dds.HandJointAnglePacket;
+import us.ihmc.communication.HumanoidControllerAPI;
 import us.ihmc.ros2.ROS2PublisherBasics;
 import us.ihmc.communication.ROS2Tools;
 import us.ihmc.humanoidRobotics.communication.packets.HumanoidMessageTools;
@@ -23,7 +24,7 @@ public class ValkyrieHandStateCommunicator implements RobotController
 
    public ValkyrieHandStateCommunicator(String robotName, FullHumanoidRobotModel fullRobotModel, ValkyrieHandModel handModel, RealtimeROS2Node realtimeROS2Node)
    {
-      publisher = realtimeROS2Node.createPublisher(ROS2Tools.typeNamedTopic(HandJointAnglePacket.class).withTopic(ROS2Tools.getControllerOutputTopic(robotName)));
+      publisher = realtimeROS2Node.createPublisher(ROS2Tools.typeNamedTopic(HandJointAnglePacket.class).withTopic(HumanoidControllerAPI.getOutputTopic(robotName)));
 
       for (RobotSide robotside : RobotSide.values)
       {

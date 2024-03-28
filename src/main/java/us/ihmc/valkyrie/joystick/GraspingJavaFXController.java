@@ -21,6 +21,7 @@ import us.ihmc.avatar.handControl.HandFingerTrajectoryMessagePublisher;
 import us.ihmc.avatar.joystickBasedJavaFXController.ButtonState;
 import us.ihmc.avatar.joystickBasedJavaFXController.XBoxOneJavaFXController;
 import us.ihmc.avatar.networkProcessor.kinematicsPlanningToolboxModule.KinematicsPlanningToolboxModule;
+import us.ihmc.communication.HumanoidControllerAPI;
 import us.ihmc.ros2.ROS2PublisherBasics;
 import us.ihmc.communication.ROS2Tools;
 import us.ihmc.communication.packets.MessageTools;
@@ -162,7 +163,7 @@ public class GraspingJavaFXController
       ROS2Topic toolboxRequestTopicName = KinematicsPlanningToolboxModule.getInputTopic(robotName);
       ROS2Topic toolboxResponseTopicName = KinematicsPlanningToolboxModule.getOutputTopic(robotName);
 
-      ROS2Topic inputTopic = ROS2Tools.getControllerInputTopic(robotName);
+      ROS2Topic inputTopic = HumanoidControllerAPI.getInputTopic(robotName);
 
       wholeBodyTrajectoryPublisher = ros2Node.createPublisher(ROS2Tools.typeNamedTopic(WholeBodyTrajectoryMessage.class).withTopic(inputTopic));
       toolboxStatePublisher = ros2Node.createPublisher(ROS2Tools.typeNamedTopic(ToolboxStateMessage.class).withTopic(toolboxRequestTopicName));

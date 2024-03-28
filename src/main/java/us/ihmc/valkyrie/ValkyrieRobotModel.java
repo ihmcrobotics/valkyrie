@@ -21,7 +21,7 @@ import us.ihmc.commonWalkingControlModules.configurations.WalkingControllerParam
 import us.ihmc.commonWalkingControlModules.dynamicPlanning.bipedPlanning.CoPTrajectoryParameters;
 import us.ihmc.commonWalkingControlModules.highLevelHumanoidControl.highLevelStates.pushRecoveryController.PushRecoveryControllerParameters;
 import us.ihmc.commonWalkingControlModules.staticReachability.StepReachabilityData;
-import us.ihmc.communication.ROS2Tools;
+import us.ihmc.communication.HumanoidControllerAPI;
 import us.ihmc.communication.controllerAPI.RobotLowLevelMessenger;
 import us.ihmc.footstepPlanning.graphSearch.parameters.FootstepPlannerParametersBasics;
 import us.ihmc.footstepPlanning.swing.DefaultSwingPlannerParameters;
@@ -504,8 +504,8 @@ public class ValkyrieRobotModel implements DRCRobotModel
 
       return new SimulatedValkyrieFingerControlThread(createFullRobotModel(),
                                                       realtimeROS2Node,
-                                                      ROS2Tools.getControllerOutputTopic(getSimpleRobotName()),
-                                                      ROS2Tools.getControllerInputTopic(getSimpleRobotName()));
+                                                      HumanoidControllerAPI.getOutputTopic(getSimpleRobotName()),
+                                                      HumanoidControllerAPI.getInputTopic(getSimpleRobotName()));
    }
 
    @Override

@@ -4,6 +4,7 @@ import controller_msgs.msg.dds.AbortWalkingMessage;
 import controller_msgs.msg.dds.HighLevelStateMessage;
 import controller_msgs.msg.dds.PauseWalkingMessage;
 import us.ihmc.avatar.drcRobot.DRCRobotModel;
+import us.ihmc.communication.HumanoidControllerAPI;
 import us.ihmc.ros2.ROS2PublisherBasics;
 import us.ihmc.communication.ROS2Tools;
 import us.ihmc.communication.controllerAPI.RobotLowLevelMessenger;
@@ -19,7 +20,7 @@ public class ValkyrieDirectRobotInterface implements RobotLowLevelMessenger
 
    public ValkyrieDirectRobotInterface(ROS2NodeInterface ros2Node, DRCRobotModel robotModel)
    {
-      ROS2Topic inputTopic = ROS2Tools.getControllerInputTopic(robotModel.getSimpleRobotName());
+      ROS2Topic inputTopic = HumanoidControllerAPI.getInputTopic(robotModel.getSimpleRobotName());
       highLevelStatePublisher = ros2Node.createPublisher(ROS2Tools.typeNamedTopic(HighLevelStateMessage.class).withTopic(inputTopic));
       abortWalkingPublisher = ros2Node.createPublisher(ROS2Tools.typeNamedTopic(AbortWalkingMessage.class).withTopic(inputTopic));
       pauseWalkingPublisher = ros2Node.createPublisher(ROS2Tools.typeNamedTopic(PauseWalkingMessage.class).withTopic(inputTopic));

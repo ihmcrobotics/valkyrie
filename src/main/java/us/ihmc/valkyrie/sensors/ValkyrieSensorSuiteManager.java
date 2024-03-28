@@ -12,6 +12,7 @@ import us.ihmc.avatar.networkProcessor.stereoPointCloudPublisher.StereoVisionPoi
 import us.ihmc.avatar.ros.RobotROSClockCalculator;
 import us.ihmc.avatar.sensors.DRCSensorSuiteManager;
 import us.ihmc.avatar.sensors.multisense.MultiSenseSensorManager;
+import us.ihmc.communication.HumanoidControllerAPI;
 import us.ihmc.communication.PerceptionAPI;
 import us.ihmc.communication.ROS2Tools;
 import us.ihmc.communication.net.ObjectCommunicator;
@@ -108,7 +109,7 @@ public class ValkyrieSensorSuiteManager implements DRCSensorSuiteManager
       {
          ROS2Tools.createCallbackSubscriptionTypeNamed(ros2Node,
                                                        RobotConfigurationData.class,
-                                                       ROS2Tools.getControllerOutputTopic(robotName),
+                                                       HumanoidControllerAPI.getOutputTopic(robotName),
                                                        s -> robotConfigurationDataBuffer.receivedPacket(s.takeNextData()));
 
          AvatarRobotCameraParameters multisenseLeftEyeCameraParameters = sensorInformation.getCameraParameters(ValkyrieSensorInformation.MULTISENSE_SL_LEFT_CAMERA_ID);
@@ -145,7 +146,7 @@ public class ValkyrieSensorSuiteManager implements DRCSensorSuiteManager
       {
          ROS2Tools.createCallbackSubscriptionTypeNamed(ros2Node,
                                                        RobotConfigurationData.class,
-                                                       ROS2Tools.getControllerOutputTopic(robotName),
+                                                       HumanoidControllerAPI.getOutputTopic(robotName),
                                                        s -> robotConfigurationDataBuffer.receivedPacket(s.takeNextData()));
 
          AvatarRobotCameraParameters multisenseLeftEyeCameraParameters = sensorInformation.getCameraParameters(ValkyrieSensorInformation.MULTISENSE_SL_LEFT_CAMERA_ID);

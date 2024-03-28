@@ -5,6 +5,7 @@ import controller_msgs.msg.dds.ArmTrajectoryMessage;
 import controller_msgs.msg.dds.HighLevelStateMessage;
 import controller_msgs.msg.dds.PauseWalkingMessage;
 import us.ihmc.avatar.joystickBasedJavaFXController.HumanoidRobotPunchMessenger;
+import us.ihmc.communication.HumanoidControllerAPI;
 import us.ihmc.ros2.ROS2PublisherBasics;
 import us.ihmc.communication.ROS2Tools;
 import us.ihmc.communication.controllerAPI.RobotLowLevelMessenger;
@@ -23,7 +24,7 @@ public class ValkyriePunchMessenger implements HumanoidRobotPunchMessenger, Robo
 
    public ValkyriePunchMessenger(String robotName, ROS2NodeInterface ros2Node)
    {
-      ROS2Topic<?> inputTopic = ROS2Tools.getControllerInputTopic(robotName);
+      ROS2Topic<?> inputTopic = HumanoidControllerAPI.getInputTopic(robotName);
       armTrajectoryPublisher = ros2Node.createPublisher(ROS2Tools.typeNamedTopic(ArmTrajectoryMessage.class).withTopic(inputTopic));
       highLevelStatePublisher = ros2Node.createPublisher(ROS2Tools.typeNamedTopic(HighLevelStateMessage.class).withTopic(inputTopic));
       abortWalkingPublisher = ros2Node.createPublisher(ROS2Tools.typeNamedTopic(AbortWalkingMessage.class).withTopic(inputTopic));

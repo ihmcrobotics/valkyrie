@@ -33,6 +33,7 @@ import us.ihmc.commonWalkingControlModules.dynamicPlanning.bipedPlanning.CoPTraj
 import us.ihmc.commonWalkingControlModules.highLevelHumanoidControl.factories.ContactableBodiesFactory;
 import us.ihmc.commonWalkingControlModules.highLevelHumanoidControl.factories.HighLevelHumanoidControllerFactory;
 import us.ihmc.commonWalkingControlModules.highLevelHumanoidControl.factories.WalkingProvider;
+import us.ihmc.communication.HumanoidControllerAPI;
 import us.ihmc.communication.ROS2Tools;
 import us.ihmc.concurrent.runtime.barrierScheduler.implicitContext.BarrierScheduler.TaskOverrunBehavior;
 import us.ihmc.euclid.transform.RigidBodyTransform;
@@ -159,7 +160,7 @@ public class ValkyrieRosControlController extends IHMCWholeRobotControlJavaBridg
    public static final double gravity = 9.80665;
 
    public static final String VALKYRIE_IHMC_ROS_ESTIMATOR_NODE_NAME = "valkyrie_ihmc_state_estimator";
-   public static final String VALKYRIE_IHMC_ROS_CONTROLLER_NODE_NAME = "valkyrie_" + ROS2Tools.HUMANOID_CONTROLLER_NODE_NAME;
+   public static final String VALKYRIE_IHMC_ROS_CONTROLLER_NODE_NAME = "valkyrie_" + HumanoidControllerAPI.HUMANOID_CONTROLLER_NODE_NAME;
 
    private static final WalkingProvider walkingProvider = WalkingProvider.DATA_PRODUCER;
 
@@ -411,7 +412,7 @@ public class ValkyrieRosControlController extends IHMCWholeRobotControlJavaBridg
       externalPelvisPoseSubscriber = new PelvisPoseCorrectionCommunicator(null, null);
       ROS2Tools.createCallbackSubscriptionTypeNamed(estimatorRealtimeROS2Node,
                                                     StampedPosePacket.class,
-                                                    ROS2Tools.getControllerInputTopic(robotName),
+                                                    HumanoidControllerAPI.getInputTopic(robotName),
                                                     externalPelvisPoseSubscriber);
 
       /*
