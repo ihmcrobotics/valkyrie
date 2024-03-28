@@ -110,9 +110,9 @@ public class ValkyrieExternalForceEstimationSimulation
       simulationStarter.getSimulationConstructionSet().addYoGraphicsListRegistry(graphicsListRegistry);
       simulationStarter.getAvatarSimulation().getSimulationConstructionSet().setDT(simDT, (int) (controllerDT / simDT));
 
-      ROS2PublisherBasics<ToolboxStateMessage> toolboxStatePublisher = ros2Node.createPublisher(ROS2Tools.typeNamedTopic(ToolboxStateMessage.class)
-                                                                                                         .withTopic(ExternalForceEstimationToolboxModule.getInputTopic(
-                                                                                                               robotModel.getSimpleRobotName())));
+      ROS2PublisherBasics<ToolboxStateMessage> toolboxStatePublisher
+            = ros2Node.createPublisher(ExternalForceEstimationToolboxModule.getInputTopic(robotModel.getSimpleRobotName())
+                                                                           .withTypeName(ToolboxStateMessage.class));
 
       ROS2PublisherBasics<ExternalForceEstimationConfigurationMessage> configurationMessagePublisher = ros2Node.createPublisher(ExternalForceEstimationToolboxModule.getInputTopic(robotModel.getSimpleRobotName()).withTypeName(ExternalForceEstimationConfigurationMessage.class));
 
