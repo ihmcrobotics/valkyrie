@@ -22,7 +22,6 @@ import us.ihmc.avatar.joystickBasedJavaFXController.XBoxOneJavaFXController;
 import us.ihmc.avatar.networkProcessor.kinematicsToolboxModule.KinematicsToolboxModule;
 import us.ihmc.communication.HumanoidControllerAPI;
 import us.ihmc.ros2.ROS2PublisherBasics;
-import us.ihmc.communication.ROS2Tools;
 import us.ihmc.communication.packets.MessageTools;
 import us.ihmc.communication.packets.PacketDestination;
 import us.ihmc.communication.packets.ToolboxState;
@@ -149,18 +148,18 @@ public class JavaFXArmController
       messager.addTopicListener(XBoxOneJavaFXController.ButtonXState, state -> submitReachingManifoldsToToolbox(state));
       messager.addTopicListener(XBoxOneJavaFXController.ButtonYState, state -> confirmReachingMotion(state));
 
-      ROS2Topic toolboxRequestTopicName = KinematicsToolboxModule.getInputTopic(robotName);
-      ROS2Topic toolboxResponseTopicName = KinematicsToolboxModule.getOutputTopic(robotName);
+      ROS2Topic<?> toolboxRequestTopicName = KinematicsToolboxModule.getInputTopic(robotName);
+      ROS2Topic<?> toolboxResponseTopicName = KinematicsToolboxModule.getOutputTopic(robotName);
 
-      ROS2Topic inputTopic = HumanoidControllerAPI.getInputTopic(robotName);
+      ROS2Topic<?> inputTopic = HumanoidControllerAPI.getInputTopic(robotName);
 
       wholeBodyTrajectoryPublisher = ros2Node.createPublisher(inputTopic.withTypeName(WholeBodyTrajectoryMessage.class));
       toolboxStatePublisher = ros2Node.createPublisher(toolboxRequestTopicName.withTypeName(ToolboxStateMessage.class));
       toolboxMessagePublisher = ros2Node.createPublisher(toolboxRequestTopicName.withTypeName(KinematicsToolboxRigidBodyMessage.class));
       this.handFingerTrajectoryMessagePublisher = handFingerTrajectoryMessagePublisher;
 
-      ROS2Tools.createCallbackSubscriptionTypeNamed(ros2Node, KinematicsToolboxOutputStatus.class, toolboxResponseTopicName,
-                                           s -> consumeToolboxOutputStatus(s.takeNextData()));
+      ros2Node.createSubscription(toolboxResponseTopicName.withTypeName(KinematicsToolboxOutputStatus.class),
+                                  s -> consumeToolboxOutputStatus(s.takeNextData()));
 
       animationTimer = new AnimationTimer()
       {

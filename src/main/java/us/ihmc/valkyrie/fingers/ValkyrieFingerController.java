@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import controller_msgs.msg.dds.HandDesiredConfigurationMessage;
 import controller_msgs.msg.dds.ValkyrieHandFingerTrajectoryMessage;
 import us.ihmc.communication.HumanoidControllerAPI;
-import us.ihmc.communication.ROS2Tools;
 import us.ihmc.humanoidRobotics.communication.packets.dataobjects.HandConfiguration;
 import us.ihmc.humanoidRobotics.communication.subscribers.HandDesiredConfigurationMessageSubscriber;
 import us.ihmc.humanoidRobotics.communication.subscribers.ValkyrieHandFingerTrajectoryMessageSubscriber;
@@ -94,12 +93,10 @@ public class ValkyrieFingerController implements RobotController
    {
       for (RobotSide robotSide : RobotSide.values)
       {
-         ROS2Tools.createCallbackSubscriptionTypeNamed(realtimeROS2Node,
-                                                       HandDesiredConfigurationMessage.class, HumanoidControllerAPI.getInputTopic(robotName),
-                                                       handDesiredConfigurationMessageSubscribers.get(robotSide));
-         ROS2Tools.createCallbackSubscriptionTypeNamed(realtimeROS2Node,
-                                                       ValkyrieHandFingerTrajectoryMessage.class, HumanoidControllerAPI.getInputTopic(robotName),
-                                                       valkyrieHandFingerTrajectoryMessageSubscribers.get(robotSide));
+         realtimeROS2Node.createSubscription(HumanoidControllerAPI.getInputTopic(robotName).withTypeName(HandDesiredConfigurationMessage.class),
+                                             handDesiredConfigurationMessageSubscribers.get(robotSide));
+         realtimeROS2Node.createSubscription(HumanoidControllerAPI.getInputTopic(robotName).withTypeName(ValkyrieHandFingerTrajectoryMessage.class),
+                                             valkyrieHandFingerTrajectoryMessageSubscribers.get(robotSide));
       }
    }
 

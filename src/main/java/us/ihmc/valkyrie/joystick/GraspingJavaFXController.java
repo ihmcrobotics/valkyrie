@@ -23,7 +23,6 @@ import us.ihmc.avatar.joystickBasedJavaFXController.XBoxOneJavaFXController;
 import us.ihmc.avatar.networkProcessor.kinematicsPlanningToolboxModule.KinematicsPlanningToolboxModule;
 import us.ihmc.communication.HumanoidControllerAPI;
 import us.ihmc.ros2.ROS2PublisherBasics;
-import us.ihmc.communication.ROS2Tools;
 import us.ihmc.communication.packets.MessageTools;
 import us.ihmc.communication.packets.PacketDestination;
 import us.ihmc.communication.packets.ToolboxState;
@@ -160,10 +159,10 @@ public class GraspingJavaFXController
       messager.addTopicListener(XBoxOneJavaFXController.ButtonXState, state -> submitReachingManifoldsToToolbox(state));
       messager.addTopicListener(XBoxOneJavaFXController.ButtonYState, state -> confirmReachingMotion(state));
 
-      ROS2Topic toolboxRequestTopicName = KinematicsPlanningToolboxModule.getInputTopic(robotName);
-      ROS2Topic toolboxResponseTopicName = KinematicsPlanningToolboxModule.getOutputTopic(robotName);
+      ROS2Topic<?> toolboxRequestTopicName = KinematicsPlanningToolboxModule.getInputTopic(robotName);
+      ROS2Topic<?> toolboxResponseTopicName = KinematicsPlanningToolboxModule.getOutputTopic(robotName);
 
-      ROS2Topic inputTopic = HumanoidControllerAPI.getInputTopic(robotName);
+      ROS2Topic<?> inputTopic = HumanoidControllerAPI.getInputTopic(robotName);
 
       wholeBodyTrajectoryPublisher = ros2Node.createPublisher(inputTopic.withTypeName(WholeBodyTrajectoryMessage.class));
       toolboxStatePublisher = ros2Node.createPublisher(toolboxRequestTopicName.withTypeName(ToolboxStateMessage.class));
@@ -171,8 +170,8 @@ public class GraspingJavaFXController
       toolboxMessagePublisher = ros2Node.createPublisher(toolboxRequestTopicName.withTypeName(KinematicsPlanningToolboxInputMessage.class));
       this.handFingerTrajectoryMessagePublisher = handFingerTrajectoryMessagePublisher;
 
-      ROS2Tools.createCallbackSubscriptionTypeNamed(ros2Node, KinematicsPlanningToolboxOutputStatus.class, toolboxResponseTopicName,
-                                           s -> consumeToolboxOutputStatus(s.takeNextData()));
+      ros2Node.createSubscription(toolboxResponseTopicName.withTypeName(KinematicsPlanningToolboxOutputStatus.class),
+                                  s -> consumeToolboxOutputStatus(s.takeNextData()));
 
       animationTimer = new AnimationTimer()
       {

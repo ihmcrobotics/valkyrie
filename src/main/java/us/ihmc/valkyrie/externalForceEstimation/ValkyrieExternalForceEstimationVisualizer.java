@@ -39,8 +39,8 @@ import us.ihmc.yoVariables.registry.YoRegistry;
 public class ValkyrieExternalForceEstimationVisualizer implements SCSVisualizerStateListener
 {
    private final RealtimeROS2Node ros2Node = ROS2Tools.createRealtimeROS2Node(PubSubImplementation.FAST_RTPS, "valkyrie_wrench_estimation_visualizer");
-   private final ROS2Topic inputTopic;
-   private final ROS2Topic outputTopic;
+   private final ROS2Topic<?> inputTopic;
+   private final ROS2Topic<?> outputTopic;
    private final int endEffectorHashCode;
    private final Vector3D externalForcePointOffset = new Vector3D();
    private String endEffectorName;
@@ -101,10 +101,8 @@ public class ValkyrieExternalForceEstimationVisualizer implements SCSVisualizerS
       scs.addYoGraphic(estimatedForceVector);
 
       AtomicReference<ExternalForceEstimationOutputStatus> toolboxOutputStatus = new AtomicReference<>();
-      ROS2Tools.createCallbackSubscriptionTypeNamed(ros2Node,
-                                                    ExternalForceEstimationOutputStatus.class,
-                                                    outputTopic,
-                                           s -> toolboxOutputStatus.set(s.takeNextData()));
+      ros2Node.createSubscription(outputTopic.withTypeName(ExternalForceEstimationOutputStatus.class),
+                                  s -> toolboxOutputStatus.set(s.takeNextData()));
 
       AtomicBoolean reset = new AtomicBoolean();
       Vector3D tareOffset = new Vector3D();

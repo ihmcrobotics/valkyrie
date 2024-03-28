@@ -147,10 +147,9 @@ public class ValkyrieExternalForceEstimationSimulation
       new ExternalForceEstimationToolboxModule(robotModel, true, PubSubImplementation.FAST_RTPS);
 
       AtomicReference<ExternalForceEstimationOutputStatus> toolboxOutputStatus = new AtomicReference<>();
-      ROS2Tools.createCallbackSubscriptionTypeNamed(ros2Node,
-                                                    ExternalForceEstimationOutputStatus.class,
-                                                    ExternalForceEstimationToolboxModule.getOutputTopic(robotModel.getSimpleRobotName()),
-                                           s -> toolboxOutputStatus.set(s.takeNextData()));
+      ros2Node.createSubscription(ExternalForceEstimationToolboxModule.getOutputTopic(robotModel.getSimpleRobotName())
+                                                                      .withTypeName(ExternalForceEstimationOutputStatus.class),
+                                  s -> toolboxOutputStatus.set(s.takeNextData()));
 
       simulationStarter.getAvatarSimulation().getSimulationConstructionSet().addScript(t ->
                                                                                        {
