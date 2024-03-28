@@ -114,8 +114,7 @@ public class ValkyrieExternalForceEstimationSimulation
                                                                                                          .withTopic(ExternalForceEstimationToolboxModule.getInputTopic(
                                                                                                                robotModel.getSimpleRobotName())));
 
-      ROS2PublisherBasics<ExternalForceEstimationConfigurationMessage> configurationMessagePublisher = ros2Node.createPublisher(ROS2Tools.typeNamedTopic(
-            ExternalForceEstimationConfigurationMessage.class).withTopic(ExternalForceEstimationToolboxModule.getInputTopic(robotModel.getSimpleRobotName())));
+      ROS2PublisherBasics<ExternalForceEstimationConfigurationMessage> configurationMessagePublisher = ros2Node.createPublisher(ExternalForceEstimationToolboxModule.getInputTopic(robotModel.getSimpleRobotName()).withTypeName(ExternalForceEstimationConfigurationMessage.class));
 
       JButton wakeupButton = new JButton("Start estimation");
       wakeupButton.addActionListener(e ->
