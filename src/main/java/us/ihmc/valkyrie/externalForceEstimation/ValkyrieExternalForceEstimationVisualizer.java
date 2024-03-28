@@ -123,12 +123,10 @@ public class ValkyrieExternalForceEstimationVisualizer implements SCSVisualizerS
                  }).start();
 
       // ----- Toolbox Control ----- //
-      ROS2PublisherBasics<ToolboxStateMessage> toolboxStatePublisher = ROS2Tools.createPublisherTypeNamed(ros2Node,
-                                                                                                                ToolboxStateMessage.class,
-                                                                                                                inputTopic);
-      ROS2PublisherBasics<ExternalForceEstimationConfigurationMessage> configurationMessagePublisher = ROS2Tools.createPublisherTypeNamed(ros2Node,
-                                                                                                                                                ExternalForceEstimationConfigurationMessage.class,
-                                                                                                                                                inputTopic);
+      ROS2PublisherBasics<ToolboxStateMessage> toolboxStatePublisher = ros2Node.createPublisher(ROS2Tools.typeNamedTopic(ToolboxStateMessage.class)
+                                                                                                         .withTopic(inputTopic));
+      ROS2PublisherBasics<ExternalForceEstimationConfigurationMessage> configurationMessagePublisher = ros2Node.createPublisher(ROS2Tools.typeNamedTopic(
+            ExternalForceEstimationConfigurationMessage.class).withTopic(inputTopic));
       JButton wakeupButton = new JButton("Start");
       wakeupButton.addActionListener(e ->
                                      {
