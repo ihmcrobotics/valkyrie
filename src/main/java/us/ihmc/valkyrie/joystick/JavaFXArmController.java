@@ -154,9 +154,9 @@ public class JavaFXArmController
 
       ROS2Topic inputTopic = HumanoidControllerAPI.getInputTopic(robotName);
 
-      wholeBodyTrajectoryPublisher = ros2Node.createPublisher(ROS2Tools.typeNamedTopic(WholeBodyTrajectoryMessage.class).withTopic(inputTopic));
-      toolboxStatePublisher = ros2Node.createPublisher(ROS2Tools.typeNamedTopic(ToolboxStateMessage.class).withTopic(toolboxRequestTopicName));
-      toolboxMessagePublisher = ros2Node.createPublisher(ROS2Tools.typeNamedTopic(KinematicsToolboxRigidBodyMessage.class).withTopic(toolboxRequestTopicName));
+      wholeBodyTrajectoryPublisher = ros2Node.createPublisher(inputTopic.withTypeName(WholeBodyTrajectoryMessage.class));
+      toolboxStatePublisher = ros2Node.createPublisher(toolboxRequestTopicName.withTypeName(ToolboxStateMessage.class));
+      toolboxMessagePublisher = ros2Node.createPublisher(toolboxRequestTopicName.withTypeName(KinematicsToolboxRigidBodyMessage.class));
       this.handFingerTrajectoryMessagePublisher = handFingerTrajectoryMessagePublisher;
 
       ROS2Tools.createCallbackSubscriptionTypeNamed(ros2Node, KinematicsToolboxOutputStatus.class, toolboxResponseTopicName,
