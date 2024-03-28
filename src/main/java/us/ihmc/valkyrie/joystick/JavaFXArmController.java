@@ -20,7 +20,7 @@ import us.ihmc.avatar.handControl.HandFingerTrajectoryMessagePublisher;
 import us.ihmc.avatar.joystickBasedJavaFXController.ButtonState;
 import us.ihmc.avatar.joystickBasedJavaFXController.XBoxOneJavaFXController;
 import us.ihmc.avatar.networkProcessor.kinematicsToolboxModule.KinematicsToolboxModule;
-import us.ihmc.communication.IHMCROS2Publisher;
+import us.ihmc.ros2.ROS2PublisherBasics;
 import us.ihmc.communication.ROS2Tools;
 import us.ihmc.communication.packets.MessageTools;
 import us.ihmc.communication.packets.PacketDestination;
@@ -72,10 +72,10 @@ public class JavaFXArmController
    private final static double defaultWeightForRigidBodyMessage = 20.0;
 
    private final HandFingerTrajectoryMessagePublisher handFingerTrajectoryMessagePublisher;
-   private final IHMCROS2Publisher<WholeBodyTrajectoryMessage> wholeBodyTrajectoryPublisher;
-   private final IHMCROS2Publisher<ToolboxStateMessage> toolboxStatePublisher;
-   //private final IHMCROS2Publisher<KinematicsPlanningToolboxInputMessage> toolboxMessagePublisher;
-   private final IHMCROS2Publisher<KinematicsToolboxRigidBodyMessage> toolboxMessagePublisher;
+   private final ROS2PublisherBasics<WholeBodyTrajectoryMessage> wholeBodyTrajectoryPublisher;
+   private final ROS2PublisherBasics<ToolboxStateMessage> toolboxStatePublisher;
+   //private final ROS2PublisherBasics<KinematicsPlanningToolboxInputMessage> toolboxMessagePublisher;
+   private final ROS2PublisherBasics<KinematicsToolboxRigidBodyMessage> toolboxMessagePublisher;
 
    private final AtomicReference<List<Node>> objectsToVisualizeReference = new AtomicReference<>(new ArrayList<>());
    private final RigidBodyTransform controlTransform = new RigidBodyTransform();
@@ -153,9 +153,9 @@ public class JavaFXArmController
 
       ROS2Topic inputTopic = ROS2Tools.getControllerInputTopic(robotName);
 
-      wholeBodyTrajectoryPublisher = ROS2Tools.createPublisherTypeNamed(ros2Node, WholeBodyTrajectoryMessage.class, inputTopic);
-      toolboxStatePublisher = ROS2Tools.createPublisherTypeNamed(ros2Node, ToolboxStateMessage.class, toolboxRequestTopicName);
-      toolboxMessagePublisher = ROS2Tools.createPublisherTypeNamed(ros2Node, KinematicsToolboxRigidBodyMessage.class, toolboxRequestTopicName);
+      wholeBodyTrajectoryPublisher = ros2Node.createPublisher(ROS2Tools.typeNamedTopic(WholeBodyTrajectoryMessage.class).withTopic(inputTopic));
+      toolboxStatePublisher = ros2Node.createPublisher(ROS2Tools.typeNamedTopic(ToolboxStateMessage.class).withTopic(toolboxRequestTopicName));
+      toolboxMessagePublisher = ros2Node.createPublisher(ROS2Tools.typeNamedTopic(KinematicsToolboxRigidBodyMessage.class).withTopic(toolboxRequestTopicName));
       this.handFingerTrajectoryMessagePublisher = handFingerTrajectoryMessagePublisher;
 
       ROS2Tools.createCallbackSubscriptionTypeNamed(ros2Node, KinematicsToolboxOutputStatus.class, toolboxResponseTopicName,
