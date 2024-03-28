@@ -168,8 +168,7 @@ public class GraspingJavaFXController
       wholeBodyTrajectoryPublisher = ros2Node.createPublisher(inputTopic.withTypeName(WholeBodyTrajectoryMessage.class));
       toolboxStatePublisher = ros2Node.createPublisher(toolboxRequestTopicName.withTypeName(ToolboxStateMessage.class));
       //toolboxMessagePublisher = ROS2Tools.createPublisherTypeNamed(ros2Node, KinematicsPlanningToolboxRigidBodyMessage.class, toolboxRequestTopicName);
-      toolboxMessagePublisher = ros2Node.createPublisher(ROS2Tools.typeNamedTopic(KinematicsPlanningToolboxInputMessage.class)
-                                                                  .withTopic(toolboxRequestTopicName));
+      toolboxMessagePublisher = ros2Node.createPublisher(toolboxRequestTopicName.withTypeName(KinematicsPlanningToolboxInputMessage.class));
       this.handFingerTrajectoryMessagePublisher = handFingerTrajectoryMessagePublisher;
 
       ROS2Tools.createCallbackSubscriptionTypeNamed(ros2Node, KinematicsPlanningToolboxOutputStatus.class, toolboxResponseTopicName,

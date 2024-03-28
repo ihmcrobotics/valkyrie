@@ -62,8 +62,7 @@ public class SimulatedValkyrieFingerController implements RobotController
 
       if (realtimeROS2Node != null)
       {
-         ROS2PublisherBasics<HandJointAnglePacket> jointAnglePublisher = realtimeROS2Node.createPublisher(ROS2Tools.typeNamedTopic(HandJointAnglePacket.class)
-                                                                                                                   .withTopic(outputTopic));
+         ROS2PublisherBasics<HandJointAnglePacket> jointAnglePublisher = realtimeROS2Node.createPublisher(outputTopic.withTypeName(HandJointAnglePacket.class));
          jointAngleProducer = new SimulatedValkyrieFingerJointAngleProducer(jointAnglePublisher, fullRobotModel);
       }
       else

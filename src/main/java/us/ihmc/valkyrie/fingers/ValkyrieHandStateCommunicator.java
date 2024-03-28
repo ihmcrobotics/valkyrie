@@ -24,7 +24,7 @@ public class ValkyrieHandStateCommunicator implements RobotController
 
    public ValkyrieHandStateCommunicator(String robotName, FullHumanoidRobotModel fullRobotModel, ValkyrieHandModel handModel, RealtimeROS2Node realtimeROS2Node)
    {
-      publisher = realtimeROS2Node.createPublisher(ROS2Tools.typeNamedTopic(HandJointAnglePacket.class).withTopic(HumanoidControllerAPI.getOutputTopic(robotName)));
+      publisher = realtimeROS2Node.createPublisher(HumanoidControllerAPI.getOutputTopic(robotName).withTypeName(HandJointAnglePacket.class));
 
       for (RobotSide robotside : RobotSide.values)
       {
