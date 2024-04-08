@@ -5,7 +5,8 @@ import controller_msgs.msg.dds.ArmTrajectoryMessage;
 import controller_msgs.msg.dds.HighLevelStateMessage;
 import controller_msgs.msg.dds.PauseWalkingMessage;
 import us.ihmc.avatar.joystickBasedJavaFXController.HumanoidRobotPunchMessenger;
-import us.ihmc.communication.IHMCROS2Publisher;
+import us.ihmc.communication.HumanoidControllerAPI;
+import us.ihmc.ros2.ROS2PublisherBasics;
 import us.ihmc.communication.ROS2Tools;
 import us.ihmc.communication.controllerAPI.RobotLowLevelMessenger;
 import us.ihmc.humanoidRobotics.communication.packets.HumanoidMessageTools;
@@ -16,18 +17,18 @@ import us.ihmc.ros2.ROS2Topic;
 
 public class ValkyriePunchMessenger implements HumanoidRobotPunchMessenger, RobotLowLevelMessenger
 {
-   private final IHMCROS2Publisher<ArmTrajectoryMessage> armTrajectoryPublisher;
-   private final IHMCROS2Publisher<HighLevelStateMessage> highLevelStatePublisher;
-   private final IHMCROS2Publisher<AbortWalkingMessage> abortWalkingPublisher;
-   private final IHMCROS2Publisher<PauseWalkingMessage> pauseWalkingPublisher;
+   private final ROS2PublisherBasics<ArmTrajectoryMessage> armTrajectoryPublisher;
+   private final ROS2PublisherBasics<HighLevelStateMessage> highLevelStatePublisher;
+   private final ROS2PublisherBasics<AbortWalkingMessage> abortWalkingPublisher;
+   private final ROS2PublisherBasics<PauseWalkingMessage> pauseWalkingPublisher;
 
    public ValkyriePunchMessenger(String robotName, ROS2NodeInterface ros2Node)
    {
-      ROS2Topic<?> inputTopic = ROS2Tools.getControllerInputTopic(robotName);
-      armTrajectoryPublisher = ROS2Tools.createPublisherTypeNamed(ros2Node, ArmTrajectoryMessage.class, inputTopic);
-      highLevelStatePublisher = ROS2Tools.createPublisherTypeNamed(ros2Node, HighLevelStateMessage.class, inputTopic);
-      abortWalkingPublisher = ROS2Tools.createPublisherTypeNamed(ros2Node, AbortWalkingMessage.class, inputTopic);
-      pauseWalkingPublisher = ROS2Tools.createPublisherTypeNamed(ros2Node, PauseWalkingMessage.class, inputTopic);
+      ROS2Topic<?> inputTopic = HumanoidControllerAPI.getInputTopic(robotName);
+      armTrajectoryPublisher = ros2Node.createPublisher(inputTopic.withTypeName(ArmTrajectoryMessage.class));
+      highLevelStatePublisher = ros2Node.createPublisher(inputTopic.withTypeName(HighLevelStateMessage.class));
+      abortWalkingPublisher = ros2Node.createPublisher(inputTopic.withTypeName(AbortWalkingMessage.class));
+      pauseWalkingPublisher = ros2Node.createPublisher(inputTopic.withTypeName(PauseWalkingMessage.class));
    }
 
 

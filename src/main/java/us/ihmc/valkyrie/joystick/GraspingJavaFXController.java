@@ -21,8 +21,8 @@ import us.ihmc.avatar.handControl.HandFingerTrajectoryMessagePublisher;
 import us.ihmc.avatar.joystickBasedJavaFXController.ButtonState;
 import us.ihmc.avatar.joystickBasedJavaFXController.XBoxOneJavaFXController;
 import us.ihmc.avatar.networkProcessor.kinematicsPlanningToolboxModule.KinematicsPlanningToolboxModule;
-import us.ihmc.communication.IHMCROS2Publisher;
-import us.ihmc.communication.ROS2Tools;
+import us.ihmc.communication.HumanoidControllerAPI;
+import us.ihmc.ros2.ROS2PublisherBasics;
 import us.ihmc.communication.packets.MessageTools;
 import us.ihmc.communication.packets.PacketDestination;
 import us.ihmc.communication.packets.ToolboxState;
@@ -85,9 +85,9 @@ public class GraspingJavaFXController
    private final static double defaultWeightForRigidBodyMessage = 20.0;
 
    private final HandFingerTrajectoryMessagePublisher handFingerTrajectoryMessagePublisher;
-   private final IHMCROS2Publisher<WholeBodyTrajectoryMessage> wholeBodyTrajectoryPublisher;
-   private final IHMCROS2Publisher<ToolboxStateMessage> toolboxStatePublisher;
-   private final IHMCROS2Publisher<KinematicsPlanningToolboxInputMessage> toolboxMessagePublisher;
+   private final ROS2PublisherBasics<WholeBodyTrajectoryMessage> wholeBodyTrajectoryPublisher;
+   private final ROS2PublisherBasics<ToolboxStateMessage> toolboxStatePublisher;
+   private final ROS2PublisherBasics<KinematicsPlanningToolboxInputMessage> toolboxMessagePublisher;
 
    private final AtomicReference<List<Node>> objectsToVisualizeReference = new AtomicReference<>(new ArrayList<>());
    private final RigidBodyTransform controlTransform = new RigidBodyTransform();
@@ -159,19 +159,19 @@ public class GraspingJavaFXController
       messager.addTopicListener(XBoxOneJavaFXController.ButtonXState, state -> submitReachingManifoldsToToolbox(state));
       messager.addTopicListener(XBoxOneJavaFXController.ButtonYState, state -> confirmReachingMotion(state));
 
-      ROS2Topic toolboxRequestTopicName = KinematicsPlanningToolboxModule.getInputTopic(robotName);
-      ROS2Topic toolboxResponseTopicName = KinematicsPlanningToolboxModule.getOutputTopic(robotName);
+      ROS2Topic<?> toolboxRequestTopicName = KinematicsPlanningToolboxModule.getInputTopic(robotName);
+      ROS2Topic<?> toolboxResponseTopicName = KinematicsPlanningToolboxModule.getOutputTopic(robotName);
 
-      ROS2Topic inputTopic = ROS2Tools.getControllerInputTopic(robotName);
+      ROS2Topic<?> inputTopic = HumanoidControllerAPI.getInputTopic(robotName);
 
-      wholeBodyTrajectoryPublisher = ROS2Tools.createPublisherTypeNamed(ros2Node, WholeBodyTrajectoryMessage.class, inputTopic);
-      toolboxStatePublisher = ROS2Tools.createPublisherTypeNamed(ros2Node, ToolboxStateMessage.class, toolboxRequestTopicName);
+      wholeBodyTrajectoryPublisher = ros2Node.createPublisher(inputTopic.withTypeName(WholeBodyTrajectoryMessage.class));
+      toolboxStatePublisher = ros2Node.createPublisher(toolboxRequestTopicName.withTypeName(ToolboxStateMessage.class));
       //toolboxMessagePublisher = ROS2Tools.createPublisherTypeNamed(ros2Node, KinematicsPlanningToolboxRigidBodyMessage.class, toolboxRequestTopicName);
-      toolboxMessagePublisher = ROS2Tools.createPublisherTypeNamed(ros2Node, KinematicsPlanningToolboxInputMessage.class, toolboxRequestTopicName);
+      toolboxMessagePublisher = ros2Node.createPublisher(toolboxRequestTopicName.withTypeName(KinematicsPlanningToolboxInputMessage.class));
       this.handFingerTrajectoryMessagePublisher = handFingerTrajectoryMessagePublisher;
 
-      ROS2Tools.createCallbackSubscriptionTypeNamed(ros2Node, KinematicsPlanningToolboxOutputStatus.class, toolboxResponseTopicName,
-                                           s -> consumeToolboxOutputStatus(s.takeNextData()));
+      ros2Node.createSubscription(toolboxResponseTopicName.withTypeName(KinematicsPlanningToolboxOutputStatus.class),
+                                  s -> consumeToolboxOutputStatus(s.takeNextData()));
 
       animationTimer = new AnimationTimer()
       {

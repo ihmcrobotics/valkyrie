@@ -7,8 +7,7 @@ import controller_msgs.msg.dds.HandJointAnglePacket;
 import controller_msgs.msg.dds.OneDoFJointTrajectoryMessage;
 import ihmc_common_msgs.msg.dds.TrajectoryPoint1DMessage;
 import controller_msgs.msg.dds.ValkyrieHandFingerTrajectoryMessage;
-import us.ihmc.communication.IHMCRealtimeROS2Publisher;
-import us.ihmc.communication.ROS2Tools;
+import us.ihmc.ros2.ROS2PublisherBasics;
 import us.ihmc.humanoidRobotics.communication.packets.dataobjects.HandConfiguration;
 import us.ihmc.humanoidRobotics.communication.subscribers.HandDesiredConfigurationMessageSubscriber;
 import us.ihmc.humanoidRobotics.communication.subscribers.ValkyrieHandFingerTrajectoryMessageSubscriber;
@@ -62,9 +61,7 @@ public class SimulatedValkyrieFingerController implements RobotController
 
       if (realtimeROS2Node != null)
       {
-         IHMCRealtimeROS2Publisher<HandJointAnglePacket> jointAnglePublisher = ROS2Tools.createPublisherTypeNamed(realtimeROS2Node,
-                                                                                                                  HandJointAnglePacket.class,
-                                                                                                                  outputTopic);
+         ROS2PublisherBasics<HandJointAnglePacket> jointAnglePublisher = realtimeROS2Node.createPublisher(outputTopic.withTypeName(HandJointAnglePacket.class));
          jointAngleProducer = new SimulatedValkyrieFingerJointAngleProducer(jointAnglePublisher, fullRobotModel);
       }
       else
@@ -131,14 +128,9 @@ public class SimulatedValkyrieFingerController implements RobotController
          valkyrieHandFingerTrajectoryMessageSubscribers.put(robotSide, valkyrieHandFingerTrajectoryMessageSubscriber);
          if (realtimeROS2Node != null)
          {
-            ROS2Tools.createCallbackSubscriptionTypeNamed(realtimeROS2Node,
-                                                          HandDesiredConfigurationMessage.class,
-                                                          inputTopic,
-                                                          handDesiredConfigurationSubscriber);
-            ROS2Tools.createCallbackSubscriptionTypeNamed(realtimeROS2Node,
-                                                          ValkyrieHandFingerTrajectoryMessage.class,
-                                                          inputTopic,
-                                                          valkyrieHandFingerTrajectoryMessageSubscriber);
+            realtimeROS2Node.createSubscription(inputTopic.withTypeName(HandDesiredConfigurationMessage.class), handDesiredConfigurationSubscriber);
+            realtimeROS2Node.createSubscription(inputTopic.withTypeName(ValkyrieHandFingerTrajectoryMessage.class),
+                                                valkyrieHandFingerTrajectoryMessageSubscriber);
          }
       }
    }

@@ -8,7 +8,7 @@ import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.avatar.networkProcessor.externalForceEstimationToolboxModule.ExternalForceEstimationToolboxModule;
 import us.ihmc.avatar.simulationStarter.DRCSimulationStarter;
 import us.ihmc.commons.thread.ThreadTools;
-import us.ihmc.communication.IHMCRealtimeROS2Publisher;
+import us.ihmc.ros2.ROS2PublisherBasics;
 import us.ihmc.communication.ROS2Tools;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.tuple3D.Point3D;
@@ -138,16 +138,11 @@ public class ValkyrieExternalContactEstimationSimulation
       simulationStarter.getSimulationConstructionSet().addYoGraphicsListRegistry(graphicsListRegistry);
       simulationStarter.getAvatarSimulation().getSimulationConstructionSet().setDT(simDT, (int) (controllerDT / simDT));
 
-      IHMCRealtimeROS2Publisher<ToolboxStateMessage> toolboxStatePublisher = ROS2Tools.createPublisherTypeNamed(ros2Node,
-                                                                                                                ToolboxStateMessage.class,
-                                                                                                                ExternalForceEstimationToolboxModule.getInputTopic(
-                                                                                                                      robotModel.getSimpleRobotName()));
+      ROS2PublisherBasics<ToolboxStateMessage> toolboxStatePublisher
+            = ros2Node.createPublisher(ExternalForceEstimationToolboxModule.getInputTopic(robotModel.getSimpleRobotName())
+                                                                           .withTypeName(ToolboxStateMessage.class));
 
-      IHMCRealtimeROS2Publisher<ExternalForceEstimationConfigurationMessage> configurationMessagePublisher = ROS2Tools.createPublisherTypeNamed(ros2Node,
-                                                                                                                                                ExternalForceEstimationConfigurationMessage.class,
-                                                                                                                                                ExternalForceEstimationToolboxModule
-                                                                                                                                                      .getInputTopic(
-                                                                                                                                                            robotModel.getSimpleRobotName()));
+      ROS2PublisherBasics<ExternalForceEstimationConfigurationMessage> configurationMessagePublisher = ros2Node.createPublisher(ExternalForceEstimationToolboxModule.getInputTopic(robotModel.getSimpleRobotName()).withTypeName(ExternalForceEstimationConfigurationMessage.class));
 
       JButton wakeupButton = new JButton("Start estimation");
       wakeupButton.addActionListener(e ->

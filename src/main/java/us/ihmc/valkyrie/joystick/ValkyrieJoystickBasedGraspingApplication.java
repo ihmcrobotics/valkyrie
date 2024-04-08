@@ -3,6 +3,7 @@ package us.ihmc.valkyrie.joystick;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import us.ihmc.avatar.drcRobot.RobotTarget;
+import us.ihmc.communication.HumanoidControllerAPI;
 import us.ihmc.communication.ROS2Tools;
 import us.ihmc.javafx.ApplicationNoModule;
 import us.ihmc.log.LogTools;
@@ -29,7 +30,7 @@ public class ValkyrieJoystickBasedGraspingApplication extends ApplicationNoModul
       ValkyrieRobotModel robotModel = new ValkyrieRobotModel(robotTarget, ValkyrieRobotVersion.DEFAULT);
       String robotName = robotModel.getSimpleRobotName();
 
-      ROS2Topic inputTopic = ROS2Tools.getControllerInputTopic(robotName);
+      ROS2Topic inputTopic = HumanoidControllerAPI.getInputTopic(robotName);
 
       ValkyrieFingerTrajectoryMessagePublisher handFingerTrajectoryMessagePublisher = new ValkyrieFingerTrajectoryMessagePublisher(ros2Node,
                                                                                                                                    inputTopic);
