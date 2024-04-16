@@ -511,7 +511,7 @@ public class ValkyrieRobotModel implements DRCRobotModel
    @Override
    public LogModelProvider getLogModelProvider()
    {
-      return new DefaultLogModelProvider<>(URDFTools.class, getJointMap().getModelName(), getURDFModelInputStream(), getResourceDirectories());
+      return new DefaultLogModelProvider<>(URDFTools.class, getJointMap().getModelName(), getURDFModelInputStream(), null, getResourceDirectories());
    }
 
    @Override
