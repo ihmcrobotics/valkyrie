@@ -23,6 +23,8 @@ import us.ihmc.commonWalkingControlModules.highLevelHumanoidControl.highLevelSta
 import us.ihmc.commonWalkingControlModules.staticReachability.StepReachabilityData;
 import us.ihmc.communication.HumanoidControllerAPI;
 import us.ihmc.communication.controllerAPI.RobotLowLevelMessenger;
+import us.ihmc.footstepPlanning.AStarBodyPathPlannerParameters;
+import us.ihmc.footstepPlanning.AStarBodyPathPlannerParametersBasics;
 import us.ihmc.footstepPlanning.graphSearch.parameters.FootstepPlannerParametersBasics;
 import us.ihmc.footstepPlanning.swing.DefaultSwingPlannerParameters;
 import us.ihmc.footstepPlanning.swing.SwingPlannerParametersBasics;
@@ -568,6 +570,12 @@ public class ValkyrieRobotModel implements DRCRobotModel
    public FootstepPlannerParametersBasics getFootstepPlannerParameters(String fileNameSuffix)
    {
       return new ValkyrieFootstepPlannerParameters(fileNameSuffix);
+   }
+
+   @Override
+   public AStarBodyPathPlannerParametersBasics getAStarBodyPathPlannerParameters()
+   {
+      return new AStarBodyPathPlannerParameters();
    }
 
    @Override
