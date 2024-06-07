@@ -1,13 +1,5 @@
 package us.ihmc.valkyrie;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.function.Consumer;
-
 import us.ihmc.avatar.drcRobot.DRCRobotModel;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.avatar.drcRobot.SimulationLowLevelControllerFactory;
@@ -28,12 +20,13 @@ import us.ihmc.footstepPlanning.AStarBodyPathPlannerParametersBasics;
 import us.ihmc.footstepPlanning.graphSearch.parameters.FootstepPlannerParametersBasics;
 import us.ihmc.footstepPlanning.swing.DefaultSwingPlannerParameters;
 import us.ihmc.footstepPlanning.swing.SwingPlannerParametersBasics;
-import us.ihmc.perception.depthData.CollisionBoxProvider;
 import us.ihmc.log.LogTools;
+import us.ihmc.modelFileLoaders.RobotDefinitionLoader;
 import us.ihmc.multicastLogDataProtocol.modelLoaders.DefaultLogModelProvider;
 import us.ihmc.multicastLogDataProtocol.modelLoaders.LogModelProvider;
 import us.ihmc.pathPlanning.visibilityGraphs.parameters.DefaultVisibilityGraphParameters;
 import us.ihmc.pathPlanning.visibilityGraphs.parameters.VisibilityGraphsParametersBasics;
+import us.ihmc.perception.depthData.CollisionBoxProvider;
 import us.ihmc.robotDataLogger.logger.DataServerSettings;
 import us.ihmc.robotModels.FullHumanoidRobotModel;
 import us.ihmc.robotModels.FullHumanoidRobotModelWrapper;
@@ -44,6 +37,7 @@ import us.ihmc.ros2.ROS2NodeInterface;
 import us.ihmc.ros2.RealtimeROS2Node;
 import us.ihmc.scs2.definition.robot.RobotDefinition;
 import us.ihmc.scs2.definition.robot.urdf.URDFTools;
+import us.ihmc.scs2.definition.robot.urdf.URDFTools.URDFParserProperties;
 import us.ihmc.scs2.definition.visual.ColorDefinition;
 import us.ihmc.scs2.definition.visual.ColorDefinitions;
 import us.ihmc.scs2.definition.visual.MaterialDefinition;
@@ -72,6 +66,14 @@ import us.ihmc.wholeBodyController.FootContactPoints;
 import us.ihmc.wholeBodyController.RobotContactPointParameters;
 import us.ihmc.wholeBodyController.UIParameters;
 import us.ihmc.wholeBodyController.diagnostics.DiagnosticParameters;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.function.Consumer;
 
 public class ValkyrieRobotModel implements DRCRobotModel
 {
@@ -333,13 +335,16 @@ public class ValkyrieRobotModel implements DRCRobotModel
    {
       if (robotDefinition == null)
       {
-         robotDefinition = RobotDefinitionTools.loadURDFModel(getURDFModelInputStream(),
-                                                              Arrays.asList(getResourceDirectories()),
-                                                              getClass().getClassLoader(),
-                                                              getJointMap().getModelName(),
-                                                              getContactPointParameters(),
-                                                              getJointMap(),
-                                                              true);
+         URDFParserProperties parserProperties = new URDFParserProperties();
+         parserProperties.setHandleImplicitJointDefinitions(false);
+         robotDefinition = RobotDefinitionLoader.loadURDFModel(getURDFModelInputStream(),
+                                                               Arrays.asList(getResourceDirectories()),
+                                                               getClass().getClassLoader(),
+                                                               getJointMap().getModelName(),
+                                                               getContactPointParameters(),
+                                                               getJointMap(),
+                                                               true,
+                                                               parserProperties);
          // For backward compatibility w.r.t. when we were using SDF file.
          // The URDF to SDF conversion appeared to sort the joints by alphabetical order.
          // The ordering matters when serializing messages such as RobotConfigurationData.
