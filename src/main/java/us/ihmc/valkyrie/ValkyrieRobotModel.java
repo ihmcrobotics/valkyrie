@@ -23,7 +23,7 @@ import us.ihmc.commonWalkingControlModules.highLevelHumanoidControl.highLevelSta
 import us.ihmc.commonWalkingControlModules.staticReachability.StepReachabilityData;
 import us.ihmc.communication.ROS2Tools;
 import us.ihmc.communication.controllerAPI.RobotLowLevelMessenger;
-import us.ihmc.footstepPlanning.graphSearch.parameters.FootstepPlannerParametersBasics;
+import us.ihmc.footstepPlanning.graphSearch.parameters.DefaultFootstepPlannerParametersBasics;
 import us.ihmc.footstepPlanning.swing.DefaultSwingPlannerParameters;
 import us.ihmc.footstepPlanning.swing.SwingPlannerParametersBasics;
 import us.ihmc.perception.depthData.CollisionBoxProvider;
@@ -559,13 +559,13 @@ public class ValkyrieRobotModel implements DRCRobotModel
    }
 
    @Override
-   public FootstepPlannerParametersBasics getFootstepPlannerParameters()
+   public DefaultFootstepPlannerParametersBasics getFootstepPlannerParameters()
    {
       return new ValkyrieFootstepPlannerParameters();
    }
 
    @Override
-   public FootstepPlannerParametersBasics getFootstepPlannerParameters(String fileNameSuffix)
+   public DefaultFootstepPlannerParametersBasics getFootstepPlannerParameters(String fileNameSuffix)
    {
       return new ValkyrieFootstepPlannerParameters(fileNameSuffix);
    }
