@@ -504,7 +504,7 @@ public class ValkyrieRobotModel implements DRCRobotModel
    }
 
    @Override
-   public SimulatedValkyrieFingerControlThread createSimulatedHandController(RealtimeROS2Node realtimeROS2Node)
+   public SimulatedValkyrieFingerControlThread createSimulatedHandController(RealtimeROS2Node realtimeROS2Node, boolean kinematicsSimulation)
    {
       if (!robotVersion.hasFingers())
          return null;

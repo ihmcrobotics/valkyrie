@@ -1,20 +1,7 @@
 package us.ihmc.valkyrieRosControl;
 
-import static us.ihmc.humanoidRobotics.communication.packets.dataobjects.HighLevelControllerName.EXIT_WALKING;
-import static us.ihmc.humanoidRobotics.communication.packets.dataobjects.HighLevelControllerName.STAND_PREP_STATE;
-import static us.ihmc.humanoidRobotics.communication.packets.dataobjects.HighLevelControllerName.STAND_READY;
-import static us.ihmc.humanoidRobotics.communication.packets.dataobjects.HighLevelControllerName.STAND_TRANSITION_STATE;
-import static us.ihmc.humanoidRobotics.communication.packets.dataobjects.HighLevelControllerName.WALKING;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-
-import org.apache.commons.math3.util.Precision;
-
 import ihmc_common_msgs.msg.dds.StampedPosePacket;
+import org.apache.commons.math3.util.Precision;
 import us.ihmc.affinity.Affinity;
 import us.ihmc.avatar.AvatarControllerThread;
 import us.ihmc.avatar.AvatarEstimatorThread;
@@ -75,6 +62,14 @@ import us.ihmc.wholeBodyController.DRCOutputProcessorWithStateChangeSmoother;
 import us.ihmc.wholeBodyController.RobotContactPointParameters;
 import us.ihmc.yoVariables.registry.YoRegistry;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+
+import static us.ihmc.humanoidRobotics.communication.packets.dataobjects.HighLevelControllerName.*;
+
 public class ValkyrieRosControlController extends IHMCWholeRobotControlJavaBridge
 {
    // Note: keep committed as DEFAULT, only change locally if needed
@@ -85,6 +80,7 @@ public class ValkyrieRosControlController extends IHMCWholeRobotControlJavaBridg
    public static final boolean LOG_SECONDARY_HIGH_LEVEL_STATES = true;
 
    private static final String[] torqueControlledJoints;
+
    static
    {
       List<String> jointList = new ArrayList<>();
@@ -121,6 +117,7 @@ public class ValkyrieRosControlController extends IHMCWholeRobotControlJavaBridg
    private static final String[] positionControlledJoints = {"lowerNeckPitch", "neckYaw", "upperNeckPitch",};
 
    private static final String[] allValkyrieJoints;
+
    static
    {
       List<String> allJointsList = new ArrayList<>();
@@ -284,7 +281,7 @@ public class ValkyrieRosControlController extends IHMCWholeRobotControlJavaBridg
       }
 
       { // Custom robot loading management.
-        // First attempt to load a custom robot from a given VM argument indicating path to the custom robot.
+         // First attempt to load a custom robot from a given VM argument indicating path to the custom robot.
          String vmArgumentValue = System.getProperty(CUSTOM_ROBOT_PATH_ARG);
 
          if (vmArgumentValue != null)
@@ -452,7 +449,8 @@ public class ValkyrieRosControlController extends IHMCWholeRobotControlJavaBridg
                                                                            controllerContextFactory,
                                                                            drcOutputProcessor,
                                                                            controllerRealtimeROS2Node,
-                                                                           gravity);
+                                                                           gravity,
+                                                                           false);
       if (!LOG_SECONDARY_HIGH_LEVEL_STATES)
          detachSecondaryRegistries(controllerThread.getYoVariableRegistry());
 
