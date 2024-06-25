@@ -11,7 +11,7 @@ plugins {
 
 ihmc {
    group = "us.ihmc"
-   version = "0.14.0-240126"
+   version = "0.14.0-240625"
    vcsUrl = "https://github.com/ihmcrobotics/valkyrie"
    openSource = true
 
