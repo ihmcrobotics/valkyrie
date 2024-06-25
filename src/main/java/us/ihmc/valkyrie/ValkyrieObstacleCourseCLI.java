@@ -80,7 +80,11 @@ public class ValkyrieObstacleCourseCLI
       String startingLocationLongOpt = "startinglocation";
 
       Options options = new Options();
-      options.addOption("p", propertiesPathLongOpt, true, "[Optional] Path to a properties file to configure the simulation.");
+      options.addOption("p",
+                        propertiesPathLongOpt,
+                        true,
+                        "[Optional] Path to a properties file to configure the simulation."
+                        + " Each line should be in the format key=value where keys correspond to the long flags that are documented here.");
       options.addOption("r", rosLongOpt, false, "Start the simulation with ROS module enabled.");
       options.addOption("s", sensorLongOpt, false, "Start the simulation with the sensor suite (Lidar, camera, etc.).");
       options.addOption("e", reaLongOpt, false, "Starts the Robot Environment Awareness module.");
