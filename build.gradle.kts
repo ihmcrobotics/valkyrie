@@ -29,6 +29,7 @@ mainDependencies {
    api("org.ejml:ejml-ddense:0.39")
    api("us.ihmc:jinput:2.0.6-ihmc2")
    api("org.glassfish.jaxb:jaxb-runtime:2.3.2")
+   api("commons-cli:commons-cli:1.6.0")
 
    api("us.ihmc:euclid:0.21.0")
    api("us.ihmc:euclid-geometry:0.21.0")
@@ -224,8 +225,19 @@ fun deployNetworkProcessor()
 }
 
 val debianName = "valkyrie-simulation-${ihmc.version}"
-val simulationApplicationName = "ValkyrieObstacleCourseSCS2"
-app.entrypoint(simulationApplicationName, "us.ihmc.valkyrie.ValkyrieObstacleCourseNoUISCS2", listOf("-Djdk.gtk.version=2", "-Dprism.vsync=false", "-Dprism.forceGPU=true"))
+val simulationApplicationNames = listOf("ValkyrieObstacleCourseSCS2", "ValkyrieObstacleCourseCLI")
+val simulationJVMOptions = listOf("-Djdk.gtk.version=2", "-Dprism.vsync=false", "-Dprism.forceGPU=true")
+
+app.entrypoint(
+   simulationApplicationNames[0],
+   "us.ihmc.valkyrie." + simulationApplicationNames[0],
+   simulationJVMOptions
+)
+app.entrypoint(
+   simulationApplicationNames[1],
+   "us.ihmc.valkyrie." + simulationApplicationNames[1],
+   simulationJVMOptions
+)
 
 tasks.create("buildDebianSimulationPackage") {
    dependsOn("installDist")
@@ -250,16 +262,19 @@ tasks.create("buildDebianSimulationPackage") {
       }
 
       fileTree("$sourceFolder/bin").matching {
-         exclude(simulationApplicationName)
+         exclude(simulationApplicationNames)
       }.forEach(File::delete)
 
-      addJavaFXVsyncHack(File("$sourceFolder/bin/$simulationApplicationName"))
+      for (simulationApplicationName in simulationApplicationNames)
+      {
+         addJavaFXVsyncHack(File("$sourceFolder/bin/$simulationApplicationName"))
+      }
 
       File("$baseFolder/DEBIAN").mkdirs()
       LogTools.info("Created directory $baseFolder/DEBIAN/: ${File("${baseFolder}/DEBIAN").exists()}")
 
       File("$baseFolder/DEBIAN/control").writeText(
-            """
+         """
          Package: valkyrie-simulation
          Version: ${ihmc.version}
          Section: base
@@ -273,26 +288,27 @@ tasks.create("buildDebianSimulationPackage") {
       )
 
       File("$baseFolder/DEBIAN/postinst").writeText(
-            """
+         """
          #!/bin/bash
-         # Without this, the desktop file does not appear in the system menu.
-         sudo desktop-file-install /usr/share/applications/$simulationApplicationName.desktop
+         # Without this, the desktop files do not appear in the system menu.
+         sudo desktop-file-install /usr/share/applications/${simulationApplicationNames[0]}.desktop
          echo "-----------------------------------------------------------------------------------------"
          echo "---------------------------- Installation Notes: ----------------------------------------"
          echo "Add the following to your .bashrc to run simulations from the command line:"
          echo "   export PATH=\${'$'}PATH:/opt/$debianName/bin/"
-         echo "Then try to run the command '$simulationApplicationName'"
+         echo "Then try to run any of the following commands: '$simulationApplicationNames'"
          echo "-----------------------------------------------------------------------------------------"
          echo "-----------------------------------------------------------------------------------------"
          """.trimIndent()
       )
 
+      // Not creating the desktop file for the CLI application.
       createDesktopApplicationFile(
-            "$baseFolder/usr/share/applications/",
-            debianName,
-            simulationApplicationName,
-            "Valkyrie Obstacle Course",
-            "Launch simulation of Valkyrie Obstacle Course using SCS2"
+         "$baseFolder/usr/share/applications/",
+         debianName,
+         simulationApplicationNames[0],
+         "Valkyrie Sim",
+         "Launch simulation of Valkyrie Obstacle Course using SCS2"
       )
 
       if (Os.isFamily(Os.FAMILY_UNIX))
@@ -300,8 +316,11 @@ tasks.create("buildDebianSimulationPackage") {
          exec {
             commandLine("chmod", "+x", "$baseFolder/DEBIAN/postinst")
          }
-         exec {
-            commandLine("chmod", "+x", "$sourceFolder/bin/$simulationApplicationName")
+         for (simulationApplicationName in simulationApplicationNames)
+         {
+            exec {
+               commandLine("chmod", "+x", "$sourceFolder/bin/$simulationApplicationName")
+            }
          }
          exec {
             workingDir(File(debianFolder))
@@ -319,7 +338,7 @@ fun addJavaFXVsyncHack(launchScriptFile: File)
 {
    var originalScript = launchScriptFile.readText()
    originalScript = originalScript.replaceFirst(
-         "#!/bin/sh", """
+      "#!/bin/sh", """
          #!/bin/bash
          # This is a workaround for a bug in JavaFX 17.0.1, disabling vsync to improve framerate with multiple windows.
          export __GL_SYNC_TO_VBLANK=0
@@ -335,7 +354,7 @@ fun createDesktopApplicationFile(destination: String, debianName: String, applic
 {
    File("$destination/").mkdirs()
    File("$destination/$applicationName.desktop").writeText(
-         """
+      """
          [Desktop Entry]
          Name=$title
          Comment=$description
