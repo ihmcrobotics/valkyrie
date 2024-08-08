@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import us.ihmc.avatar.controllerAPI.EndToEndNeckTrajectoryMessageTest;
 import us.ihmc.avatar.drcRobot.DRCRobotModel;
 import us.ihmc.avatar.drcRobot.RobotTarget;
-import us.ihmc.simulationConstructionSetTools.bambooTools.BambooTools;
+import us.ihmc.simulationConstructionSetTools.tools.CITools;
 import us.ihmc.valkyrie.ValkyrieRobotModel;
 
 public class ValkyrieEndToEndNeckTrajectoryMessageTest extends EndToEndNeckTrajectoryMessageTest
@@ -22,7 +22,7 @@ public class ValkyrieEndToEndNeckTrajectoryMessageTest extends EndToEndNeckTraje
    @Override
    public String getSimpleRobotName()
    {
-      return BambooTools.getSimpleRobotNameFor(BambooTools.SimpleRobotNameKeys.VALKYRIE);
+      return CITools.getSimpleRobotNameFor(CITools.SimpleRobotNameKeys.VALKYRIE);
    }
 
    @Tag("controller-api-2")

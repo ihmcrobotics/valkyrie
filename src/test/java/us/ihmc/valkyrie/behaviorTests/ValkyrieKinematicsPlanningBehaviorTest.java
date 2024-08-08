@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import us.ihmc.avatar.behaviorTests.KinematicsPlanningBehaviorTest;
 import us.ihmc.avatar.drcRobot.DRCRobotModel;
 import us.ihmc.avatar.drcRobot.RobotTarget;
-import us.ihmc.simulationConstructionSetTools.bambooTools.BambooTools;
+import us.ihmc.simulationConstructionSetTools.tools.CITools;
 import us.ihmc.valkyrie.ValkyrieRobotModel;
 
 public class ValkyrieKinematicsPlanningBehaviorTest extends KinematicsPlanningBehaviorTest
@@ -22,7 +22,7 @@ public class ValkyrieKinematicsPlanningBehaviorTest extends KinematicsPlanningBe
    @Override
    public String getSimpleRobotName()
    {
-      return BambooTools.getSimpleRobotNameFor(BambooTools.SimpleRobotNameKeys.VALKYRIE);
+      return CITools.getSimpleRobotNameFor(CITools.SimpleRobotNameKeys.VALKYRIE);
    }
 
    @Tag("humanoid-toolbox")
