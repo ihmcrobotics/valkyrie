@@ -17,13 +17,13 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
+import us.ihmc.euclid.tools.EuclidCoreRandomTools;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.mecano.multiBodySystem.RevoluteJoint;
 import us.ihmc.mecano.multiBodySystem.RigidBody;
 import us.ihmc.mecano.multiBodySystem.interfaces.OneDoFJointBasics;
 import us.ihmc.mecano.multiBodySystem.interfaces.RigidBodyBasics;
 import us.ihmc.mecano.tools.MultiBodySystemRandomTools;
-import us.ihmc.robotics.random.RandomGeometry;
 import us.ihmc.valkyrieRosControl.XMLJoints.XMLJointWithTorqueOffset;
 import us.ihmc.wholeBodyController.diagnostics.JointTorqueOffsetEstimator;
 import us.ihmc.wholeBodyController.diagnostics.TorqueOffsetPrinter;
@@ -179,7 +179,7 @@ public class ValkyrieTorqueOffsetPrinter implements TorqueOffsetPrinter
       final Random random = new Random();
       Vector3D[] jointAxes = new Vector3D[random.nextInt(10)];
       for (int i = 0; i < jointAxes.length; i++)
-         jointAxes[i] = RandomGeometry.nextVector3D(random, 1.0);
+         jointAxes[i] = EuclidCoreRandomTools.nextVector3D(random, 1.0);
       revoluteJoints.addAll(MultiBodySystemRandomTools.nextRevoluteJointChain(random, "blop", rootBody, jointAxes));
       final List<OneDoFJointBasics> oneDoFJoints = new ArrayList<>();
       for (RevoluteJoint revoluteJoint : revoluteJoints)
