@@ -28,7 +28,6 @@ mainDependencies {
    api("org.ejml:ejml-simple:0.39")
    api("org.ejml:ejml-ddense:0.39")
    api("us.ihmc:jinput:2.0.6-ihmc2")
-   api("org.glassfish.jaxb:jaxb-runtime:2.3.2")
    api("us.ihmc:ihmc-lord-microstrain-drivers:17-0.0.7")
 
    api("us.ihmc:euclid:0.21.0")
