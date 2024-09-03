@@ -19,7 +19,7 @@ ihmc {
    configurePublications()
 }
 
-val ihmcOpenRoboticsSoftwareVersion = "0.14.0-240126"
+val ihmcOpenRoboticsSoftwareVersion = "source"
 
 mainDependencies {
    api("com.martiansoftware:jsap:2.1")
