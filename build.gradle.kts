@@ -239,6 +239,32 @@ app.entrypoint(
    simulationJVMOptions
 )
 
+tasks.register<Copy>("extractROSInterfaces") {
+   from(configurations.runtimeClasspath.map { config ->
+      config.map {
+         if (it.isFile && it.name.equals("ihmc-interfaces-$ihmcOpenRoboticsSoftwareVersion.jar")) {
+            zipTree(it)
+         } else {
+            null
+         }
+      }
+   })
+   duplicatesStrategy = DuplicatesStrategy.INCLUDE
+   include("ihmc_interfaces/**")
+   include("ros1/**")
+   into(project.projectDir.resolve("ihmc_interfaces"))
+
+   doLast {
+      val ihmc_interfaces_dir = file(project.projectDir.resolve("ihmc_interfaces/ihmc_interfaces"))
+      if (ihmc_interfaces_dir.isDirectory) {
+         ihmc_interfaces_dir.renameTo(file(ihmc_interfaces_dir.parentFile.resolve("ros2")))
+      }
+   }
+}
+tasks.named("compileJava") {
+   dependsOn("extractROSInterfaces")
+}
+
 tasks.create("buildDebianSimulationPackage") {
    dependsOn("installDist")
 
