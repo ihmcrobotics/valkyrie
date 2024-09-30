@@ -15,6 +15,7 @@ import us.ihmc.mecano.multiBodySystem.interfaces.RigidBodyBasics;
 import us.ihmc.robotics.partNames.ArmJointName;
 import us.ihmc.robotics.partNames.LegJointName;
 import us.ihmc.robotics.physics.Collidable;
+import us.ihmc.robotics.physics.CollidableHelper;
 import us.ihmc.robotics.physics.RobotCollisionModel;
 import us.ihmc.robotics.robotSide.RobotSide;
 import us.ihmc.robotics.partNames.HumanoidJointNameMap;
@@ -31,6 +32,13 @@ public class ValkyrieCollisionBasedSelectionModel implements RobotCollisionModel
 {
    private final ValkyrieRobotVersion robotVersion;
    private final HumanoidJointNameMap jointMap;
+   private long collisionMask = -1;
+   private long collisionGroup = -1;
+   private boolean enablePelvis;
+
+   private CollidableHelper helper;
+   private String[] otherCollisionMasks;
+   private String robotCollisionMask;
 
    public ValkyrieCollisionBasedSelectionModel(ValkyrieRobotVersion robotVersion, HumanoidJointNameMap jointMap)
    {
@@ -38,12 +46,26 @@ public class ValkyrieCollisionBasedSelectionModel implements RobotCollisionModel
       this.jointMap = jointMap;
    }
 
+   public ValkyrieCollisionBasedSelectionModel(ValkyrieRobotVersion robotVersion, HumanoidJointNameMap jointMap, boolean enablePelvis)
+   {
+      this.robotVersion = robotVersion;
+      this.jointMap = jointMap;
+      this.enablePelvis = enablePelvis;
+   }
+
+   public void setCollidableHelper(CollidableHelper helper, String robotCollisionMask, String... otherCollisionMasks)
+   {
+      this.helper = helper;
+      this.robotCollisionMask = robotCollisionMask;
+      this.otherCollisionMasks = otherCollisionMasks;
+   }
+
    @Override
    public List<Collidable> getRobotCollidables(MultiBodySystemBasics multiBodySystem)
    {
       List<Collidable> collidables = new ArrayList<>();
-      long collisionMask = -1;
-      long collisionGroup = -1;
+      collisionMask = helper.getCollisionMask(robotCollisionMask);
+      collisionGroup = helper.createCollisionGroup(otherCollisionMasks);
 
       { // Head
          RigidBodyBasics head = RobotCollisionModel.findRigidBody(jointMap.getHeadName(), multiBodySystem);
