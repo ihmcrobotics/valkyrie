@@ -11,6 +11,7 @@ import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple4D.Quaternion;
 import us.ihmc.euclid.yawPitchRoll.YawPitchRoll;
+import us.ihmc.robotics.EuclidCoreMissingTools;
 import us.ihmc.robotics.robotSide.RobotSide;
 import us.ihmc.robotics.robotSide.SideDependentList;
 import us.ihmc.sensorProcessing.frames.CommonHumanoidReferenceFrames;
@@ -139,6 +140,14 @@ public class ValkyrieSensorInformation implements HumanoidRobotSensorInformation
       transformChestToL515DepthCamera.setIdentity();
       transformChestToL515DepthCamera.getTranslation().set(0.275000, 0.052000, 0.140000);
       transformChestToL515DepthCamera.getRotation().setYawPitchRoll(0.010000, 1.151900, 0.045000);
+   }
+
+   private static final RigidBodyTransform D455_TO_CHEST_TRANSFORM = new RigidBodyTransform();
+   static
+   {
+      // Tuned by Luigi on 06/13/2024 for fixed spine joints
+      D455_TO_CHEST_TRANSFORM.getTranslation().set(0.09389,  -0.00261,  0.06224);
+      EuclidCoreMissingTools.setYawPitchRollDegrees(D455_TO_CHEST_TRANSFORM.getRotation(), -2.10876, 63.09805, -1.57217);
    }
 
    private static final HashMap<String, Integer> imuUSBSerialIds = new HashMap<>();
@@ -362,7 +371,7 @@ public class ValkyrieSensorInformation implements HumanoidRobotSensorInformation
    @Override
    public RigidBodyTransform getSteppingCameraTransform()
    {
-      return transformChestToL515DepthCamera;
+      return D455_TO_CHEST_TRANSFORM;
    }
 
    @Override
