@@ -1,5 +1,8 @@
 package us.ihmc.valkyrie;
 
+import com.jme3.math.Quaternion;
+import com.jme3.math.Transform;
+import com.jme3.math.Vector3f;
 import us.ihmc.avatar.drcRobot.DRCRobotModel;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.avatar.drcRobot.SimulationLowLevelControllerFactory;
@@ -58,12 +61,10 @@ import us.ihmc.valkyrie.parameters.ValkyriePhysicalProperties;
 import us.ihmc.valkyrie.parameters.ValkyrieSensorInformation;
 import us.ihmc.valkyrie.parameters.ValkyrieStateEstimatorParameters;
 import us.ihmc.valkyrie.parameters.ValkyrieSwingPlannerParameters;
-import us.ihmc.valkyrie.parameters.ValkyrieUIParameters;
 import us.ihmc.valkyrie.parameters.ValkyrieWalkingControllerParameters;
 import us.ihmc.valkyrie.sensors.ValkyrieSensorSuiteManager;
 import us.ihmc.wholeBodyController.FootContactPoints;
 import us.ihmc.wholeBodyController.RobotContactPointParameters;
-import us.ihmc.wholeBodyController.UIParameters;
 import us.ihmc.wholeBodyController.diagnostics.DiagnosticParameters;
 
 import java.io.FileInputStream;
@@ -744,9 +745,18 @@ public class ValkyrieRobotModel implements DRCRobotModel
    }
 
    @Override
-   public UIParameters getUIParameters()
+   public Transform getJmeTransformWristToHand(RobotSide robotSide)
    {
-      return new ValkyrieUIParameters(robotVersion, getRobotPhysicalProperties(), getJointMap());
+      Vector3f centerOfHandToWristTranslation = new Vector3f();
+      float[] angles = new float[3];
+
+      centerOfHandToWristTranslation = new Vector3f(0f, robotSide.negateIfLeftSide(0.015f), -0.06f);
+      angles[0] = (float) robotSide.negateIfLeftSide(Math.toRadians(90));
+      angles[1] = 0.0f;
+      angles[2] = (float) robotSide.negateIfLeftSide(Math.toRadians(90));
+
+      Quaternion centerOfHandToWristRotation = new Quaternion(angles);
+      return new Transform(centerOfHandToWristTranslation, centerOfHandToWristRotation);
    }
 
    @Override
