@@ -5,7 +5,7 @@ import javafx.stage.Stage;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.communication.HumanoidControllerAPI;
 import us.ihmc.communication.ROS2Tools;
-import us.ihmc.javafx.ApplicationNoModule;
+import us.ihmc.javaFXToolkit.ApplicationNoModule;
 import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.ros2.ROS2Node;
