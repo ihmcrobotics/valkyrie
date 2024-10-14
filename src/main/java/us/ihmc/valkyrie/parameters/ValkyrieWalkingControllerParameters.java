@@ -17,14 +17,14 @@ import us.ihmc.commonWalkingControlModules.momentumBasedController.optimization.
 import us.ihmc.commonWalkingControlModules.momentumBasedController.optimization.OneDoFJointPrivilegedConfigurationParameters;
 import us.ihmc.commonWalkingControlModules.sensors.footSwitch.WrenchBasedFootSwitchFactory;
 import us.ihmc.euclid.geometry.Pose3D;
-import us.ihmc.robotics.controllers.pidGains.GainCoupling;
-import us.ihmc.robotics.controllers.pidGains.PIDGainsReadOnly;
-import us.ihmc.robotics.controllers.pidGains.implementations.DefaultPID3DGains;
-import us.ihmc.robotics.controllers.pidGains.implementations.DefaultPIDSE3Gains;
-import us.ihmc.robotics.controllers.pidGains.implementations.PDGains;
-import us.ihmc.robotics.controllers.pidGains.implementations.PID3DConfiguration;
-import us.ihmc.robotics.controllers.pidGains.implementations.PIDGains;
-import us.ihmc.robotics.controllers.pidGains.implementations.PIDSE3Configuration;
+import us.ihmc.wholeBodyControlCore.pidGains.GainCoupling;
+import us.ihmc.wholeBodyControlCore.pidGains.PIDGainsReadOnly;
+import us.ihmc.wholeBodyControlCore.pidGains.implementations.PID3DGains;
+import us.ihmc.wholeBodyControlCore.pidGains.implementations.PIDSE3Gains;
+import us.ihmc.wholeBodyControlCore.pidGains.implementations.PDGains;
+import us.ihmc.wholeBodyControlCore.pidGains.implementations.PID3DConfiguration;
+import us.ihmc.wholeBodyControlCore.pidGains.implementations.PIDGains;
+import us.ihmc.wholeBodyControlCore.pidGains.implementations.PIDSE3Configuration;
 import us.ihmc.robotics.partNames.ArmJointName;
 import us.ihmc.robotics.partNames.LegJointName;
 import us.ihmc.robotics.partNames.NeckJointName;
@@ -343,7 +343,7 @@ public class ValkyrieWalkingControllerParameters extends WalkingControllerParame
       double maxAccel = runningOnRealRobot ? 100.0 : 18.0; // Was 18.0 before tuneup of sep 2018
       double maxJerk = runningOnRealRobot ? 1500.0 : 270.0; // Was 270.0 before tuneup of sep 2018
 
-      DefaultPID3DGains gains = new DefaultPID3DGains();
+      PID3DGains gains = new PID3DGains();
       gains.setProportionalGains(kpXY, kpXY, kpZ);
       gains.setDampingRatios(zetaXY, zetaXY, zetaZ);
       gains.setMaxFeedbackAndFeedbackRate(maxAccel, maxJerk);
@@ -361,7 +361,7 @@ public class ValkyrieWalkingControllerParameters extends WalkingControllerParame
       double maxAccel = 18.0;
       double maxJerk = 270.0;
 
-      DefaultPID3DGains gains = new DefaultPID3DGains();
+      PID3DGains gains = new PID3DGains();
       gains.setProportionalGains(kpX, kpYZ, kpYZ);
       gains.setDampingRatios(zeta, zeta, zeta);
       gains.setMaxFeedbackAndFeedbackRate(maxAccel, maxJerk);
@@ -380,7 +380,7 @@ public class ValkyrieWalkingControllerParameters extends WalkingControllerParame
       double maxAccel = runningOnRealRobot ? 12.0 : 18.0;
       double maxJerk = runningOnRealRobot ? 360.0 : 270.0;
 
-      DefaultPID3DGains gains = new DefaultPID3DGains();
+      PID3DGains gains = new PID3DGains();
       gains.setProportionalGains(kpXY, kpXY, kpZ);
       gains.setDampingRatios(zetaXY, zetaXY, zetaZ);
       gains.setMaxFeedbackAndFeedbackRate(maxAccel, maxJerk);
@@ -397,7 +397,7 @@ public class ValkyrieWalkingControllerParameters extends WalkingControllerParame
       double maxAccel = runningOnRealRobot ? 10.0 : Double.POSITIVE_INFINITY;
       double maxJerk = runningOnRealRobot ? 100.0 : Double.POSITIVE_INFINITY;
 
-      DefaultPID3DGains gains = new DefaultPID3DGains();
+      PID3DGains gains = new PID3DGains();
       gains.setProportionalGains(kp);
       gains.setDampingRatios(zeta);
       gains.setMaxFeedbackAndFeedbackRate(maxAccel, maxJerk);
@@ -426,7 +426,7 @@ public class ValkyrieWalkingControllerParameters extends WalkingControllerParame
       double maxAccel = runningOnRealRobot ? 10.0 : Double.POSITIVE_INFINITY;
       double maxJerk = runningOnRealRobot ? 100.0 : Double.POSITIVE_INFINITY;
 
-      DefaultPID3DGains gains = new DefaultPID3DGains();
+      PID3DGains gains = new PID3DGains();
       gains.setProportionalGains(kp);
       gains.setDampingRatios(zeta);
       gains.setMaxFeedbackAndFeedbackRate(maxAccel, maxJerk);
@@ -519,7 +519,7 @@ public class ValkyrieWalkingControllerParameters extends WalkingControllerParame
       double maxAngularAcceleration = runningOnRealRobot ? 100.0 : Double.POSITIVE_INFINITY;
       double maxAngularJerk = runningOnRealRobot ? 1500.0 : Double.POSITIVE_INFINITY;
 
-      DefaultPIDSE3Gains gains = new DefaultPIDSE3Gains();
+      PIDSE3Gains gains = new PIDSE3Gains();
       gains.setPositionProportionalGains(kpX, kpY, kpZ);
       gains.setPositionDampingRatios(zetaXY, zetaXY, zetaZ);
       gains.setPositionMaxFeedbackAndFeedbackRate(maxLinearAcceleration, maxLinearJerk);
@@ -546,7 +546,7 @@ public class ValkyrieWalkingControllerParameters extends WalkingControllerParame
       double maxAngularAcceleration = runningOnRealRobot ? 100.0 : Double.POSITIVE_INFINITY;
       double maxAngularJerk = runningOnRealRobot ? 1500.0 : Double.POSITIVE_INFINITY;
 
-      DefaultPIDSE3Gains gains = new DefaultPIDSE3Gains();
+      PIDSE3Gains gains = new PIDSE3Gains();
       gains.setPositionProportionalGains(kpXY, kpXY, kpZ);
       gains.setPositionDampingRatios(zetaXYZ);
       gains.setPositionMaxFeedbackAndFeedbackRate(maxLinearAcceleration, maxLinearJerk);
@@ -573,7 +573,7 @@ public class ValkyrieWalkingControllerParameters extends WalkingControllerParame
       double maxAngularAcceleration = runningOnRealRobot ? 100.0 : Double.POSITIVE_INFINITY;
       double maxAngularJerk = runningOnRealRobot ? 1500.0 : Double.POSITIVE_INFINITY;
 
-      DefaultPIDSE3Gains gains = new DefaultPIDSE3Gains();
+      PIDSE3Gains gains = new PIDSE3Gains();
       gains.setPositionProportionalGains(kpXY, kpXY, kpZ);
       gains.setPositionDampingRatios(zetaXYZ);
       gains.setPositionMaxFeedbackAndFeedbackRate(maxLinearAcceleration, maxLinearJerk);
