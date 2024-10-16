@@ -3,7 +3,7 @@ package us.ihmc.valkyrie.parameters;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.footstepPlanning.ui.UIAuxiliaryRobotData;
-import us.ihmc.robotics.robotSide.SideDependentList;
+import us.ihmc.commons.robotics.robotSide.SideDependentList;
 import us.ihmc.valkyrie.ValkyrieRobotModel;
 
 import java.util.function.ToDoubleFunction;

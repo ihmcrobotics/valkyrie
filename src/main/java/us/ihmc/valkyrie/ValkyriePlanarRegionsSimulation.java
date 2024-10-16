@@ -1,17 +1,9 @@
 package us.ihmc.valkyrie;
 
 import us.ihmc.avatar.AvatarPlanarRegionsSimulation;
-import us.ihmc.avatar.drcRobot.DRCRobotModel;
 import us.ihmc.avatar.drcRobot.RobotTarget;
-import us.ihmc.avatar.initialSetup.OffsetAndYawRobotInitialSetup;
-import us.ihmc.avatar.networkProcessor.HumanoidNetworkProcessorParameters;
-import us.ihmc.avatar.simulationStarter.DRCSimulationStarter;
-import us.ihmc.pathPlanning.DataSet;
-import us.ihmc.pathPlanning.DataSetIOTools;
 import us.ihmc.pathPlanning.DataSetName;
-import us.ihmc.robotEnvironmentAwareness.tools.ConstantPlanarRegionsPublisher;
-import us.ihmc.robotics.robotSide.RobotSide;
-import us.ihmc.simulationConstructionSetTools.util.environments.PlanarRegionsListDefinedEnvironment;
+import us.ihmc.commons.robotics.robotSide.RobotSide;
 import us.ihmc.wholeBodyController.AdditionalSimulationContactPoints;
 import us.ihmc.wholeBodyController.FootContactPoints;
 
