@@ -34,7 +34,6 @@ public class ValkyrieCollisionBasedSelectionModel implements RobotCollisionModel
    private final HumanoidJointNameMap jointMap;
    private long collisionMask = -1;
    private long collisionGroup = -1;
-   private boolean enablePelvis;
 
    private CollidableHelper helper;
    private String[] otherCollisionMasks;
@@ -44,13 +43,6 @@ public class ValkyrieCollisionBasedSelectionModel implements RobotCollisionModel
    {
       this.robotVersion = robotVersion;
       this.jointMap = jointMap;
-   }
-
-   public ValkyrieCollisionBasedSelectionModel(ValkyrieRobotVersion robotVersion, HumanoidJointNameMap jointMap, boolean enablePelvis)
-   {
-      this.robotVersion = robotVersion;
-      this.jointMap = jointMap;
-      this.enablePelvis = enablePelvis;
    }
 
    public void setCollidableHelper(CollidableHelper helper, String robotCollisionMask, String... otherCollisionMasks)
