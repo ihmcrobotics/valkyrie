@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import us.ihmc.avatar.drcRobot.DRCRobotModel;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.avatar.multiContact.HumanoidRobotTransformOptimizerTest;
+import us.ihmc.euclid.tools.EuclidCoreMissingRandomTools;
 import us.ihmc.euclid.tools.EuclidCoreRandomTools;
 import us.ihmc.valkyrie.ValkyrieInitialSetupFactories;
 import us.ihmc.valkyrie.ValkyrieMutableInitialSetup;
