@@ -2,7 +2,7 @@ package us.ihmc.valkyrieRosControl.sliderBoardControl;
 
 import us.ihmc.mecano.multiBodySystem.interfaces.OneDoFJointBasics;
 import us.ihmc.robotics.controllers.PDController;
-import us.ihmc.robotics.math.filters.BacklashCompensatingVelocityYoVariable;
+import us.ihmc.yoVariables.filters.BacklashCompensatingVelocityYoVariable;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
