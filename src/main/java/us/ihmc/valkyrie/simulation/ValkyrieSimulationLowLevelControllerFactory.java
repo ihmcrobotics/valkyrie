@@ -2,7 +2,7 @@ package us.ihmc.valkyrie.simulation;
 
 import us.ihmc.avatar.drcRobot.SimulationLowLevelControllerFactory;
 import us.ihmc.robotModels.FullRobotModel;
-import us.ihmc.sensorProcessing.outputData.JointDesiredOutputListReadOnly;
+import us.ihmc.commons.robotics.outputData.JointDesiredOutputListReadOnly;
 import us.ihmc.simulationconstructionset.Robot;
 import us.ihmc.simulationconstructionset.util.RobotController;
 import us.ihmc.robotics.partNames.HumanoidJointNameMap;

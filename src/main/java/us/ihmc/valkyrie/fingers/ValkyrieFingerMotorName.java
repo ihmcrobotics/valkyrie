@@ -1,7 +1,7 @@
 package us.ihmc.valkyrie.fingers;
 
-import us.ihmc.robotics.partNames.FingerName;
-import us.ihmc.robotics.robotSide.RobotSide;
+import us.ihmc.commons.robotics.partNames.FingerName;
+import us.ihmc.commons.robotics.robotSide.RobotSide;
 
 public enum ValkyrieFingerMotorName
 {
