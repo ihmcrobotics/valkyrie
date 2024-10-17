@@ -745,21 +745,6 @@ public class ValkyrieRobotModel implements DRCRobotModel
    }
 
    @Override
-   public Transform getJmeTransformWristToHand(RobotSide robotSide)
-   {
-      Vector3f centerOfHandToWristTranslation = new Vector3f();
-      float[] angles = new float[3];
-
-      centerOfHandToWristTranslation = new Vector3f(0f, robotSide.negateIfLeftSide(0.015f), -0.06f);
-      angles[0] = (float) robotSide.negateIfLeftSide(Math.toRadians(90));
-      angles[1] = 0.0f;
-      angles[2] = (float) robotSide.negateIfLeftSide(Math.toRadians(90));
-
-      Quaternion centerOfHandToWristRotation = new Quaternion(angles);
-      return new Transform(centerOfHandToWristTranslation, centerOfHandToWristRotation);
-   }
-
-   @Override
    public String getSimpleRobotName()
    {
       return "Valkyrie";
@@ -782,5 +767,20 @@ public class ValkyrieRobotModel implements DRCRobotModel
    {
       Path folderPath = WorkspacePathTools.handleWorkingDirectoryFuzziness("ihmc-open-robotics-software");
       return folderPath.resolve("valkyrie/src/main/resources/multiContact/scripts").toAbsolutePath().normalize();
+   }
+
+   @Override
+   public Transform getJmeTransformWristToHand(RobotSide robotSide)
+   {
+      Vector3f centerOfHandToWristTranslation = new Vector3f();
+      float[] angles = new float[3];
+
+      centerOfHandToWristTranslation = new Vector3f(0f, robotSide.negateIfLeftSide(0.015f), -0.06f);
+      angles[0] = (float) robotSide.negateIfLeftSide(Math.toRadians(90));
+      angles[1] = 0.0f;
+      angles[2] = (float) robotSide.negateIfLeftSide(Math.toRadians(90));
+
+      Quaternion centerOfHandToWristRotation = new Quaternion(angles);
+      return new Transform(centerOfHandToWristTranslation, centerOfHandToWristRotation);
    }
 }
