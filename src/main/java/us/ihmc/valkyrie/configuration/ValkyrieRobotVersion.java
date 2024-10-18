@@ -1,6 +1,7 @@
 package us.ihmc.valkyrie.configuration;
 
 import us.ihmc.avatar.drcRobot.RobotVersion;
+import us.ihmc.robotics.robotSide.RobotSide;
 
 public enum ValkyrieRobotVersion implements RobotVersion
 {
@@ -74,6 +75,16 @@ public enum ValkyrieRobotVersion implements RobotVersion
          default:
             throw new RuntimeException("ValkyrieRobotVersion: Unimplemented enumeration case : " + this);
       }
+   }
+
+   @Override
+   public boolean hasArm(RobotSide robotSide)
+   {
+      return switch (this)
+            {
+               case ARMLESS -> false;
+               default -> true;
+            };
    }
 
    public boolean hasFingers()
