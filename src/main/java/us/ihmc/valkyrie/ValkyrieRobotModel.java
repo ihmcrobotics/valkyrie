@@ -1,6 +1,9 @@
 package us.ihmc.valkyrie;
 
 import us.ihmc.avatar.arm.PresetArmConfiguration;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Transform;
+import com.jme3.math.Vector3f;
 import us.ihmc.avatar.drcRobot.DRCRobotModel;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.avatar.drcRobot.SimulationLowLevelControllerFactory;
@@ -51,11 +54,21 @@ import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
 import us.ihmc.valkyrie.diagnostic.ValkyrieDiagnosticParameters;
 import us.ihmc.valkyrie.fingers.SimulatedValkyrieFingerControlThread;
 import us.ihmc.valkyrie.fingers.ValkyrieHandModel;
-import us.ihmc.valkyrie.parameters.*;
+import us.ihmc.valkyrie.parameters.ValkyrieCoPTrajectoryParameters;
+import us.ihmc.valkyrie.parameters.ValkyrieCollisionBoxProvider;
+import us.ihmc.valkyrie.parameters.ValkyrieContactPointParameters;
+import us.ihmc.valkyrie.parameters.ValkyrieFootstepPlannerParameters;
+import us.ihmc.valkyrie.parameters.ValkyrieJointMap;
+import us.ihmc.valkyrie.parameters.ValkyrieLocomotionParameters;
+import us.ihmc.valkyrie.parameters.ValkyriePhysicalProperties;
+import us.ihmc.valkyrie.parameters.ValkyriePresetArmConfigurations;
+import us.ihmc.valkyrie.parameters.ValkyrieSensorInformation;
+import us.ihmc.valkyrie.parameters.ValkyrieStateEstimatorParameters;
+import us.ihmc.valkyrie.parameters.ValkyrieSwingPlannerParameters;
+import us.ihmc.valkyrie.parameters.ValkyrieWalkingControllerParameters;
 import us.ihmc.valkyrie.sensors.ValkyrieSensorSuiteManager;
 import us.ihmc.wholeBodyController.FootContactPoints;
 import us.ihmc.wholeBodyController.RobotContactPointParameters;
-import us.ihmc.wholeBodyController.UIParameters;
 import us.ihmc.wholeBodyController.diagnostics.DiagnosticParameters;
 
 import java.io.FileInputStream;
@@ -748,12 +761,6 @@ public class ValkyrieRobotModel implements DRCRobotModel
    }
 
    @Override
-   public UIParameters getUIParameters()
-   {
-      return new ValkyrieUIParameters(robotVersion, getRobotPhysicalProperties(), getJointMap());
-   }
-
-   @Override
    public String getSimpleRobotName()
    {
       return "Valkyrie";
@@ -776,5 +783,20 @@ public class ValkyrieRobotModel implements DRCRobotModel
    {
       Path folderPath = WorkspacePathTools.handleWorkingDirectoryFuzziness("ihmc-open-robotics-software");
       return folderPath.resolve("valkyrie/src/main/resources/multiContact/scripts").toAbsolutePath().normalize();
+   }
+
+   @Override
+   public Transform getJmeTransformWristToHand(RobotSide robotSide)
+   {
+      Vector3f centerOfHandToWristTranslation = new Vector3f();
+      float[] angles = new float[3];
+
+      centerOfHandToWristTranslation = new Vector3f(0f, robotSide.negateIfLeftSide(0.015f), -0.06f);
+      angles[0] = (float) robotSide.negateIfLeftSide(Math.toRadians(90));
+      angles[1] = 0.0f;
+      angles[2] = (float) robotSide.negateIfLeftSide(Math.toRadians(90));
+
+      Quaternion centerOfHandToWristRotation = new Quaternion(angles);
+      return new Transform(centerOfHandToWristTranslation, centerOfHandToWristRotation);
    }
 }
