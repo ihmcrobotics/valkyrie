@@ -2,7 +2,7 @@ package us.ihmc.valkyrie.parameters;
 
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.robotics.partNames.HumanoidJointNameMap;
-import us.ihmc.robotics.robotSide.RobotSide;
+import us.ihmc.commons.robotics.robotSide.RobotSide;
 import us.ihmc.wholeBodyController.FootContactPoints;
 import us.ihmc.wholeBodyController.RobotContactPointParameters;
 
