@@ -83,6 +83,7 @@ public class ValkyrieRobotModel implements DRCRobotModel
 {
    private static final boolean PRINT_MODEL = false;
    public static final String CUSTOM_ROBOT_PATH_ENVIRONMENT_VARIABLE_NAME = "IHMC_CUSTOM_VALKYRIE_ROBOT_PATH";
+   static final boolean ENFORCE_UNIQUE_REFERENCE_FRAMES = false;
 
    private final String[] resourceDirectories = {"models/", "models/gazebo/", "models/val_description/", "models/val_description/urdf/"};
 
@@ -435,7 +436,7 @@ public class ValkyrieRobotModel implements DRCRobotModel
    @Override
    public FullHumanoidRobotModel createFullRobotModel()
    {
-      return new FullHumanoidRobotModelWrapper(getRobotDefinition(), getJointMap());
+      return createFullRobotModel(ENFORCE_UNIQUE_REFERENCE_FRAMES);
    }
 
    @Override
