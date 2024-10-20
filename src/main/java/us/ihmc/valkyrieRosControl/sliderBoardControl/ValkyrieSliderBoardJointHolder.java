@@ -2,7 +2,7 @@ package us.ihmc.valkyrieRosControl.sliderBoardControl;
 
 import us.ihmc.mecano.multiBodySystem.interfaces.OneDoFJointBasics;
 import us.ihmc.robotics.controllers.PDController;
-import us.ihmc.robotics.math.filters.RevisedBacklashCompensatingVelocityYoVariable;
+import us.ihmc.yoVariables.filters.BacklashCompensatingVelocityYoVariable;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 
@@ -19,7 +19,7 @@ abstract class ValkyrieSliderBoardJointHolder
    protected final YoDouble q;
    protected final YoDouble qd;
    protected final YoDouble tau;
-   protected final RevisedBacklashCompensatingVelocityYoVariable bl_qd;
+   protected final BacklashCompensatingVelocityYoVariable bl_qd;
    protected final YoDouble q_d;
    protected final YoDouble qd_d;
    protected final YoDouble tau_offset;
@@ -41,7 +41,7 @@ abstract class ValkyrieSliderBoardJointHolder
 
       q = new YoDouble(jointName + "_q", registry);
       qd = new YoDouble(jointName + "_qd", registry);
-      bl_qd = new RevisedBacklashCompensatingVelocityYoVariable("bl_qd_" + jointName, "", valkyrieRosControlSliderBoard.jointVelocityAlphaFilter, q, dt, valkyrieRosControlSliderBoard.jointVelocitySlopTime, registry);
+      bl_qd = new BacklashCompensatingVelocityYoVariable("bl_qd_" + jointName, "", valkyrieRosControlSliderBoard.jointVelocityAlphaFilter, q, dt, valkyrieRosControlSliderBoard.jointVelocitySlopTime, registry);
       tau = new YoDouble(jointName + "_tau", registry);
 
       q_d = new YoDouble(jointName + "_q_d", registry);
