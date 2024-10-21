@@ -5,8 +5,7 @@ import us.ihmc.robotics.robotSide.RobotSide;
 import us.ihmc.robotics.robotSide.SideDependentList;
 
 /**
- * This class contains the arm configurations for Nadia; this allows for the Cycloid arms, the TMotor arms, and the Cycloid arms
- * with the TMotor forearms with the SAKE hands.
+ * This class contains the arm configurations for Valkyrie
  */
 public class ValkyriePresetArmConfigurations
 {
@@ -15,15 +14,14 @@ public class ValkyriePresetArmConfigurations
    private static final SideDependentList<double[]> HOME = new SideDependentList<>();
    private static final SideDependentList<double[]> TUCKED_UP_ARMS = new SideDependentList<>();
 
-   // To tune these values, run NadiaModelViewer as it allows you to tune joint angles with sliders
    static
    {
       for (RobotSide side : RobotSide.values)
       {
-         INITIAL_SETUP.put(side, new double[]{0.7, side.negateIfRightSide(0.2), side.negateIfRightSide(0.0), -1.4, side.negateIfRightSide(0.0), side.negateIfRightSide(0.0), side.negateIfRightSide(0.0)});
-         STAND_PREP.put(side, new double[]{0.3, side.negateIfRightSide(0.1), side.negateIfRightSide(0.2), -0.4, side.negateIfRightSide(0.0), side.negateIfRightSide(0.0), side.negateIfRightSide(0.0)});
-         HOME.put(side, new double[]{0.7, side.negateIfRightSide(0.0), side.negateIfRightSide(0.0), -1.2, side.negateIfRightSide(0.0), side.negateIfRightSide(0.0), side.negateIfRightSide(0.0)});
-         TUCKED_UP_ARMS.put(side, new double[]{0.6, side.negateIfRightSide(0.0), side.negateIfRightSide(0.25), -1.3, side.negateIfRightSide(0.0), side.negateIfRightSide(0.0), side.negateIfRightSide(0.0)});
+         INITIAL_SETUP.put(side, new double[]{0.4, side.negateIfRightSide(-1.0), 0.1, side.negateIfRightSide(-1.3), 1.0, 0.0, 0.0});
+         STAND_PREP.put(side, new double[]{0.264, side.negateIfRightSide(-1.247), 0.306, side.negateIfRightSide(-0.578), 1.112, 0.0, side.negateIfRightSide(-0.056)});
+         HOME.put(side, new double[]{0.4, side.negateIfRightSide(-1.0), 0.1, side.negateIfRightSide(-1.3), 1.0, 0.0, 0.0});
+         TUCKED_UP_ARMS.put(side, new double[]{0.128, side.negateIfRightSide(-0.706), 0.76, side.negateIfRightSide(-1.85), 0.35, 0.0, side.negateIfRightSide(0.6)});
       }
    }
 
