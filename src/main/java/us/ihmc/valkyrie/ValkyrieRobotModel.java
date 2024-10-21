@@ -1,5 +1,6 @@
 package us.ihmc.valkyrie;
 
+import us.ihmc.avatar.arm.PresetArmConfiguration;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
@@ -19,6 +20,7 @@ import us.ihmc.communication.HumanoidControllerAPI;
 import us.ihmc.communication.controllerAPI.RobotLowLevelMessenger;
 import us.ihmc.footstepPlanning.AStarBodyPathPlannerParameters;
 import us.ihmc.footstepPlanning.AStarBodyPathPlannerParametersBasics;
+import us.ihmc.footstepPlanning.LocomotionParameters;
 import us.ihmc.footstepPlanning.graphSearch.parameters.DefaultFootstepPlannerParametersBasics;
 import us.ihmc.footstepPlanning.swing.DefaultSwingPlannerParameters;
 import us.ihmc.footstepPlanning.swing.SwingPlannerParametersBasics;
@@ -57,7 +59,9 @@ import us.ihmc.valkyrie.parameters.ValkyrieCollisionBoxProvider;
 import us.ihmc.valkyrie.parameters.ValkyrieContactPointParameters;
 import us.ihmc.valkyrie.parameters.ValkyrieFootstepPlannerParameters;
 import us.ihmc.valkyrie.parameters.ValkyrieJointMap;
+import us.ihmc.valkyrie.parameters.ValkyrieLocomotionParameters;
 import us.ihmc.valkyrie.parameters.ValkyriePhysicalProperties;
+import us.ihmc.valkyrie.parameters.ValkyriePresetArmConfigurations;
 import us.ihmc.valkyrie.parameters.ValkyrieSensorInformation;
 import us.ihmc.valkyrie.parameters.ValkyrieStateEstimatorParameters;
 import us.ihmc.valkyrie.parameters.ValkyrieSwingPlannerParameters;
@@ -79,6 +83,7 @@ public class ValkyrieRobotModel implements DRCRobotModel
 {
    private static final boolean PRINT_MODEL = false;
    public static final String CUSTOM_ROBOT_PATH_ENVIRONMENT_VARIABLE_NAME = "IHMC_CUSTOM_VALKYRIE_ROBOT_PATH";
+   static final boolean ENFORCE_UNIQUE_REFERENCE_FRAMES = false;
 
    private final String[] resourceDirectories = {"models/", "models/gazebo/", "models/val_description/", "models/val_description/urdf/"};
 
@@ -163,6 +168,18 @@ public class ValkyrieRobotModel implements DRCRobotModel
       if (jointMap == null)
          jointMap = new ValkyrieJointMap(getRobotPhysicalProperties(), robotVersion);
       return jointMap;
+   }
+
+   @Override
+   public LocomotionParameters getLocomotionParameters()
+   {
+      return new ValkyrieLocomotionParameters();
+   }
+
+   @Override
+   public double[] getPresetArmConfiguration(RobotSide side, PresetArmConfiguration presetArmConfiguration)
+   {
+      return ValkyriePresetArmConfigurations.getPresetArmConfiguration(side, presetArmConfiguration);
    }
 
    /**
@@ -419,7 +436,7 @@ public class ValkyrieRobotModel implements DRCRobotModel
    @Override
    public FullHumanoidRobotModel createFullRobotModel()
    {
-      return new FullHumanoidRobotModelWrapper(getRobotDefinition(), getJointMap());
+      return createFullRobotModel(ENFORCE_UNIQUE_REFERENCE_FRAMES);
    }
 
    @Override
