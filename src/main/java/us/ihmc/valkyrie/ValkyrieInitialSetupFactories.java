@@ -1,8 +1,8 @@
 package us.ihmc.valkyrie;
 
-import us.ihmc.commons.robotics.partNames.ArmJointName;
-import us.ihmc.commons.robotics.partNames.LegJointName;
-import us.ihmc.commons.robotics.robotSide.RobotSide;
+import us.ihmc.robotics.partNames.ArmJointName;
+import us.ihmc.robotics.partNames.LegJointName;
+import us.ihmc.robotics.robotSide.RobotSide;
 import us.ihmc.robotics.partNames.HumanoidJointNameMap;
 
 public class ValkyrieInitialSetupFactories

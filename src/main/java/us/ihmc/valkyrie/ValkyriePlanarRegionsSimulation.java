@@ -3,7 +3,7 @@ package us.ihmc.valkyrie;
 import us.ihmc.avatar.AvatarPlanarRegionsSimulation;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.pathPlanning.DataSetName;
-import us.ihmc.commons.robotics.robotSide.RobotSide;
+import us.ihmc.robotics.robotSide.RobotSide;
 import us.ihmc.wholeBodyController.AdditionalSimulationContactPoints;
 import us.ihmc.wholeBodyController.FootContactPoints;
 

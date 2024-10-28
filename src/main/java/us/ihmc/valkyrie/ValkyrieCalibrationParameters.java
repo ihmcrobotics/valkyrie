@@ -3,11 +3,11 @@ package us.ihmc.valkyrie;
 import java.util.HashMap;
 
 import us.ihmc.commonWalkingControlModules.highLevelHumanoidControl.highLevelStates.WholeBodySetpointParameters;
-import us.ihmc.commons.robotics.partNames.ArmJointName;
-import us.ihmc.commons.robotics.partNames.LegJointName;
-import us.ihmc.commons.robotics.partNames.NeckJointName;
-import us.ihmc.commons.robotics.partNames.SpineJointName;
-import us.ihmc.commons.robotics.robotSide.RobotSide;
+import us.ihmc.robotics.partNames.ArmJointName;
+import us.ihmc.robotics.partNames.LegJointName;
+import us.ihmc.robotics.partNames.NeckJointName;
+import us.ihmc.robotics.partNames.SpineJointName;
+import us.ihmc.robotics.robotSide.RobotSide;
 import us.ihmc.valkyrie.parameters.ValkyrieJointMap;
 
 public class ValkyrieCalibrationParameters implements WholeBodySetpointParameters

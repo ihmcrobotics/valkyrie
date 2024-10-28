@@ -4,7 +4,7 @@ import controller_msgs.msg.dds.ValkyrieHandFingerTrajectoryMessage;
 import gnu.trove.list.array.TDoubleArrayList;
 import us.ihmc.avatar.handControl.HandFingerTrajectoryMessagePublisher;
 import us.ihmc.ros2.ROS2PublisherBasics;
-import us.ihmc.commons.robotics.robotSide.RobotSide;
+import us.ihmc.robotics.robotSide.RobotSide;
 import us.ihmc.ros2.ROS2Node;
 import us.ihmc.ros2.ROS2Topic;
 import us.ihmc.valkyrie.network.ValkyrieMessageTools;
