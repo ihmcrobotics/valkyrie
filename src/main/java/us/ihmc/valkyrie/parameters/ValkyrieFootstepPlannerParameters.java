@@ -29,7 +29,7 @@ public class ValkyrieFootstepPlannerParameters extends StoredPropertySet impleme
       setBodyBoxWidth(0.85);
       setBodyBoxDepth(0.4);
       setMinClearanceFromStance(0.05);
-      setCliffBaseHeightToAvoid(0.07);
+      // setCliffBaseHeightToAvoid(0.07);
       setMinDistanceFromCliffBottoms(0.04);
       setWiggleInsideDeltaTarget(0.03);
       setMaxXYWiggleDistance(0.04);
