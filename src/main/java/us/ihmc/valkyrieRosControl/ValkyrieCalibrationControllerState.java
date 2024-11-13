@@ -16,7 +16,7 @@ import us.ihmc.sensorProcessing.outputData.JointDesiredOutputBasics;
 import us.ihmc.sensorProcessing.outputData.JointDesiredOutputListReadOnly;
 import us.ihmc.sensorProcessing.outputData.JointDesiredOutputReadOnly;
 import us.ihmc.stateEstimation.humanoid.kinematicsBasedStateEstimation.ForceSensorCalibrationModule;
-import us.ihmc.tools.lists.PairList;
+import us.ihmc.commons.lists.PairList;
 import us.ihmc.valkyrie.ValkyrieCalibrationParameters;
 import us.ihmc.wholeBodyController.diagnostics.CalibrationState;
 import us.ihmc.wholeBodyController.diagnostics.JointTorqueOffsetEstimatorController;
