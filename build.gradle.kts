@@ -1,12 +1,8 @@
 import org.apache.tools.ant.taskdefs.condition.Os
-import us.ihmc.cd.LogTools
 
 plugins {
    id("us.ihmc.ihmc-build")
-   id("us.ihmc.ihmc-ci") version "8.3"
-   id("us.ihmc.ihmc-cd") version "1.26"
    id("us.ihmc.scs") version "0.4"
-   id("us.ihmc.log-tools-plugin") version "0.6.3"
 }
 
 ihmc {
@@ -256,7 +252,7 @@ tasks.create("buildDebianSimulationPackage") {
       addJavaFXVsyncHack(File("$sourceFolder/bin/$simulationApplicationName"))
 
       File("$baseFolder/DEBIAN").mkdirs()
-      LogTools.info("Created directory $baseFolder/DEBIAN/: ${File("${baseFolder}/DEBIAN").exists()}")
+      println("Created directory $baseFolder/DEBIAN/: ${File("${baseFolder}/DEBIAN").exists()}")
 
       File("$baseFolder/DEBIAN/control").writeText(
             """
