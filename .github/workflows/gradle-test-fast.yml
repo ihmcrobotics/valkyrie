@@ -18,7 +18,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'fast'
-      extra-repos: '["ihmc-open-robotics-software"]'
       requires-self-hosted: true
       timeout-minutes: 65
   valkyrie-controller-api:
@@ -27,7 +26,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'fast'
-      extra-repos: '["ihmc-open-robotics-software"]'
       requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-controller-api-2:
@@ -36,7 +34,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'fast'
-      extra-repos: '["ihmc-open-robotics-software"]'
       requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-flat-ground:
@@ -45,7 +42,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'humanoid-flat-ground'
-      extra-repos: '["ihmc-open-robotics-software"]'
       requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-obstacle:
@@ -54,7 +50,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'humanoid-obstacle'
-      extra-repos: '["ihmc-open-robotics-software"]'
       requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-push-recovery:
@@ -63,7 +58,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'humanoid-push-recovery'
-      extra-repos: '["ihmc-open-robotics-software"]'
       requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-rough-terrain:
@@ -72,7 +66,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'humanoid-rough-terrain'
-      extra-repos: '["ihmc-open-robotics-software"]'
       requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-toolbox:
@@ -81,6 +74,5 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'humanoid-toolbox'
-      extra-repos: '["ihmc-open-robotics-software"]'
       requires-self-hosted: true
       timeout-minutes: 45

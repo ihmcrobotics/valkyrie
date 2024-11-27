@@ -15,7 +15,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'allocation-slow'
-      extra-repos: '["ihmc-open-robotics-software", "ihmc-internal-software"]'
       requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-controller-api-slow:
@@ -24,7 +23,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'controller-api-slow'
-      extra-repos: '["ihmc-open-robotics-software", "ihmc-internal-software"]'
       requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-controller-api-slow-2:
@@ -33,7 +31,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'controller-api-slow-2'
-      extra-repos: '["ihmc-open-robotics-software", "ihmc-internal-software"]'
       requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-controller-api-slow-3:
@@ -42,7 +39,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'controller-api-slow-3'
-      extra-repos: '["ihmc-open-robotics-software", "ihmc-internal-software"]'
       requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-controller-api-slow-4:
@@ -51,7 +47,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'controller-api-slow-4'
-      extra-repos: '["ihmc-open-robotics-software", "ihmc-internal-software"]'
       requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-behaviors-slow:
@@ -60,7 +55,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'humanoid-behaviors-slow'
-      extra-repos: '["ihmc-open-robotics-software", "ihmc-internal-software"]'
       requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-flat-ground-slow:
@@ -69,7 +63,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'humanoid-flat-ground-slow'
-      extra-repos: '["ihmc-open-robotics-software", "ihmc-internal-software"]'
       requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-obstacle-slow:
@@ -78,7 +71,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'humanoid-obstacle-slow'
-      extra-repos: '["ihmc-open-robotics-software", "ihmc-internal-software"]'
       requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-push-recovery-slow:
@@ -87,7 +79,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'humanoid-push-recovery-slow'
-      extra-repos: '["ihmc-open-robotics-software", "ihmc-internal-software"]'
       requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-rough-terrain-slow:
@@ -96,6 +87,5 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'humanoid-rough-terrain-slow'
-      extra-repos: '["ihmc-open-robotics-software", "ihmc-internal-software"]'
       requires-self-hosted: true
       timeout-minutes: 45
