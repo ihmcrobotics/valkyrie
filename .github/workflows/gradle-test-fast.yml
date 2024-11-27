@@ -25,7 +25,7 @@ jobs:
     secrets:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
-      test-category: 'fast'
+      test-category: 'controller-api'
       requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-controller-api-2:
@@ -33,7 +33,7 @@ jobs:
     secrets:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
-      test-category: 'fast'
+      test-category: 'controller-api-2'
       requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-flat-ground:
