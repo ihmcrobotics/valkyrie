@@ -21,3 +21,66 @@ jobs:
       extra-repos: '["ihmc-open-robotics-software"]'
       requires-self-hosted: true
       timeout-minutes: 65
+  valkyrie-controller-api:
+    uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
+    secrets:
+      ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
+    with:
+      test-category: 'fast'
+      extra-repos: '["ihmc-open-robotics-software"]'
+      requires-self-hosted: true
+      timeout-minutes: 45
+  valkyrie-controller-api-2:
+    uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
+    secrets:
+      ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
+    with:
+      test-category: 'fast'
+      extra-repos: '["ihmc-open-robotics-software"]'
+      requires-self-hosted: true
+      timeout-minutes: 45
+  valkyrie-humanoid-flat-ground:
+    uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
+    secrets:
+      ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
+    with:
+      test-category: 'humanoid-flat-ground'
+      extra-repos: '["ihmc-open-robotics-software"]'
+      requires-self-hosted: true
+      timeout-minutes: 45
+  valkyrie-humanoid-obstacle:
+    uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
+    secrets:
+      ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
+    with:
+      test-category: 'humanoid-obstacle'
+      extra-repos: '["ihmc-open-robotics-software"]'
+      requires-self-hosted: true
+      timeout-minutes: 45
+  valkyrie-humanoid-push-recovery:
+    uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
+    secrets:
+      ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
+    with:
+      test-category: 'humanoid-push-recovery'
+      extra-repos: '["ihmc-open-robotics-software"]'
+      requires-self-hosted: true
+      timeout-minutes: 45
+  valkyrie-humanoid-rough-terrain:
+    uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
+    secrets:
+      ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
+    with:
+      test-category: 'humanoid-rough-terrain'
+      extra-repos: '["ihmc-open-robotics-software"]'
+      requires-self-hosted: true
+      timeout-minutes: 45
+  valkyrie-humanoid-toolbox:
+    uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
+    secrets:
+      ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
+    with:
+      test-category: 'humanoid-toolbox'
+      extra-repos: '["ihmc-open-robotics-software"]'
+      requires-self-hosted: true
+      timeout-minutes: 45
