@@ -10,7 +10,6 @@ import us.ihmc.avatar.initialSetup.RobotInitialSetup;
 import us.ihmc.avatar.reachabilityMap.footstep.StepReachabilityIOHelper;
 import us.ihmc.avatar.ros.RobotROSClockCalculator;
 import us.ihmc.avatar.ros.WallTimeBasedROSClockCalculator;
-import us.ihmc.behaviors.lookAndStep.LookAndStepBehaviorParameters;
 import us.ihmc.commonWalkingControlModules.configurations.HighLevelControllerParameters;
 import us.ihmc.commonWalkingControlModules.configurations.WalkingControllerParameters;
 import us.ihmc.commonWalkingControlModules.dynamicPlanning.bipedPlanning.CoPTrajectoryParameters;
@@ -47,7 +46,6 @@ import us.ihmc.sensorProcessing.stateEstimation.StateEstimatorParameters;
 import us.ihmc.simulationConstructionSetTools.util.HumanoidFloatingRootJointRobot;
 import us.ihmc.simulationToolkit.RobotDefinitionTools;
 import us.ihmc.tools.io.WorkspacePathTools;
-import us.ihmc.valkyrie.behaviors.ValkyrieLookAndStepParameters;
 import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
 import us.ihmc.valkyrie.diagnostic.ValkyrieDiagnosticParameters;
 import us.ihmc.valkyrie.fingers.SimulatedValkyrieFingerControlThread;
@@ -580,12 +578,6 @@ public class ValkyrieRobotModel implements DRCRobotModel
    public AStarBodyPathPlannerParametersBasics getAStarBodyPathPlannerParameters()
    {
       return new AStarBodyPathPlannerParameters();
-   }
-
-   @Override
-   public LookAndStepBehaviorParameters getLookAndStepParameters()
-   {
-      return new ValkyrieLookAndStepParameters();
    }
 
    @Override
