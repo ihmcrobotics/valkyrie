@@ -1,6 +1,6 @@
 package us.ihmc.valkyrie.diagnostic;
 
-import static us.ihmc.sensorProcessing.outputData.JointDesiredControlMode.POSITION;
+import static us.ihmc.robotics.outputData.JointDesiredControlMode.POSITION;
 import static us.ihmc.valkyrie.ValkyrieHighLevelControllerParameters.configureBehavior;
 import static us.ihmc.valkyrie.ValkyrieHighLevelControllerParameters.configureSymmetricBehavior;
 import static us.ihmc.valkyrie.ValkyrieHighLevelControllerParameters.getLeftAndRightJointNames;

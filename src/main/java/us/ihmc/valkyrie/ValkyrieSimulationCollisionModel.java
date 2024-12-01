@@ -20,7 +20,6 @@ import us.ihmc.robotics.physics.Collidable;
 import us.ihmc.robotics.physics.CollidableHelper;
 import us.ihmc.robotics.physics.RobotCollisionModel;
 import us.ihmc.robotics.robotSide.RobotSide;
-import us.ihmc.robotics.robotSide.SideDependentList;
 import us.ihmc.simulationToolkit.physicsEngine.ExperimentalSimulation;
 import us.ihmc.robotics.partNames.HumanoidJointNameMap;
 

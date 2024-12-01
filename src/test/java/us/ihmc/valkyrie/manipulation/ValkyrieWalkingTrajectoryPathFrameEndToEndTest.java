@@ -30,6 +30,7 @@ import us.ihmc.euclid.referenceFrame.FramePose3D;
 import us.ihmc.euclid.referenceFrame.FrameVector3D;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.tools.EuclidCoreTestTools;
+import us.ihmc.euclid.tools.EuclidCoreTools;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
 import us.ihmc.euclid.tuple3D.Point3D;
@@ -39,7 +40,6 @@ import us.ihmc.humanoidRobotics.communication.packets.HumanoidMessageTools;
 import us.ihmc.mecano.frames.MovingReferenceFrame;
 import us.ihmc.mecano.tools.MultiBodySystemTools;
 import us.ihmc.robotModels.FullHumanoidRobotModel;
-import us.ihmc.robotics.EuclidCoreMissingTools;
 import us.ihmc.robotics.math.trajectories.generators.MultipleWaypointsPositionTrajectoryGenerator;
 import us.ihmc.robotics.robotSide.RobotSide;
 import us.ihmc.scs2.definition.controller.interfaces.Controller;
@@ -400,7 +400,7 @@ public class ValkyrieWalkingTrajectoryPathFrameEndToEndTest
          FrameVector3D zUp = new FrameVector3D(pendulumAttachmentPoint.getFrame(), Axis3D.Z);
          zUp.changeFrame(rootFrame);
 
-         double angle = EuclidCoreMissingTools.angleFromFirstToSecondVector3D(zUp, Axis3D.Z);
+         double angle = EuclidCoreTools.angleFromFirstToSecondVector3D(zUp, Axis3D.Z);
          currentAngle.set(angle);
          oscillationCalculator.increment(angle);
          angleStandardDeviation.set(oscillationCalculator.getResult());

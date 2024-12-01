@@ -26,11 +26,11 @@ mainDependencies {
    api("us.ihmc:jinput:2.0.6-ihmc2")
    api("us.ihmc:ihmc-lord-microstrain-drivers:17-0.0.7")
 
-   api("us.ihmc:euclid:0.21.0")
-   api("us.ihmc:euclid-geometry:0.21.0")
-   api("us.ihmc:euclid-frame:0.21.0")
-   api("us.ihmc:euclid-shape:0.21.0")
-   api("us.ihmc:euclid-frame-shape:0.21.0")
+   api("us.ihmc:euclid:0.22.2")
+   api("us.ihmc:euclid-geometry:0.22.2")
+   api("us.ihmc:euclid-frame:0.22.2")
+   api("us.ihmc:euclid-shape:0.22.2")
+   api("us.ihmc:euclid-frame-shape:0.22.2")
    api("us.ihmc:ihmc-realtime:1.6.0")
    api("us.ihmc:ihmc-ros-control:0.7.1")
 
@@ -41,7 +41,7 @@ mainDependencies {
    api("us.ihmc:ihmc-footstep-planning-visualizers:$ihmcOpenRoboticsSoftwareVersion") {
       exclude(group = "us.ihmc", module = "javacpp")
    }
-   api("us.ihmc:ihmc-parameter-tuner:0.14.1")
+   api("us.ihmc:ihmc-parameter-tuner:0.15.0")
 
    // This is required to get the binaries for Linux.
    var javaFXVersion = "17.0.2"
@@ -49,11 +49,11 @@ mainDependencies {
 }
 
 testDependencies {
-   api("us.ihmc:euclid:0.21.0")
-   api("us.ihmc:euclid-geometry:0.21.0")
-   api("us.ihmc:euclid-frame:0.21.0")
-   api("us.ihmc:euclid-shape:0.21.0")
-   api("us.ihmc:euclid-frame-shape:0.21.0")
+   api("us.ihmc:euclid:0.22.2")
+   api("us.ihmc:euclid-geometry:0.22.2")
+   api("us.ihmc:euclid-frame:0.22.2")
+   api("us.ihmc:euclid-shape:0.22.2")
+   api("us.ihmc:euclid-frame-shape:0.22.2")
 
    api("us.ihmc:ihmc-avatar-interfaces-test:$ihmcOpenRoboticsSoftwareVersion") {
       exclude(group = "us.ihmc", module = "javacpp")

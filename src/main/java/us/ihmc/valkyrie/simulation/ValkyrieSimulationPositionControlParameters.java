@@ -19,7 +19,7 @@ import static us.ihmc.robotics.partNames.NeckJointName.PROXIMAL_NECK_PITCH;
 import static us.ihmc.robotics.partNames.SpineJointName.SPINE_PITCH;
 import static us.ihmc.robotics.partNames.SpineJointName.SPINE_ROLL;
 import static us.ihmc.robotics.partNames.SpineJointName.SPINE_YAW;
-import static us.ihmc.sensorProcessing.outputData.JointDesiredControlMode.POSITION;
+import static us.ihmc.robotics.outputData.JointDesiredControlMode.POSITION;
 import static us.ihmc.valkyrie.ValkyrieHighLevelControllerParameters.configureBehavior;
 import static us.ihmc.valkyrie.ValkyrieHighLevelControllerParameters.configureSymmetricBehavior;
 

@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.commonWalkingControlModules.sensors.footSwitch.WrenchBasedFootSwitchFactory;
 import us.ihmc.mecano.multiBodySystem.interfaces.OneDoFJointBasics;
-import us.ihmc.robotics.math.filters.AlphaFilteredYoVariable;
 import us.ihmc.robotics.partNames.ArmJointName;
 import us.ihmc.robotics.partNames.LegJointName;
 import us.ihmc.robotics.robotSide.RobotSide;
@@ -27,6 +26,7 @@ import us.ihmc.sensorProcessing.simulatedSensors.SensorNoiseParameters;
 import us.ihmc.sensorProcessing.stateEstimation.IMUBasedJointStateEstimatorParameters;
 import us.ihmc.sensorProcessing.stateEstimation.StateEstimatorParameters;
 import us.ihmc.valkyrie.fingers.ValkyrieHandJointName;
+import us.ihmc.yoVariables.filters.AlphaFilterTools;
 import us.ihmc.yoVariables.parameters.DoubleParameter;
 import us.ihmc.yoVariables.providers.DoubleProvider;
 import us.ihmc.yoVariables.registry.YoRegistry;
@@ -114,7 +114,7 @@ public class ValkyrieStateEstimatorParameters extends StateEstimatorParameters
 
       String pelvisIMU = sensorInformation.getRearPelvisIMUSensor();
       String chestIMU = sensorInformation.getLeftTrunkIMUSensor();
-      double breakFrequencyForVelocityEstimation = AlphaFilteredYoVariable.computeBreakFrequencyGivenAlpha(0.95, 0.002);
+      double breakFrequencyForVelocityEstimation = AlphaFilterTools.computeBreakFrequencyGivenAlpha(0.95, 0.002);
       double breakFrequencyForPositionEstimation = Double.NaN;
       imuBasedJointStateEstimatorParameters.add(new IMUBasedJointStateEstimatorParameters("Spine",
                                                                                           target == RobotTarget.REAL_ROBOT,

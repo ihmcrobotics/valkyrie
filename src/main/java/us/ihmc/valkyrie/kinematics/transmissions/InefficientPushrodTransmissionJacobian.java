@@ -1,9 +1,7 @@
 package us.ihmc.valkyrie.kinematics.transmissions;
 
 import us.ihmc.euclid.Axis3D;
-import us.ihmc.euclid.referenceFrame.FramePoint3D;
-import us.ihmc.euclid.referenceFrame.FrameVector3D;
-import us.ihmc.euclid.referenceFrame.ReferenceFrame;
+import us.ihmc.euclid.referenceFrame.*;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
@@ -13,8 +11,6 @@ import us.ihmc.graphicsDescription.yoGraphics.YoGraphicsList;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicsListRegistry;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.robotics.referenceFrames.TransformReferenceFrame;
-import us.ihmc.robotics.referenceFrames.TranslationReferenceFrame;
 
 public class InefficientPushrodTransmissionJacobian implements PushrodTransmissionJacobian
 {
@@ -42,11 +38,11 @@ public class InefficientPushrodTransmissionJacobian implements PushrodTransmissi
    private final ReferenceFrame worldFrame = ReferenceFrame.getWorldFrame();
 
    private final TranslationReferenceFrame topFrame = new TranslationReferenceFrame("topFrame", worldFrame);
-   private final TransformReferenceFrame actuator5SlideFrame = new TransformReferenceFrame("actuator5SlideFrame", topFrame);
-   private final TransformReferenceFrame actuator6SlideFrame = new TransformReferenceFrame("actuator6SlideFrame", topFrame);
-   private final TransformReferenceFrame afterTopJointFrame = new TransformReferenceFrame("afterTopJointFrame", topFrame);
+   private final PoseReferenceFrame actuator5SlideFrame = new PoseReferenceFrame("actuator5SlideFrame", topFrame);
+   private final PoseReferenceFrame actuator6SlideFrame = new PoseReferenceFrame("actuator6SlideFrame", topFrame);
+   private final PoseReferenceFrame afterTopJointFrame = new PoseReferenceFrame("afterTopJointFrame", topFrame);
    private final TranslationReferenceFrame beforeBottomJointFrame = new TranslationReferenceFrame("beforeBottomJointFrame", afterTopJointFrame);
-   private final TransformReferenceFrame bottomFrame = new TransformReferenceFrame("bottomFrame", beforeBottomJointFrame);
+   private final PoseReferenceFrame bottomFrame = new PoseReferenceFrame("bottomFrame", beforeBottomJointFrame);
 
    private final RigidBodyTransform topJointTransform3D = new RigidBodyTransform();
    private final RigidBodyTransform bottomJointTransform3D = new RigidBodyTransform();
@@ -110,7 +106,7 @@ public class InefficientPushrodTransmissionJacobian implements PushrodTransmissi
       }
       }
       
-      topFrame.updateTranslation(new FrameVector3D(worldFrame, 0.0, 0.0, 1.0));    // Arbitrary. Just put it in the air. If we wanted to have things align with the real robot, then this should be at the top joint frame.
+      topFrame.setTranslationAndUpdate(new FrameVector3D(worldFrame, 0.0, 0.0, 1.0));    // Arbitrary. Just put it in the air. If we wanted to have things align with the real robot, then this should be at the top joint frame.
       
       RigidBodyTransform transformFromActuatorSlide5FrameToBoneFrame = new RigidBodyTransform();      
       transformFromActuatorSlide5FrameToBoneFrame.setRotationPitchAndZeroTranslation(-actuatorSlider5PitchRotation);
@@ -123,7 +119,7 @@ public class InefficientPushrodTransmissionJacobian implements PushrodTransmissi
       actuator5SlideFrame.setTransformAndUpdate(transformFromActuatorSlide5FrameToBoneFrame);
       actuator6SlideFrame.setTransformAndUpdate(transformFromActuatorSlide6FrameToBoneFrame);
       
-      beforeBottomJointFrame.updateTranslation(new FrameVector3D(afterTopJointFrame, 0.0, 0.0, -heightOfTopAxisAboveBottomAxis));
+      beforeBottomJointFrame.setTranslationAndUpdate(new FrameVector3D(afterTopJointFrame, 0.0, 0.0, -heightOfTopAxisAboveBottomAxis));
 
       if (yoGraphicsListRegistry == null)
       {
