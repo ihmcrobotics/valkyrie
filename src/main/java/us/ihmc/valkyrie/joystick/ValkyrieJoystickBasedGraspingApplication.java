@@ -4,11 +4,10 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.communication.HumanoidControllerAPI;
-import us.ihmc.communication.ROS2Tools;
 import us.ihmc.javaFXToolkit.ApplicationNoModule;
 import us.ihmc.log.LogTools;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.ros2.ROS2Node;
+import us.ihmc.ros2.ROS2NodeBuilder;
 import us.ihmc.ros2.ROS2Topic;
 import us.ihmc.valkyrie.ValkyrieRobotModel;
 import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
@@ -17,7 +16,7 @@ import us.ihmc.valkyrie.fingers.ValkyrieFingerTrajectoryMessagePublisher;
 public class ValkyrieJoystickBasedGraspingApplication extends ApplicationNoModule
 {
    private JoystickBasedGraspingMainUI ui;
-   private final ROS2Node ros2Node = ROS2Tools.createROS2Node(PubSubImplementation.FAST_RTPS, "ihmc_valkyrie_xbox_joystick_control");
+   private final ROS2Node ros2Node = new ROS2NodeBuilder().build("ihmc_valkyrie_xbox_joystick_control");
 
    @Override
    public void start(Stage primaryStage) throws Exception

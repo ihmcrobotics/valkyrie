@@ -1,9 +1,5 @@
 package us.ihmc.valkyrie.sensors;
 
-import static us.ihmc.pubsub.DomainFactory.PubSubImplementation.FAST_RTPS;
-
-import java.net.URI;
-
 import controller_msgs.msg.dds.RobotConfigurationData;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.avatar.networkProcessor.lidarScanPublisher.LidarScanPublisher;
@@ -14,18 +10,17 @@ import us.ihmc.avatar.sensors.DRCSensorSuiteManager;
 import us.ihmc.avatar.sensors.multisense.MultiSenseSensorManager;
 import us.ihmc.communication.HumanoidControllerAPI;
 import us.ihmc.communication.PerceptionAPI;
-import us.ihmc.communication.ROS2Tools;
 import us.ihmc.communication.net.ObjectCommunicator;
 import us.ihmc.euclid.geometry.interfaces.Pose3DBasics;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.transform.RigidBodyTransform;
+import us.ihmc.perception.depthData.CollisionBoxProvider;
 import us.ihmc.perception.ros1.camera.CameraDataReceiver;
 import us.ihmc.perception.ros1.camera.SCSCameraDataReceiver;
-import us.ihmc.perception.depthData.CollisionBoxProvider;
 import us.ihmc.robotModels.FullHumanoidRobotModelFactory;
 import us.ihmc.robotModels.FullRobotModel;
 import us.ihmc.ros2.ROS2Node;
-import us.ihmc.ros2.ROS2NodeInterface;
+import us.ihmc.ros2.ROS2NodeBuilder;
 import us.ihmc.ros2.ROS2QosProfile;
 import us.ihmc.sensorProcessing.communication.producers.RobotConfigurationDataBuffer;
 import us.ihmc.sensorProcessing.parameters.AvatarRobotCameraParameters;
@@ -36,10 +31,12 @@ import us.ihmc.utilities.ros.RosMainNode;
 import us.ihmc.valkyrie.parameters.ValkyrieJointMap;
 import us.ihmc.valkyrie.parameters.ValkyrieSensorInformation;
 
+import java.net.URI;
+
 public class ValkyrieSensorSuiteManager implements DRCSensorSuiteManager
 {
    public static final String NODE_NAME = "ihmc_valkyrie_sensor_suite_node";
-   private final ROS2NodeInterface ros2Node;
+   private final ROS2Node ros2Node;
 
    private final String robotName;
    private final CollisionBoxProvider collisionBoxProvider;
@@ -77,14 +74,14 @@ public class ValkyrieSensorSuiteManager implements DRCSensorSuiteManager
                                      HumanoidRobotSensorInformation sensorInformation,
                                      ValkyrieJointMap jointMap,
                                      RobotTarget target,
-                                     ROS2NodeInterface ros2Node)
+                                     ROS2Node ros2Node)
    {
       this.robotName = robotName;
       this.collisionBoxProvider = collisionBoxProvider;
       this.rosClockCalculator = rosClockCalculator;
       this.fullRobotModelFactory = fullRobotModelFactory;
       this.sensorInformation = sensorInformation;
-      this.ros2Node = ros2Node == null ? ROS2Tools.createROS2Node(FAST_RTPS, NODE_NAME) : ros2Node;
+      this.ros2Node = ros2Node == null ? new ROS2NodeBuilder().build(NODE_NAME) : ros2Node;
    }
 
    public void setEnableVideoPublisher(boolean enableVideoPublisher)

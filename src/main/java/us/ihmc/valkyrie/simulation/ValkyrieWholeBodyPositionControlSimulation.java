@@ -1,7 +1,5 @@
 package us.ihmc.valkyrie.simulation;
 
-import java.util.EnumMap;
-
 import ihmc_common_msgs.msg.dds.GroundPlaneMessage;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.avatar.networkProcessor.HumanoidNetworkProcessorParameters;
@@ -13,7 +11,6 @@ import us.ihmc.commonWalkingControlModules.highLevelHumanoidControl.factories.Hi
 import us.ihmc.commonWalkingControlModules.highLevelHumanoidControl.highLevelStates.HighLevelControllerState;
 import us.ihmc.commonWalkingControlModules.highLevelHumanoidControl.highLevelStates.JointspacePositionControllerState;
 import us.ihmc.commonWalkingControlModules.momentumBasedController.HighLevelHumanoidControllerToolbox;
-import us.ihmc.ros2.ROS2PublisherBasics;
 import us.ihmc.communication.ROS2Tools;
 import us.ihmc.communication.controllerAPI.CommandInputManager;
 import us.ihmc.communication.controllerAPI.StatusMessageOutputManager;
@@ -22,10 +19,11 @@ import us.ihmc.euclid.tuple2D.Point2D;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
 import us.ihmc.humanoidRobotics.communication.packets.dataobjects.HighLevelControllerName;
 import us.ihmc.mecano.multiBodySystem.interfaces.OneDoFJointBasics;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.robotics.stateMachine.core.State;
 import us.ihmc.robotics.stateMachine.core.StateTransition;
 import us.ihmc.ros2.ROS2Node;
+import us.ihmc.ros2.ROS2NodeBuilder;
+import us.ihmc.ros2.ROS2Publisher;
 import us.ihmc.sensorProcessing.outputData.JointDesiredOutputListReadOnly;
 import us.ihmc.simulationConstructionSetTools.util.environments.DefaultCommonAvatarEnvironment;
 import us.ihmc.simulationToolkit.RobotDefinitionTools;
@@ -35,6 +33,8 @@ import us.ihmc.valkyrie.ValkyrieRobotModel;
 import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
 import us.ihmc.valkyrie.parameters.ValkyrieJointMap;
 import us.ihmc.yoVariables.registry.YoRegistry;
+
+import java.util.EnumMap;
 
 public class ValkyrieWholeBodyPositionControlSimulation
 {
@@ -48,8 +48,8 @@ public class ValkyrieWholeBodyPositionControlSimulation
    private final double dt = 8.0e-4;
    private final ValkyrieRobotModel robotModel;
 
-   private final ROS2Node ros2Node = ROS2Tools.createROS2Node(PubSubImplementation.FAST_RTPS, "ground_plane_node");
-   private final ROS2PublisherBasics<GroundPlaneMessage> groundPlanePublisher
+   private final ROS2Node ros2Node = new ROS2NodeBuilder().build("ground_plane_node");
+   private final ROS2Publisher<GroundPlaneMessage> groundPlanePublisher
          = ros2Node.createPublisher(ROS2Tools.IHMC_ROOT.withTypeName(GroundPlaneMessage.class));
 
 
