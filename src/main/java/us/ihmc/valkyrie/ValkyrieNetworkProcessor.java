@@ -10,12 +10,10 @@ import com.martiansoftware.jsap.JSAPException;
 
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.avatar.networkProcessor.HumanoidNetworkProcessor;
-import us.ihmc.communication.producers.VideoControlSettings;
 import us.ihmc.log.LogTools;
 import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
 import us.ihmc.valkyrie.externalForceEstimation.ValkyrieExternalForceEstimationModule;
-import us.ihmc.valkyrie.sensors.ValkyrieSensorSuiteManager;
 import us.ihmc.valkyrieRosControl.ValkyrieRosControlController;
 
 public class ValkyrieNetworkProcessor
@@ -38,8 +36,6 @@ public class ValkyrieNetworkProcessor
    /** Whether or not to start the footstep planner when running the IHMC network processor. */
    private static final boolean ihmc_launchFootstepPlannerModule = false;
 
-   private static final String REAConfigurationFilePath = System.getProperty("user.home") + "/.ihmc/Configurations/defaultREAModuleConfiguration.txt";
-
    public static void startIHMCNetworkProcessor(ValkyrieRobotModel robotModel)
    {
       HumanoidNetworkProcessor networkProcessor = new HumanoidNetworkProcessor(robotModel, PubSubImplementation.FAST_RTPS);
@@ -52,25 +48,6 @@ public class ValkyrieNetworkProcessor
       networkProcessor.setupWalkingPreviewModule(false);
 
       networkProcessor.setupBipedalSupportPlanarRegionPublisherModule();
-      networkProcessor.setupHumanoidAvatarLidarREAStateUpdater();
-      networkProcessor.setupRosModule();
-
-      ValkyrieSensorSuiteManager sensorModule = robotModel.getSensorSuiteManager(networkProcessor.getOrCreateROS2Node());
-      sensorModule.setEnableLidarScanPublisher(true);
-      sensorModule.setEnableStereoVisionPointCloudPublisher(true);
-      sensorModule.setEnableVideoPublisher(true);
-
-      networkProcessor.setupSensorModule();
-
-      sensorModule.getLidarScanPublisher().setPublisherPeriodInMillisecond(25L);
-      sensorModule.getMultiSenseSensorManager().setVideoSettings(VideoControlSettings.configureJPEGServer(35, 20));
-      sensorModule.getStereoVisionPointCloudPublisher().setRangeFilter(0.2, 2.5);
-      sensorModule.getStereoVisionPointCloudPublisher().setSelfCollisionFilter(robotModel.getCollisionBoxProvider());
-      sensorModule.getStereoVisionPointCloudPublisher().setPublisherPeriodInMillisecond(750L);
-      sensorModule.getStereoVisionPointCloudPublisher().setMaximumNumberOfPoints(500000);
-      sensorModule.getStereoVisionPointCloudPublisher().setMinimumResolution(0.005);
-
-      LogTools.info("ROS_MASTER_URI=" + networkProcessor.getOrCreateRosURI());
 
       networkProcessor.setupShutdownHook();
       networkProcessor.start();
@@ -147,32 +124,10 @@ public class ValkyrieNetworkProcessor
          networkProcessor.setupWalkingPreviewModule(false);
       }
 
-      if (parameters.get(ValkyrieNetworkProcessorParameters.start_rea))
-      {
-         networkProcessor.setupRobotEnvironmentAwerenessModule(REAConfigurationFilePath);
-         networkProcessor.setupBipedalSupportPlanarRegionPublisherModule();
-         networkProcessor.setupHumanoidAvatarLidarREAStateUpdater();
-      }
-
       if (parameters.get(ValkyrieNetworkProcessorParameters.start_directional_nav))
       {
          networkProcessor.setupDirectionalControlModule(true);
       }
-
-      // Always required for Valkyrie
-      networkProcessor.setupRosModule();
-
-      if (parameters.get(ValkyrieNetworkProcessorParameters.start_sensor_processing))
-      {
-         ValkyrieSensorSuiteManager sensorSuiteManager = robotModel.getSensorSuiteManager(networkProcessor.getOrCreateROS2Node());
-         sensorSuiteManager.setEnableLidarScanPublisher(parameters.get(ValkyrieNetworkProcessorParameters.start_lidar));
-         sensorSuiteManager.setEnableStereoVisionPointCloudPublisher(parameters.get(ValkyrieNetworkProcessorParameters.start_stereo_vision_pointcloud));
-
-         sensorSuiteManager.setEnableVideoPublisher(false);
-         networkProcessor.setupSensorModule();
-      }
-
-      LogTools.info("ROS_MASTER_URI=" + networkProcessor.getOrCreateRosURI());
 
       networkProcessor.setupShutdownHook();
       networkProcessor.start();

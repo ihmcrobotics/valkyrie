@@ -10,6 +10,7 @@ import us.ihmc.avatar.initialSetup.RobotInitialSetup;
 import us.ihmc.avatar.reachabilityMap.footstep.StepReachabilityIOHelper;
 import us.ihmc.avatar.ros.RobotROSClockCalculator;
 import us.ihmc.avatar.ros.WallTimeBasedROSClockCalculator;
+import us.ihmc.avatar.sensors.DRCSensorSuiteManager;
 import us.ihmc.commonWalkingControlModules.configurations.HighLevelControllerParameters;
 import us.ihmc.commonWalkingControlModules.configurations.WalkingControllerParameters;
 import us.ihmc.commonWalkingControlModules.dynamicPlanning.bipedPlanning.CoPTrajectoryParameters;
@@ -60,7 +61,6 @@ import us.ihmc.valkyrie.parameters.ValkyrieSensorInformation;
 import us.ihmc.valkyrie.parameters.ValkyrieStateEstimatorParameters;
 import us.ihmc.valkyrie.parameters.ValkyrieSwingPlannerParameters;
 import us.ihmc.valkyrie.parameters.ValkyrieWalkingControllerParameters;
-import us.ihmc.valkyrie.sensors.ValkyrieSensorSuiteManager;
 import us.ihmc.wholeBodyController.FootContactPoints;
 import us.ihmc.wholeBodyController.RobotContactPointParameters;
 import us.ihmc.wholeBodyController.diagnostics.DiagnosticParameters;
@@ -112,8 +112,6 @@ public class ValkyrieRobotModel implements DRCRobotModel
    private RobotCollisionModel kinematicsCollisionModel;
 
    private SimulationLowLevelControllerFactory simulationLowLevelControllerFactory;
-
-   private ValkyrieSensorSuiteManager sensorSuiteManager = null;
 
    public ValkyrieRobotModel(RobotTarget target)
    {
@@ -478,26 +476,9 @@ public class ValkyrieRobotModel implements DRCRobotModel
    }
 
    @Override
-   public ValkyrieSensorSuiteManager getSensorSuiteManager()
+   public DRCSensorSuiteManager getSensorSuiteManager(ROS2NodeInterface ros2Node)
    {
-      return getSensorSuiteManager(null);
-   }
-
-   @Override
-   public ValkyrieSensorSuiteManager getSensorSuiteManager(ROS2NodeInterface ros2Node)
-   {
-      if (sensorSuiteManager == null)
-      {
-         sensorSuiteManager = new ValkyrieSensorSuiteManager(getSimpleRobotName(),
-                                                             this,
-                                                             getCollisionBoxProvider(),
-                                                             getROSClockCalculator(),
-                                                             getSensorInformation(),
-                                                             getJointMap(),
-                                                             target,
-                                                             ros2Node);
-      }
-      return sensorSuiteManager;
+      return null;
    }
 
    @Override
