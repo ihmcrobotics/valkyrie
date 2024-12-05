@@ -1,22 +1,20 @@
 package us.ihmc.valkyrie;
 
+import com.martiansoftware.jsap.JSAPException;
+import us.ihmc.avatar.drcRobot.RobotTarget;
+import us.ihmc.avatar.networkProcessor.HumanoidNetworkProcessor;
+import us.ihmc.communication.producers.VideoControlSettings;
+import us.ihmc.log.LogTools;
+import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
+import us.ihmc.valkyrie.externalForceEstimation.ValkyrieExternalForceEstimationModule;
+import us.ihmc.valkyrie.sensors.ValkyrieSensorSuiteManager;
+import us.ihmc.valkyrieRosControl.ValkyrieRosControlController;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.Properties;
-
-import com.martiansoftware.jsap.JSAPException;
-
-import us.ihmc.avatar.drcRobot.RobotTarget;
-import us.ihmc.avatar.networkProcessor.HumanoidNetworkProcessor;
-import us.ihmc.communication.producers.VideoControlSettings;
-import us.ihmc.log.LogTools;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
-import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
-import us.ihmc.valkyrie.externalForceEstimation.ValkyrieExternalForceEstimationModule;
-import us.ihmc.valkyrie.sensors.ValkyrieSensorSuiteManager;
-import us.ihmc.valkyrieRosControl.ValkyrieRosControlController;
 
 public class ValkyrieNetworkProcessor
 {
@@ -42,7 +40,7 @@ public class ValkyrieNetworkProcessor
 
    public static void startIHMCNetworkProcessor(ValkyrieRobotModel robotModel)
    {
-      HumanoidNetworkProcessor networkProcessor = new HumanoidNetworkProcessor(robotModel, PubSubImplementation.FAST_RTPS);
+      HumanoidNetworkProcessor networkProcessor = new HumanoidNetworkProcessor(robotModel);
 
       networkProcessor.setupKinematicsToolboxModule(false);
       networkProcessor.setupKinematicsStreamingToolboxModule(ValkyrieKinematicsStreamingToolboxModule.class, null, true);
@@ -119,7 +117,7 @@ public class ValkyrieNetworkProcessor
 
    public static void startJSCNetworkProcessor(ValkyrieRobotModel robotModel)
    {
-      HumanoidNetworkProcessor networkProcessor = new HumanoidNetworkProcessor(robotModel, PubSubImplementation.FAST_RTPS);
+      HumanoidNetworkProcessor networkProcessor = new HumanoidNetworkProcessor(robotModel);
       final String valkyrieNetworkProcessorConfig = System.getProperty("user.home") + File.separator + ".ihmc" + File.separator
             + "ValkyrieNetworkProcessorModuleConfig.ini";
 

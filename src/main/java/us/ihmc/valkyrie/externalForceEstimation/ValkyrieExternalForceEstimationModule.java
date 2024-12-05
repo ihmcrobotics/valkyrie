@@ -3,7 +3,6 @@ package us.ihmc.valkyrie.externalForceEstimation;
 import us.ihmc.avatar.drcRobot.DRCRobotModel;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.avatar.networkProcessor.externalForceEstimationToolboxModule.ExternalForceEstimationToolboxModule;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.ros2.RealtimeROS2Node;
 import us.ihmc.valkyrie.ValkyrieRobotModel;
 import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
@@ -18,9 +17,9 @@ public class ValkyrieExternalForceEstimationModule extends ExternalForceEstimati
       super(robotModel, startYoVariableServer, ros2Node);
    }
 
-   public ValkyrieExternalForceEstimationModule(DRCRobotModel robotModel, boolean startYoVariableServer, PubSubImplementation pubSubImplementation)
+   public ValkyrieExternalForceEstimationModule(DRCRobotModel robotModel, boolean startYoVariableServer)
    {
-      super(robotModel, startYoVariableServer, pubSubImplementation);
+      super(robotModel, startYoVariableServer);
    }
    
    public static void main(String[] args)
@@ -28,7 +27,6 @@ public class ValkyrieExternalForceEstimationModule extends ExternalForceEstimati
       ValkyrieRobotModel robotModel = new ValkyrieRobotModel(RobotTarget.REAL_ROBOT, version);
 
       boolean startYoVariableServer = false;
-      PubSubImplementation pubSubImplementation = PubSubImplementation.FAST_RTPS;
-      new ExternalForceEstimationToolboxModule(robotModel, startYoVariableServer, pubSubImplementation);
+      new ExternalForceEstimationToolboxModule(robotModel, startYoVariableServer);
    }
 }

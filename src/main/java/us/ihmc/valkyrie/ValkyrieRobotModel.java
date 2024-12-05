@@ -34,7 +34,7 @@ import us.ihmc.robotModels.FullHumanoidRobotModelWrapper;
 import us.ihmc.robotics.physics.CollidableHelper;
 import us.ihmc.robotics.physics.RobotCollisionModel;
 import us.ihmc.robotics.robotSide.RobotSide;
-import us.ihmc.ros2.ROS2NodeInterface;
+import us.ihmc.ros2.ROS2Node;
 import us.ihmc.ros2.RealtimeROS2Node;
 import us.ihmc.scs2.definition.robot.RobotDefinition;
 import us.ihmc.scs2.definition.robot.urdf.URDFTools;
@@ -484,7 +484,7 @@ public class ValkyrieRobotModel implements DRCRobotModel
    }
 
    @Override
-   public ValkyrieSensorSuiteManager getSensorSuiteManager(ROS2NodeInterface ros2Node)
+   public ValkyrieSensorSuiteManager getSensorSuiteManager(ROS2Node ros2Node)
    {
       if (sensorSuiteManager == null)
       {
@@ -749,7 +749,7 @@ public class ValkyrieRobotModel implements DRCRobotModel
    }
 
    @Override
-   public RobotLowLevelMessenger newRobotLowLevelMessenger(ROS2NodeInterface ros2Node)
+   public RobotLowLevelMessenger newRobotLowLevelMessenger(ROS2Node ros2Node)
    {
       return new ValkyrieDirectRobotInterface(ros2Node, this);
    }
