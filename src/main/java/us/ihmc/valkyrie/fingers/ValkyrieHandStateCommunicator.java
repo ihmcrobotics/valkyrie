@@ -1,26 +1,25 @@
 package us.ihmc.valkyrie.fingers;
 
-import java.util.EnumMap;
-
 import controller_msgs.msg.dds.HandJointAnglePacket;
 import us.ihmc.communication.HumanoidControllerAPI;
-import us.ihmc.ros2.ROS2PublisherBasics;
-import us.ihmc.communication.ROS2Tools;
 import us.ihmc.humanoidRobotics.communication.packets.HumanoidMessageTools;
 import us.ihmc.mecano.multiBodySystem.interfaces.OneDoFJointBasics;
 import us.ihmc.robotModels.FullHumanoidRobotModel;
 import us.ihmc.robotics.robotSide.RobotSide;
 import us.ihmc.robotics.robotSide.SideDependentList;
+import us.ihmc.ros2.ROS2Publisher;
 import us.ihmc.ros2.RealtimeROS2Node;
 import us.ihmc.simulationconstructionset.util.RobotController;
 import us.ihmc.yoVariables.registry.YoRegistry;
+
+import java.util.EnumMap;
 
 public class ValkyrieHandStateCommunicator implements RobotController
 {
    private final SideDependentList<EnumMap<ValkyrieHandJointName, OneDoFJointBasics>> handJoints = SideDependentList.createListOfEnumMaps(ValkyrieHandJointName.class);
 
    private final HandJointAnglePacket packet;
-   private final ROS2PublisherBasics<HandJointAnglePacket> publisher;
+   private final ROS2Publisher<HandJointAnglePacket> publisher;
 
    public ValkyrieHandStateCommunicator(String robotName, FullHumanoidRobotModel fullRobotModel, ValkyrieHandModel handModel, RealtimeROS2Node realtimeROS2Node)
    {

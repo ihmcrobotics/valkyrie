@@ -1,15 +1,13 @@
 package us.ihmc.valkyrie.externalForceEstimation;
 
+import org.apache.commons.lang3.tuple.Pair;
 import toolbox_msgs.msg.dds.ExternalForceEstimationConfigurationMessage;
 import toolbox_msgs.msg.dds.ToolboxStateMessage;
-import org.apache.commons.lang3.tuple.Pair;
 import us.ihmc.avatar.drcRobot.DRCRobotModel;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.avatar.networkProcessor.externalForceEstimationToolboxModule.ExternalForceEstimationToolboxModule;
 import us.ihmc.avatar.simulationStarter.DRCSimulationStarter;
 import us.ihmc.commons.thread.ThreadTools;
-import us.ihmc.ros2.ROS2PublisherBasics;
-import us.ihmc.communication.ROS2Tools;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
@@ -21,8 +19,9 @@ import us.ihmc.graphicsDescription.yoGraphics.YoGraphicVector;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicsList;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicsListRegistry;
 import us.ihmc.mecano.multiBodySystem.interfaces.RigidBodyBasics;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.robotModels.FullHumanoidRobotModel;
+import us.ihmc.ros2.ROS2NodeBuilder;
+import us.ihmc.ros2.ROS2Publisher;
 import us.ihmc.ros2.RealtimeROS2Node;
 import us.ihmc.simulationConstructionSetTools.util.HumanoidFloatingRootJointRobot;
 import us.ihmc.simulationConstructionSetTools.util.environments.FlatGroundEnvironment;
@@ -100,7 +99,7 @@ public class ValkyrieExternalContactEstimationSimulation
       }
 
       double controllerDT = robotModel.getControllerDT();
-      RealtimeROS2Node ros2Node = ROS2Tools.createRealtimeROS2Node(PubSubImplementation.FAST_RTPS, "valkyrie_wrench_estimation_sim");
+      RealtimeROS2Node ros2Node = new ROS2NodeBuilder().buildRealtime("valkyrie_wrench_estimation_sim");
 
       YoGraphicsListRegistry graphicsListRegistry = new YoGraphicsListRegistry();
       YoRegistry scsRootRegistry = simulationStarter.getAvatarSimulation().getSimulationConstructionSet().getRootRegistry();
@@ -138,11 +137,11 @@ public class ValkyrieExternalContactEstimationSimulation
       simulationStarter.getSimulationConstructionSet().addYoGraphicsListRegistry(graphicsListRegistry);
       simulationStarter.getAvatarSimulation().getSimulationConstructionSet().setDT(simDT, (int) (controllerDT / simDT));
 
-      ROS2PublisherBasics<ToolboxStateMessage> toolboxStatePublisher
+      ROS2Publisher<ToolboxStateMessage> toolboxStatePublisher
             = ros2Node.createPublisher(ExternalForceEstimationToolboxModule.getInputTopic(robotModel.getSimpleRobotName())
                                                                            .withTypeName(ToolboxStateMessage.class));
 
-      ROS2PublisherBasics<ExternalForceEstimationConfigurationMessage> configurationMessagePublisher = ros2Node.createPublisher(ExternalForceEstimationToolboxModule.getInputTopic(robotModel.getSimpleRobotName()).withTypeName(ExternalForceEstimationConfigurationMessage.class));
+      ROS2Publisher<ExternalForceEstimationConfigurationMessage> configurationMessagePublisher = ros2Node.createPublisher(ExternalForceEstimationToolboxModule.getInputTopic(robotModel.getSimpleRobotName()).withTypeName(ExternalForceEstimationConfigurationMessage.class));
 
       JButton wakeupButton = new JButton("Start estimation");
       wakeupButton.addActionListener(e ->
@@ -171,7 +170,7 @@ public class ValkyrieExternalContactEstimationSimulation
                                     });
       simulationStarter.getAvatarSimulation().getSimulationConstructionSet().addButton(sleepButton);
 
-      new ExternalForceEstimationToolboxModule(robotModel, true, PubSubImplementation.FAST_RTPS);
+      new ExternalForceEstimationToolboxModule(robotModel, true);
 
       simulationStarter.getAvatarSimulation().start();
       simulationStarter.getAvatarSimulation().simulate();

@@ -1,8 +1,5 @@
 package us.ihmc.valkyrie;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import toolbox_msgs.msg.dds.KinematicsStreamingToolboxConfigurationMessage;
 import us.ihmc.avatar.drcRobot.DRCRobotModel;
 import us.ihmc.avatar.drcRobot.RobotTarget;
@@ -10,10 +7,10 @@ import us.ihmc.avatar.initialSetup.RobotInitialSetup;
 import us.ihmc.avatar.networkProcessor.kinemtaticsStreamingToolboxModule.KinematicsStreamingToolboxModule;
 import us.ihmc.avatar.networkProcessor.kinemtaticsStreamingToolboxModule.KinematicsStreamingToolboxParameters;
 import us.ihmc.mecano.multiBodySystem.interfaces.OneDoFJointBasics;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.robotDataLogger.logger.DataServerSettings;
 import us.ihmc.robotModels.FullHumanoidRobotModel;
 import us.ihmc.robotics.partNames.ArmJointName;
+import us.ihmc.robotics.partNames.HumanoidJointNameMap;
 import us.ihmc.robotics.partNames.LegJointName;
 import us.ihmc.robotics.partNames.SpineJointName;
 import us.ihmc.robotics.robotSide.RobotSide;
@@ -23,7 +20,9 @@ import us.ihmc.valkyrie.ValkyrieNetworkProcessor.NetworkProcessorVersion;
 import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
 import us.ihmc.valkyrie.parameters.ValkyrieJointMap;
 import us.ihmc.valkyrieRosControl.ValkyrieRosControlController;
-import us.ihmc.robotics.partNames.HumanoidJointNameMap;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ValkyrieKinematicsStreamingToolboxModule extends KinematicsStreamingToolboxModule
 {
@@ -35,10 +34,9 @@ public class ValkyrieKinematicsStreamingToolboxModule extends KinematicsStreamin
 
    public ValkyrieKinematicsStreamingToolboxModule(DRCRobotModel robotModel,
                                                    KinematicsStreamingToolboxParameters parameters,
-                                                   boolean startYoVariableServer,
-                                                   PubSubImplementation pubSubImplementation)
+                                                   boolean startYoVariableServer)
    {
-      super(robotModel, parameters, startYoVariableServer, pubSubImplementation);
+      super(robotModel, parameters, startYoVariableServer);
       controller.setInitialRobotConfigurationNamedMap(createInitialConfiguration(robotModel));
    }
 
@@ -86,7 +84,6 @@ public class ValkyrieKinematicsStreamingToolboxModule extends KinematicsStreamin
          robotModel.setHumanoidRobotKinematicsCollisionModel(kinematicsCollisionModel);
       }
       boolean startYoVariableServer = true;
-      PubSubImplementation pubSubImplementation = PubSubImplementation.FAST_RTPS;
 
       KinematicsStreamingToolboxParameters parameters = KinematicsStreamingToolboxParameters.defaultParameters();
       KinematicsStreamingToolboxConfigurationMessage defaultConfiguration = parameters.getDefaultConfiguration();
@@ -145,8 +142,7 @@ public class ValkyrieKinematicsStreamingToolboxModule extends KinematicsStreamin
 
       ValkyrieKinematicsStreamingToolboxModule module = new ValkyrieKinematicsStreamingToolboxModule(robotModel,
                                                                                                      parameters,
-                                                                                                     startYoVariableServer,
-                                                                                                     pubSubImplementation);
+                                                                                                     startYoVariableServer);
 
       Runtime.getRuntime().addShutdownHook(new Thread(() ->
       {

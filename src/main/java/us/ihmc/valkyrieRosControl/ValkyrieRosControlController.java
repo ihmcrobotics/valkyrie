@@ -21,7 +21,6 @@ import us.ihmc.commonWalkingControlModules.highLevelHumanoidControl.factories.Co
 import us.ihmc.commonWalkingControlModules.highLevelHumanoidControl.factories.HighLevelHumanoidControllerFactory;
 import us.ihmc.commonWalkingControlModules.highLevelHumanoidControl.factories.WalkingProvider;
 import us.ihmc.communication.HumanoidControllerAPI;
-import us.ihmc.communication.ROS2Tools;
 import us.ihmc.communication.StateEstimatorAPI;
 import us.ihmc.concurrent.runtime.barrierScheduler.implicitContext.BarrierScheduler.TaskOverrunBehavior;
 import us.ihmc.euclid.transform.RigidBodyTransform;
@@ -30,7 +29,6 @@ import us.ihmc.humanoidRobotics.communication.subscribers.PelvisPoseCorrectionCo
 import us.ihmc.humanoidRobotics.communication.subscribers.PelvisPoseCorrectionCommunicatorInterface;
 import us.ihmc.log.LogTools;
 import us.ihmc.multicastLogDataProtocol.modelLoaders.LogModelProvider;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.realtime.PriorityParameters;
 import us.ihmc.realtime.RealtimeThread;
 import us.ihmc.robotDataLogger.YoVariableServer;
@@ -39,6 +37,7 @@ import us.ihmc.robotDataLogger.util.JVMStatisticsGenerator;
 import us.ihmc.robotModels.FullHumanoidRobotModel;
 import us.ihmc.robotics.robotSide.RobotSide;
 import us.ihmc.robotics.robotSide.SideDependentList;
+import us.ihmc.ros2.ROS2NodeBuilder;
 import us.ihmc.ros2.RealtimeROS2Node;
 import us.ihmc.rosControl.EffortJointHandle;
 import us.ihmc.rosControl.wholeRobot.ForceTorqueSensorHandle;
@@ -362,12 +361,8 @@ public class ValkyrieRosControlController extends IHMCWholeRobotControlJavaBridg
        * Create network servers/clients
        */
       PeriodicRealtimeThreadSchedulerFactory realtimeThreadFactory = new PeriodicRealtimeThreadSchedulerFactory(ValkyriePriorityParameters.POSECOMMUNICATOR_PRIORITY);
-      RealtimeROS2Node estimatorRealtimeROS2Node = ROS2Tools.createRealtimeROS2Node(PubSubImplementation.FAST_RTPS,
-                                                                                    realtimeThreadFactory,
-                                                                                    VALKYRIE_IHMC_ROS_ESTIMATOR_NODE_NAME);
-      RealtimeROS2Node controllerRealtimeROS2Node = ROS2Tools.createRealtimeROS2Node(PubSubImplementation.FAST_RTPS,
-                                                                                     realtimeThreadFactory,
-                                                                                     VALKYRIE_IHMC_ROS_CONTROLLER_NODE_NAME);
+      RealtimeROS2Node estimatorRealtimeROS2Node = new ROS2NodeBuilder().buildRealtime(VALKYRIE_IHMC_ROS_ESTIMATOR_NODE_NAME, realtimeThreadFactory);
+      RealtimeROS2Node controllerRealtimeROS2Node = new ROS2NodeBuilder().buildRealtime(VALKYRIE_IHMC_ROS_CONTROLLER_NODE_NAME, realtimeThreadFactory);
       LogModelProvider logModelProvider = robotModel.getLogModelProvider();
       DataServerSettings logSettings = robotModel.getLogSettings();
       double estimatorDT = robotModel.getEstimatorDT();
