@@ -344,3 +344,45 @@ fun createDesktopApplicationFile(destination: String, debianName: String, applic
          """.trimIndent()
    )
 }
+
+// These are to configure the tests so a new JVM instance is created for each test.
+// Simulations use a lot of heap memory and have memory leaks.
+categories.configure("fast")
+{
+   forkEvery = 1
+}
+
+categories.configure("controller-api")
+{
+   forkEvery = 1
+}
+
+categories.configure("controller-api-2")
+{
+   forkEvery = 1
+}
+
+categories.configure("humanoid-flat-ground")
+{
+   forkEvery = 1
+}
+
+categories.configure("humanoid-obstacle")
+{
+   forkEvery = 1
+}
+
+categories.configure("humanoid-push-recovery")
+{
+   forkEvery = 1
+}
+
+categories.configure("humanoid-rough-terrain")
+{
+   forkEvery = 1
+}
+
+categories.configure("humanoid-toolbox")
+{
+   forkEvery = 1
+}
