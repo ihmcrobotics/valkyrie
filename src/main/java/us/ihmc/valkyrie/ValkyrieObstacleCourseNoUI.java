@@ -4,7 +4,6 @@ import com.martiansoftware.jsap.JSAP;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
-
 import us.ihmc.avatar.DRCObstacleCourseStartingLocation;
 import us.ihmc.avatar.drcRobot.DRCRobotModel;
 import us.ihmc.avatar.drcRobot.RobotTarget;
@@ -76,7 +75,7 @@ public class ValkyrieObstacleCourseNoUI {
 			         networkModuleParams.setSimulatedSensorCommunicator(simulatedSensorCommunicator);
 			      }
 
-			      networkProcessor = HumanoidNetworkProcessor.newFromParameters(robotModel, pubSubImplementation, networkModuleParams);
+			      networkProcessor = HumanoidNetworkProcessor.newFromParameters(robotModel, networkModuleParams);
 			      networkProcessor.start();
 			   }			
 		};
