@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - develop
+      - main
   pull_request:
 
 permissions:
@@ -18,7 +19,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'fast'
-      requires-self-hosted: true
       timeout-minutes: 65
   valkyrie-controller-api:
     uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
@@ -26,7 +26,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'controller-api'
-      requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-controller-api-2:
     uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
@@ -34,7 +33,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'controller-api-2'
-      requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-flat-ground:
     uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
@@ -42,7 +40,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'humanoid-flat-ground'
-      requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-obstacle:
     uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
@@ -50,7 +47,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'humanoid-obstacle'
-      requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-push-recovery:
     uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
@@ -58,7 +54,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'humanoid-push-recovery'
-      requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-rough-terrain:
     uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
@@ -66,7 +61,6 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'humanoid-rough-terrain'
-      requires-self-hosted: true
       timeout-minutes: 45
   valkyrie-humanoid-toolbox:
     uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
@@ -74,5 +68,4 @@ jobs:
       ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
     with:
       test-category: 'humanoid-toolbox'
-      requires-self-hosted: true
       timeout-minutes: 45
