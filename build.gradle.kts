@@ -31,7 +31,7 @@ mainDependencies {
    api("us.ihmc:euclid-frame:0.21.0")
    api("us.ihmc:euclid-shape:0.21.0")
    api("us.ihmc:euclid-frame-shape:0.21.0")
-   api("us.ihmc:ihmc-realtime:1.6.0")
+   api("us.ihmc:ihmc-realtime:1.7.0")
    api("us.ihmc:ihmc-ros-control:0.7.1")
 
    api("us.ihmc:ihmc-system-identification:$ihmcOpenRoboticsSoftwareVersion")
