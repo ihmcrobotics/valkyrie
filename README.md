@@ -20,7 +20,7 @@
    start looking up for Valkyrie).
 5. If you want to run the simulation from the command line, you can add the following line to your `~/.bashrc`
    file: `export PATH=$PATH:/opt/valkyrie-simulation-[version]/bin`.
-    - You can then run from the command line with: `ValkyrieObstacleCourseSCS2`
+    - You can then run from the command line with: `ValkyrieObstacleCourseSCS2` or `ValkyrieObstacleCourseCLI`.
 
 To uninstall, run: `sudo dpkg -r valkyrie-simulation`
 
@@ -58,7 +58,7 @@ The `rosURI` is the URI of the ROS 1 master.
 
 You can also configure the ROS 1 communication using the `ROS_MASTER_URI` environment variable.
 
-# Launch options
+# `ValkyrieObstacleCourseNoUISCS2` Launch options
 
 When launching the simulation, a popup window will appear as follows:
 
@@ -83,6 +83,11 @@ Some of the options are obsolete and will be removed in the future. Here's a des
 - `WholeBodyTrajectoryToolbox`: [Obsolete] You can ignore it and leave unchecked.
 - `FiducialDetector`: [Obsolete] You can ignore it and leave unchecked.
 - `ObjectDetector`: [Obsolete] You can ignore it and leave unchecked.
+
+# `ValkyrieObstacleCourseCLI` Launch options
+
+When launching the simulation from the command line, you can specify the options as arguments.
+Just run `ValkyrieObstacleCourseCLI --help` to see the available options.
 
 # Further information and documentation
 
