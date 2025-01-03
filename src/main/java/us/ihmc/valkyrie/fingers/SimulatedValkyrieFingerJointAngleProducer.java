@@ -1,15 +1,15 @@
 package us.ihmc.valkyrie.fingers;
 
-import java.util.EnumMap;
-
 import controller_msgs.msg.dds.HandJointAnglePacket;
 import us.ihmc.avatar.handControl.packetsAndConsumers.HandJointAngleCommunicator;
 import us.ihmc.avatar.handControl.packetsAndConsumers.HandSensorData;
-import us.ihmc.ros2.ROS2PublisherBasics;
 import us.ihmc.mecano.multiBodySystem.interfaces.OneDoFJointBasics;
 import us.ihmc.robotModels.FullRobotModel;
 import us.ihmc.robotics.robotSide.RobotSide;
 import us.ihmc.robotics.robotSide.SideDependentList;
+import us.ihmc.ros2.ROS2Publisher;
+
+import java.util.EnumMap;
 
 public class SimulatedValkyrieFingerJointAngleProducer
 {
@@ -17,7 +17,7 @@ public class SimulatedValkyrieFingerJointAngleProducer
 
    private final SideDependentList<HandJointAngleCommunicator> jointAngleCommunicators = new SideDependentList<>();
 
-   public SimulatedValkyrieFingerJointAngleProducer(ROS2PublisherBasics<HandJointAnglePacket> jointAnglePublisher, FullRobotModel fullRobotModel)
+   public SimulatedValkyrieFingerJointAngleProducer(ROS2Publisher<HandJointAnglePacket> jointAnglePublisher, FullRobotModel fullRobotModel)
    {
       for (RobotSide robotSide : RobotSide.values)
       {

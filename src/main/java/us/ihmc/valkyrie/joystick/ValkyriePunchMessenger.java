@@ -6,23 +6,22 @@ import controller_msgs.msg.dds.HighLevelStateMessage;
 import controller_msgs.msg.dds.PauseWalkingMessage;
 import us.ihmc.avatar.joystickBasedJavaFXController.HumanoidRobotPunchMessenger;
 import us.ihmc.communication.HumanoidControllerAPI;
-import us.ihmc.ros2.ROS2PublisherBasics;
-import us.ihmc.communication.ROS2Tools;
 import us.ihmc.communication.controllerAPI.RobotLowLevelMessenger;
 import us.ihmc.humanoidRobotics.communication.packets.HumanoidMessageTools;
 import us.ihmc.humanoidRobotics.communication.packets.dataobjects.HighLevelControllerName;
 import us.ihmc.robotics.robotSide.RobotSide;
-import us.ihmc.ros2.ROS2NodeInterface;
+import us.ihmc.ros2.ROS2Node;
+import us.ihmc.ros2.ROS2Publisher;
 import us.ihmc.ros2.ROS2Topic;
 
 public class ValkyriePunchMessenger implements HumanoidRobotPunchMessenger, RobotLowLevelMessenger
 {
-   private final ROS2PublisherBasics<ArmTrajectoryMessage> armTrajectoryPublisher;
-   private final ROS2PublisherBasics<HighLevelStateMessage> highLevelStatePublisher;
-   private final ROS2PublisherBasics<AbortWalkingMessage> abortWalkingPublisher;
-   private final ROS2PublisherBasics<PauseWalkingMessage> pauseWalkingPublisher;
+   private final ROS2Publisher<ArmTrajectoryMessage> armTrajectoryPublisher;
+   private final ROS2Publisher<HighLevelStateMessage> highLevelStatePublisher;
+   private final ROS2Publisher<AbortWalkingMessage> abortWalkingPublisher;
+   private final ROS2Publisher<PauseWalkingMessage> pauseWalkingPublisher;
 
-   public ValkyriePunchMessenger(String robotName, ROS2NodeInterface ros2Node)
+   public ValkyriePunchMessenger(String robotName, ROS2Node ros2Node)
    {
       ROS2Topic<?> inputTopic = HumanoidControllerAPI.getInputTopic(robotName);
       armTrajectoryPublisher = ros2Node.createPublisher(inputTopic.withTypeName(ArmTrajectoryMessage.class));

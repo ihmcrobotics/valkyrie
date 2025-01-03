@@ -1,9 +1,8 @@
 package us.ihmc.valkyrie.jfxvisualizer;
 
-import org.apache.commons.lang3.tuple.Triple;
-
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.tuple.Triple;
 import us.ihmc.avatar.drcRobot.DRCRobotModel;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.avatar.networkProcessor.footstepPlanningModule.FootstepPlanningModuleLauncher;
@@ -15,7 +14,6 @@ import us.ihmc.footstepPlanning.ui.FootstepPlannerUI;
 import us.ihmc.footstepPlanning.ui.RemoteUIMessageConverter;
 import us.ihmc.javaFXToolkit.ApplicationNoModule;
 import us.ihmc.messager.javafx.SharedMemoryJavaFXMessager;
-import us.ihmc.pubsub.DomainFactory;
 import us.ihmc.valkyrie.ValkyrieNetworkProcessor;
 import us.ihmc.valkyrie.ValkyrieRobotModel;
 import us.ihmc.valkyrie.parameters.ValkyrieUIAuxiliaryData;
@@ -41,7 +39,7 @@ public class ValkyrieFootstepPlannerUI extends ApplicationNoModule
       previewModel.setUseOBJGraphics(true);
 
       messager = new SharedMemoryJavaFXMessager(FootstepPlannerMessagerAPI.API);
-      messageConverter = RemoteUIMessageConverter.createConverter(messager, model.getSimpleRobotName(), DomainFactory.PubSubImplementation.FAST_RTPS);
+      messageConverter = RemoteUIMessageConverter.createConverter(messager, model.getSimpleRobotName());
 
       messager.startMessager();
 
@@ -61,7 +59,7 @@ public class ValkyrieFootstepPlannerUI extends ApplicationNoModule
 
       if(!ValkyrieNetworkProcessor.isFootstepPlanningModuleStarted())
       {
-         FootstepPlanningModule plannerModule = FootstepPlanningModuleLauncher.createModule(model, DomainFactory.PubSubImplementation.FAST_RTPS);
+         FootstepPlanningModule plannerModule = FootstepPlanningModuleLauncher.createModule(model);
 
          // Create logger and connect to messager
          FootstepPlannerLogger logger = new FootstepPlannerLogger(plannerModule);

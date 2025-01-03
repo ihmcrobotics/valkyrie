@@ -11,7 +11,7 @@ import us.ihmc.avatar.initialSetup.RobotInitialSetup;
 import us.ihmc.avatar.reachabilityMap.footstep.StepReachabilityIOHelper;
 import us.ihmc.avatar.ros.RobotROSClockCalculator;
 import us.ihmc.avatar.ros.WallTimeBasedROSClockCalculator;
-import us.ihmc.behaviors.lookAndStep.LookAndStepBehaviorParameters;
+import us.ihmc.avatar.sensors.DRCSensorSuiteManager;
 import us.ihmc.commonWalkingControlModules.configurations.HighLevelControllerParameters;
 import us.ihmc.commonWalkingControlModules.configurations.WalkingControllerParameters;
 import us.ihmc.commonWalkingControlModules.dynamicPlanning.bipedPlanning.CoPTrajectoryParameters;
@@ -37,7 +37,7 @@ import us.ihmc.robotModels.FullHumanoidRobotModelWrapper;
 import us.ihmc.robotics.physics.CollidableHelper;
 import us.ihmc.robotics.physics.RobotCollisionModel;
 import us.ihmc.robotics.robotSide.RobotSide;
-import us.ihmc.ros2.ROS2NodeInterface;
+import us.ihmc.ros2.ROS2Node;
 import us.ihmc.ros2.RealtimeROS2Node;
 import us.ihmc.scs2.definition.robot.RobotDefinition;
 import us.ihmc.scs2.definition.robot.urdf.URDFTools;
@@ -49,24 +49,11 @@ import us.ihmc.sensorProcessing.stateEstimation.StateEstimatorParameters;
 import us.ihmc.simulationConstructionSetTools.util.HumanoidFloatingRootJointRobot;
 import us.ihmc.simulationToolkit.RobotDefinitionTools;
 import us.ihmc.tools.io.WorkspacePathTools;
-import us.ihmc.valkyrie.behaviors.ValkyrieLookAndStepParameters;
 import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
 import us.ihmc.valkyrie.diagnostic.ValkyrieDiagnosticParameters;
 import us.ihmc.valkyrie.fingers.SimulatedValkyrieFingerControlThread;
 import us.ihmc.valkyrie.fingers.ValkyrieHandModel;
-import us.ihmc.valkyrie.parameters.ValkyrieCoPTrajectoryParameters;
-import us.ihmc.valkyrie.parameters.ValkyrieCollisionBoxProvider;
-import us.ihmc.valkyrie.parameters.ValkyrieContactPointParameters;
-import us.ihmc.valkyrie.parameters.ValkyrieFootstepPlannerParameters;
-import us.ihmc.valkyrie.parameters.ValkyrieJointMap;
-import us.ihmc.valkyrie.parameters.ValkyrieLocomotionParameters;
-import us.ihmc.valkyrie.parameters.ValkyriePhysicalProperties;
-import us.ihmc.valkyrie.parameters.ValkyriePresetArmConfigurations;
-import us.ihmc.valkyrie.parameters.ValkyrieSensorInformation;
-import us.ihmc.valkyrie.parameters.ValkyrieStateEstimatorParameters;
-import us.ihmc.valkyrie.parameters.ValkyrieSwingPlannerParameters;
-import us.ihmc.valkyrie.parameters.ValkyrieWalkingControllerParameters;
-import us.ihmc.valkyrie.sensors.ValkyrieSensorSuiteManager;
+import us.ihmc.valkyrie.parameters.*;
 import us.ihmc.wholeBodyController.FootContactPoints;
 import us.ihmc.wholeBodyController.RobotContactPointParameters;
 import us.ihmc.wholeBodyController.diagnostics.DiagnosticParameters;
@@ -119,8 +106,6 @@ public class ValkyrieRobotModel implements DRCRobotModel
    private RobotCollisionModel kinematicsCollisionModel;
 
    private SimulationLowLevelControllerFactory simulationLowLevelControllerFactory;
-
-   private ValkyrieSensorSuiteManager sensorSuiteManager = null;
 
    public ValkyrieRobotModel(RobotTarget target)
    {
@@ -497,26 +482,9 @@ public class ValkyrieRobotModel implements DRCRobotModel
    }
 
    @Override
-   public ValkyrieSensorSuiteManager getSensorSuiteManager()
+   public DRCSensorSuiteManager getSensorSuiteManager(ROS2Node ros2Node)
    {
-      return getSensorSuiteManager(null);
-   }
-
-   @Override
-   public ValkyrieSensorSuiteManager getSensorSuiteManager(ROS2NodeInterface ros2Node)
-   {
-      if (sensorSuiteManager == null)
-      {
-         sensorSuiteManager = new ValkyrieSensorSuiteManager(getSimpleRobotName(),
-                                                             this,
-                                                             getCollisionBoxProvider(),
-                                                             getROSClockCalculator(),
-                                                             getSensorInformation(),
-                                                             getJointMap(),
-                                                             target,
-                                                             ros2Node);
-      }
-      return sensorSuiteManager;
+      return null;
    }
 
    @Override
@@ -597,12 +565,6 @@ public class ValkyrieRobotModel implements DRCRobotModel
    public AStarBodyPathPlannerParametersBasics getAStarBodyPathPlannerParameters()
    {
       return new AStarBodyPathPlannerParameters();
-   }
-
-   @Override
-   public LookAndStepBehaviorParameters getLookAndStepParameters()
-   {
-      return new ValkyrieLookAndStepParameters();
    }
 
    @Override
@@ -774,7 +736,7 @@ public class ValkyrieRobotModel implements DRCRobotModel
    }
 
    @Override
-   public RobotLowLevelMessenger newRobotLowLevelMessenger(ROS2NodeInterface ros2Node)
+   public RobotLowLevelMessenger newRobotLowLevelMessenger(ROS2Node ros2Node)
    {
       return new ValkyrieDirectRobotInterface(ros2Node, this);
    }

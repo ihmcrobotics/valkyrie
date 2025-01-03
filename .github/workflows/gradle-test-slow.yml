@@ -1,0 +1,81 @@
+name: Gradle test (slow)
+
+on:
+  schedule:
+    - cron: '0 */8 * * *'
+  workflow_dispatch:
+permissions:
+  checks: write
+  contents: read
+
+jobs:
+  valkyrie-allocation-slow:
+    uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
+    secrets:
+      ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
+    with:
+      test-category: 'allocation-slow'
+      timeout-minutes: 45
+  valkyrie-humanoid-controller-api-slow:
+    uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
+    secrets:
+      ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
+    with:
+      test-category: 'controller-api-slow'
+      timeout-minutes: 45
+  valkyrie-humanoid-controller-api-slow-2:
+    uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
+    secrets:
+      ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
+    with:
+      test-category: 'controller-api-slow-2'
+      timeout-minutes: 45
+  valkyrie-humanoid-controller-api-slow-3:
+    uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
+    secrets:
+      ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
+    with:
+      test-category: 'controller-api-slow-3'
+      timeout-minutes: 45
+  valkyrie-humanoid-controller-api-slow-4:
+    uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
+    secrets:
+      ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
+    with:
+      test-category: 'controller-api-slow-4'
+      timeout-minutes: 45
+  valkyrie-humanoid-behaviors-slow:
+    uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
+    secrets:
+      ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
+    with:
+      test-category: 'humanoid-behaviors-slow'
+      timeout-minutes: 45
+  valkyrie-humanoid-flat-ground-slow:
+    uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
+    secrets:
+      ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
+    with:
+      test-category: 'humanoid-flat-ground-slow'
+      timeout-minutes: 45
+  valkyrie-humanoid-obstacle-slow:
+    uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
+    secrets:
+      ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
+    with:
+      test-category: 'humanoid-obstacle-slow'
+      timeout-minutes: 45
+  valkyrie-humanoid-push-recovery-slow:
+    uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
+    secrets:
+      ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
+    with:
+      test-category: 'humanoid-push-recovery-slow'
+      timeout-minutes: 45
+  valkyrie-humanoid-rough-terrain-slow:
+    uses: ihmcrobotics/ihmc-actions/.github/workflows/gradle-test.yml@main
+    secrets:
+      ROSIE_PERSONAL_ACCESS_TOKEN: ${{ secrets.ROSIE_PERSONAL_ACCESS_TOKEN }}
+    with:
+      test-category: 'humanoid-rough-terrain-slow'
+      timeout-minutes: 45

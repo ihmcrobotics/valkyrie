@@ -1,10 +1,5 @@
 package us.ihmc.valkyrie.externalForceEstimation;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
-
-import javax.swing.JButton;
-
 import toolbox_msgs.msg.dds.ExternalForceEstimationConfigurationMessage;
 import toolbox_msgs.msg.dds.ExternalForceEstimationOutputStatus;
 import toolbox_msgs.msg.dds.ToolboxStateMessage;
@@ -12,19 +7,18 @@ import us.ihmc.avatar.drcRobot.DRCRobotModel;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.avatar.networkProcessor.externalForceEstimationToolboxModule.ExternalForceEstimationToolboxModule;
 import us.ihmc.commons.thread.ThreadTools;
-import us.ihmc.ros2.ROS2PublisherBasics;
-import us.ihmc.communication.ROS2Tools;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicVector;
 import us.ihmc.mecano.multiBodySystem.interfaces.RigidBodyBasics;
-import us.ihmc.pubsub.DomainFactory.PubSubImplementation;
 import us.ihmc.robotDataLogger.YoVariableClient;
 import us.ihmc.robotDataVisualizer.visualizer.SCSVisualizer;
 import us.ihmc.robotDataVisualizer.visualizer.SCSVisualizerStateListener;
 import us.ihmc.robotModels.FullHumanoidRobotModel;
+import us.ihmc.ros2.ROS2NodeBuilder;
+import us.ihmc.ros2.ROS2Publisher;
 import us.ihmc.ros2.ROS2Topic;
 import us.ihmc.ros2.RealtimeROS2Node;
 import us.ihmc.simulationconstructionset.Joint;
@@ -36,9 +30,13 @@ import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
 import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameVector3D;
 import us.ihmc.yoVariables.registry.YoRegistry;
 
+import javax.swing.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+
 public class ValkyrieExternalForceEstimationVisualizer implements SCSVisualizerStateListener
 {
-   private final RealtimeROS2Node ros2Node = ROS2Tools.createRealtimeROS2Node(PubSubImplementation.FAST_RTPS, "valkyrie_wrench_estimation_visualizer");
+   private final RealtimeROS2Node ros2Node = new ROS2NodeBuilder().buildRealtime("valkyrie_wrench_estimation_visualizer");
    private final ROS2Topic<?> inputTopic;
    private final ROS2Topic<?> outputTopic;
    private final int endEffectorHashCode;
@@ -121,8 +119,8 @@ public class ValkyrieExternalForceEstimationVisualizer implements SCSVisualizerS
                  }).start();
 
       // ----- Toolbox Control ----- //
-      ROS2PublisherBasics<ToolboxStateMessage> toolboxStatePublisher = ros2Node.createPublisher(inputTopic.withTypeName(ToolboxStateMessage.class));
-      ROS2PublisherBasics<ExternalForceEstimationConfigurationMessage> configurationMessagePublisher = ros2Node.createPublisher(inputTopic.withTypeName(ExternalForceEstimationConfigurationMessage.class));
+      ROS2Publisher<ToolboxStateMessage> toolboxStatePublisher = ros2Node.createPublisher(inputTopic.withTypeName(ToolboxStateMessage.class));
+      ROS2Publisher<ExternalForceEstimationConfigurationMessage> configurationMessagePublisher = ros2Node.createPublisher(inputTopic.withTypeName(ExternalForceEstimationConfigurationMessage.class));
       JButton wakeupButton = new JButton("Start");
       wakeupButton.addActionListener(e ->
                                      {

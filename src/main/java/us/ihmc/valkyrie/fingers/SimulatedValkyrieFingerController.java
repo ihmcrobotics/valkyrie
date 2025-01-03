@@ -1,13 +1,10 @@
 package us.ihmc.valkyrie.fingers;
 
-import java.util.EnumMap;
-
 import controller_msgs.msg.dds.HandDesiredConfigurationMessage;
 import controller_msgs.msg.dds.HandJointAnglePacket;
 import controller_msgs.msg.dds.OneDoFJointTrajectoryMessage;
-import ihmc_common_msgs.msg.dds.TrajectoryPoint1DMessage;
 import controller_msgs.msg.dds.ValkyrieHandFingerTrajectoryMessage;
-import us.ihmc.ros2.ROS2PublisherBasics;
+import ihmc_common_msgs.msg.dds.TrajectoryPoint1DMessage;
 import us.ihmc.humanoidRobotics.communication.packets.dataobjects.HandConfiguration;
 import us.ihmc.humanoidRobotics.communication.subscribers.HandDesiredConfigurationMessageSubscriber;
 import us.ihmc.humanoidRobotics.communication.subscribers.ValkyrieHandFingerTrajectoryMessageSubscriber;
@@ -17,6 +14,7 @@ import us.ihmc.robotModels.FullRobotModel;
 import us.ihmc.robotics.partNames.FingerName;
 import us.ihmc.robotics.robotSide.RobotSide;
 import us.ihmc.robotics.robotSide.SideDependentList;
+import us.ihmc.ros2.ROS2Publisher;
 import us.ihmc.ros2.ROS2Topic;
 import us.ihmc.ros2.RealtimeROS2Node;
 import us.ihmc.sensorProcessing.outputData.JointDesiredControlMode;
@@ -26,6 +24,8 @@ import us.ihmc.simulationconstructionset.util.RobotController;
 import us.ihmc.yoVariables.providers.DoubleProvider;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
+
+import java.util.EnumMap;
 
 public class SimulatedValkyrieFingerController implements RobotController
 {
@@ -61,7 +61,7 @@ public class SimulatedValkyrieFingerController implements RobotController
 
       if (realtimeROS2Node != null)
       {
-         ROS2PublisherBasics<HandJointAnglePacket> jointAnglePublisher = realtimeROS2Node.createPublisher(outputTopic.withTypeName(HandJointAnglePacket.class));
+         ROS2Publisher<HandJointAnglePacket> jointAnglePublisher = realtimeROS2Node.createPublisher(outputTopic.withTypeName(HandJointAnglePacket.class));
          jointAngleProducer = new SimulatedValkyrieFingerJointAngleProducer(jointAnglePublisher, fullRobotModel);
       }
       else

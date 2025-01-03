@@ -5,20 +5,19 @@ import controller_msgs.msg.dds.HighLevelStateMessage;
 import controller_msgs.msg.dds.PauseWalkingMessage;
 import us.ihmc.avatar.drcRobot.DRCRobotModel;
 import us.ihmc.communication.HumanoidControllerAPI;
-import us.ihmc.ros2.ROS2PublisherBasics;
-import us.ihmc.communication.ROS2Tools;
 import us.ihmc.communication.controllerAPI.RobotLowLevelMessenger;
 import us.ihmc.humanoidRobotics.communication.packets.dataobjects.HighLevelControllerName;
-import us.ihmc.ros2.ROS2NodeInterface;
+import us.ihmc.ros2.ROS2Node;
+import us.ihmc.ros2.ROS2Publisher;
 import us.ihmc.ros2.ROS2Topic;
 
 public class ValkyrieDirectRobotInterface implements RobotLowLevelMessenger
 {
-   private final ROS2PublisherBasics<HighLevelStateMessage> highLevelStatePublisher;
-   private final ROS2PublisherBasics<AbortWalkingMessage> abortWalkingPublisher;
-   private final ROS2PublisherBasics<PauseWalkingMessage> pauseWalkingPublisher;
+   private final ROS2Publisher<HighLevelStateMessage> highLevelStatePublisher;
+   private final ROS2Publisher<AbortWalkingMessage> abortWalkingPublisher;
+   private final ROS2Publisher<PauseWalkingMessage> pauseWalkingPublisher;
 
-   public ValkyrieDirectRobotInterface(ROS2NodeInterface ros2Node, DRCRobotModel robotModel)
+   public ValkyrieDirectRobotInterface(ROS2Node ros2Node, DRCRobotModel robotModel)
    {
       ROS2Topic inputTopic = HumanoidControllerAPI.getInputTopic(robotModel.getSimpleRobotName());
       highLevelStatePublisher = ros2Node.createPublisher(inputTopic.withTypeName(HighLevelStateMessage.class));

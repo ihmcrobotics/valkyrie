@@ -84,3 +84,6 @@
 **/gradlew.bat
 **/generatedTestSuites/*TestSuite.java
 **/rebel.xml
+
+# Extracted ihmc_interfaces from gradle task
+ihmc_interfaces

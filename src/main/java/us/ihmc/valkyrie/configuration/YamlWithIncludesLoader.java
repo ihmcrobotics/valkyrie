@@ -3,6 +3,7 @@ package us.ihmc.valkyrie.configuration;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.AbstractConstruct;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
@@ -36,6 +37,8 @@ public class YamlWithIncludesLoader
 
       public IncludeConstructor(String subDirectory)
       {
+         super(new LoaderOptions());
+
          this.subDirectory = subDirectory;
 
          this.yamlConstructors.put(new Tag("!include"), new IncludeYaml());
