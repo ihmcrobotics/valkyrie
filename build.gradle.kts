@@ -35,6 +35,7 @@ mainDependencies {
    api("us.ihmc:ihmc-ros-control:0.7.1")
 
    api("us.ihmc:ihmc-system-identification:$ihmcOpenRoboticsSoftwareVersion")
+   api("us.ihmc:ihmc-high-level-behaviors:$ihmcOpenRoboticsSoftwareVersion")
    api("us.ihmc:ihmc-avatar-interfaces:$ihmcOpenRoboticsSoftwareVersion") {
       exclude(group = "us.ihmc", module = "javacpp")
    }
