@@ -68,6 +68,7 @@ val installDistOutputFolder = "${project.projectDir}/build/install/valkyrie"
 app.entrypoint("IHMCValkyrieJoystickApplication", "us.ihmc.valkyrie.joystick.ValkyrieJoystickBasedSteppingApplication")
 app.entrypoint("valkyrie-network-processor", "us.ihmc.valkyrie.ValkyrieNetworkProcessor")
 app.entrypoint("ValkyrieObstacleCourseNoUI", "us.ihmc.valkyrie.ValkyrieObstacleCourseNoUI")
+app.entrypoint("ValkyrieHardwareAutonomyProcess", "us.ihmc.valkyrie.perception.ValkyrieHardwareAutonomyProcess")
 
 tasks.create("deployOCUApplications") {
    dependsOn("installDist")
