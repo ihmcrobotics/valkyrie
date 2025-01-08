@@ -35,6 +35,7 @@ mainDependencies {
    api("us.ihmc:ihmc-ros-control:0.7.1")
 
    api("us.ihmc:ihmc-system-identification:$ihmcOpenRoboticsSoftwareVersion")
+   api("us.ihmc:ihmc-high-level-behaviors:$ihmcOpenRoboticsSoftwareVersion")
    api("us.ihmc:ihmc-avatar-interfaces:$ihmcOpenRoboticsSoftwareVersion") {
       exclude(group = "us.ihmc", module = "javacpp")
    }
@@ -67,6 +68,7 @@ val installDistOutputFolder = "${project.projectDir}/build/install/valkyrie"
 app.entrypoint("IHMCValkyrieJoystickApplication", "us.ihmc.valkyrie.joystick.ValkyrieJoystickBasedSteppingApplication")
 app.entrypoint("valkyrie-network-processor", "us.ihmc.valkyrie.ValkyrieNetworkProcessor")
 app.entrypoint("ValkyrieObstacleCourseNoUI", "us.ihmc.valkyrie.ValkyrieObstacleCourseNoUI")
+app.entrypoint("ValkyrieHardwareAutonomyProcess", "us.ihmc.valkyrie.perception.ValkyrieHardwareAutonomyProcess")
 
 tasks.create("deployOCUApplications") {
    dependsOn("installDist")
@@ -144,6 +146,9 @@ tasks.create("deploy") {
          exec("ls -halp $directory/lib")
 
          put(file("build/libs/valkyrie-$version.jar").toString(), "$directory/ValkyrieController.jar")
+         rsync("build/install/valkyrie/bin", "link02", "$directory/bin")
+         rsync("build/install/valkyrie/lib", "link02", "$directory/lib")
+
          put(file("launchScripts").toString(), directory)
          exec("chmod +x $directory/runNetworkProcessor.sh")
          exec("ls -halp $directory")
@@ -151,6 +156,35 @@ tasks.create("deploy") {
 
       deployNetworkProcessor()
    }
+}
+
+
+fun rsync(localPath: String, remoteAddress: String, remotePath: String)
+{
+   // https://explainshell.com/explain?cmd=rsync+--compress+--human-readable+--stats+--times+--recursive+--delete
+   // https://man.archlinux.org/man/rsync.1
+   val command = arrayListOf<String>()
+   command += "/usr/bin/rsync"
+   command += "--compress"
+   command += "--human-readable"
+   command += "--stats"
+   command += "--times"
+   command += "--recursive"
+   command += "--delete"
+   command += localPath
+   command += "$remoteAddress:$remotePath"
+   var commandToPrint = ""
+   for (part in command)
+   {
+      commandToPrint += " $part"
+   }
+   logger.quiet("Running $commandToPrint")
+   val start = System.nanoTime()
+   exec {
+      commandLine(command)
+   }
+   val end = System.nanoTime()
+   logger.quiet("rsync took ${(end - start) / 1e9} s")
 }
 
 tasks.create("deployNetworkProcessor") {

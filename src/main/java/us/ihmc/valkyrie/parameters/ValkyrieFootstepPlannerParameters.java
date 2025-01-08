@@ -14,6 +14,7 @@ public class ValkyrieFootstepPlannerParameters extends StoredPropertySet impleme
    {
       super(DefaultFootstepPlannerParameters.keys, ValkyrieFootstepPlannerParameters.class, versionSuffix);
 
+      setUseGPU(false);
       setCheckForBodyBoxCollisions(false);
       setIdealFootstepWidth(0.2);
       setIdealFootstepLength(0.2);
@@ -43,7 +44,8 @@ public class ValkyrieFootstepPlannerParameters extends StoredPropertySet impleme
 
    public static void main(String[] args)
    {
-      ValkyrieFootstepPlannerParameters parameters = new ValkyrieFootstepPlannerParameters();
-      parameters.save();
+      StoredPropertySet storedPropertySet = new StoredPropertySet(DefaultFootstepPlannerParameters.keys, ValkyrieFootstepPlannerParameters.class);
+      storedPropertySet.loadUnsafe();
+      storedPropertySet.save();
    }
 }
