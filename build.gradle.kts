@@ -36,12 +36,8 @@ mainDependencies {
 
    api("us.ihmc:ihmc-system-identification:$ihmcOpenRoboticsSoftwareVersion")
    api("us.ihmc:ihmc-high-level-behaviors:$ihmcOpenRoboticsSoftwareVersion")
-   api("us.ihmc:ihmc-avatar-interfaces:$ihmcOpenRoboticsSoftwareVersion") {
-      exclude(group = "us.ihmc", module = "javacpp")
-   }
-   api("us.ihmc:ihmc-footstep-planning-visualizers:$ihmcOpenRoboticsSoftwareVersion") {
-      exclude(group = "us.ihmc", module = "javacpp")
-   }
+   api("us.ihmc:ihmc-avatar-interfaces:$ihmcOpenRoboticsSoftwareVersion")
+   api("us.ihmc:ihmc-footstep-planning-visualizers:$ihmcOpenRoboticsSoftwareVersion")
    api("us.ihmc:ihmc-parameter-tuner:0.15.1")
 
    // This is required to get the binaries for Linux.
@@ -56,9 +52,7 @@ testDependencies {
    api("us.ihmc:euclid-shape:0.21.0")
    api("us.ihmc:euclid-frame-shape:0.21.0")
 
-   api("us.ihmc:ihmc-avatar-interfaces-test:$ihmcOpenRoboticsSoftwareVersion") {
-      exclude(group = "us.ihmc", module = "javacpp")
-   }
+   api("us.ihmc:ihmc-avatar-interfaces-test:$ihmcOpenRoboticsSoftwareVersion")
 }
 
 ihmc.jarWithLibFolder()
