@@ -137,7 +137,7 @@ tasks.create("deploy") {
       val valkyrie_realtime_username: String by project
       val valkyrie_realtime_password: String by project
 
-      remote.session(valkyrie_link_ip, valkyrie_realtime_username, valkyrie_realtime_password) // control
+      remote.session(valkyrie_link_ip, valkyrie_realtime_username) // control
       {
          exec("mkdir -p $directory")
 
@@ -146,8 +146,8 @@ tasks.create("deploy") {
          exec("ls -halp $directory/lib")
 
          put(file("build/libs/valkyrie-$version.jar").toString(), "$directory/ValkyrieController.jar")
-         rsync("build/install/valkyrie/bin", "link02", "$directory/bin")
-         rsync("build/install/valkyrie/lib", "link02", "$directory/lib")
+         rsync("build/install/valkyrie/bin", valkyrie_link_ip, "$directory/bin")
+         rsync("build/install/valkyrie/lib", valkyrie_link_ip, "$directory/lib")
 
          put(file("launchScripts").toString(), directory)
          exec("chmod +x $directory/runNetworkProcessor.sh")
