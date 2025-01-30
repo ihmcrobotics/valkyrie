@@ -4,15 +4,27 @@ import us.ihmc.avatar.drcRobot.ROS2SyncedRobotModel;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.behaviors.behaviorTree.ros2.ROS2BehaviorTreeUpdateThread;
 import us.ihmc.commons.thread.RepeatingTaskThread;
+import us.ihmc.communication.PerceptionAPI;
+import us.ihmc.communication.packets.Packet;
 import us.ihmc.communication.ros2.ROS2DemandGraphNode;
 import us.ihmc.communication.ros2.ROS2Helper;
+import us.ihmc.communication.ros2.ROS2TunedRigidBodyTransform;
+import us.ihmc.perception.ImageSensorPublishThread;
 import us.ihmc.perception.detections.DetectionManager;
+import us.ihmc.perception.detections.yolo.YOLOv8DetectionThread;
+import us.ihmc.perception.opencl.OpenCLManager;
+import us.ihmc.perception.rapidRegions.RapidPlanarRegionsExtractionThread;
 import us.ihmc.perception.sceneGraph.ros2.ROS2SceneGraph;
 import us.ihmc.perception.sceneGraph.ros2.ROS2SceneGraphUpdateThread;
 import us.ihmc.ros2.ROS2Node;
 import us.ihmc.ros2.ROS2NodeBuilder;
+import us.ihmc.ros2.ROS2Topic;
+import us.ihmc.sensors.ImageSensor;
+import us.ihmc.sensors.zed.ZEDImageSensor;
 import us.ihmc.valkyrie.ValkyrieRobotModel;
 import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
+
+import java.util.Map;
 
 public class ValkyrieAutonomyProcess
 {
@@ -25,6 +37,19 @@ public class ValkyrieAutonomyProcess
    // Robot
    private final ROS2SyncedRobotModel syncedRobot;
    private final RepeatingTaskThread robotUpdateThread;
+   private final ROS2TunedRigidBodyTransform zedTunableTransform;
+   private final ROS2TunedRigidBodyTransform realsenseTunableTransform;
+
+   // ZED Stuff
+   private final ROS2DemandGraphNode zedDemandNode = new ROS2DemandGraphNode(ros2Helper, PerceptionAPI.REQUEST_ZED);
+   private final ROS2DemandGraphNode zedPublishDemandNode = new ROS2DemandGraphNode(ros2Helper, PerceptionAPI.REQUEST_ZED_PUBLICATION);
+
+   private static final Map<Integer, ROS2Topic<? extends Packet<?>>> ZED_IMAGE_TOPIC_MAP
+           = Map.of(ZEDImageSensor.LEFT_COLOR_IMAGE_KEY, PerceptionAPI.SRT_ZED_LEFT_COLOR_STREAM_STATUS,
+           ZEDImageSensor.RIGHT_COLOR_IMAGE_KEY, PerceptionAPI.SRT_ZED_RIGHT_COLOR_STREAM_STATUS,
+           ZEDImageSensor.DEPTH_IMAGE_KEY, PerceptionAPI.ZED2_DEPTH);
+   private ImageSensorPublishThread zed2iPublishThread;
+   private ImageSensor zedSensor;
 
    // Detections
    private final DetectionManager detectionManager;
@@ -36,16 +61,39 @@ public class ValkyrieAutonomyProcess
    // Behaviors
    private final ROS2BehaviorTreeUpdateThread behaviorTreeUpdateThread;
 
-   public ValkyrieAutonomyProcess()
+   // YOLO
+   private final ROS2DemandGraphNode yoloZEDDemandNode = new ROS2DemandGraphNode(ros2Helper, PerceptionAPI.REQUEST_YOLO_ZED);
+   private final ROS2DemandGraphNode yoloAnnotatedImageDemandNode = new ROS2DemandGraphNode(ros2Helper, PerceptionAPI.REQUEST_YOLO_ANNOTATED_IMAGE);
+   private YOLOv8DetectionThread yoloThread;
+
+   // Planar Regions
+   private final ROS2DemandGraphNode planarRegionsDemandNode = new ROS2DemandGraphNode(ros2Helper, PerceptionAPI.REQUEST_PLANAR_REGIONS);
+   private RapidPlanarRegionsExtractionThread planarRegionsThread;
+
+   public ValkyrieAutonomyProcess(ImageSensor zedSensor)
    {
       // Robot
       syncedRobot = new ROS2SyncedRobotModel(ROBOT_MODEL, ros2Node);
       syncedRobot.initializeToDefaultRobotInitialSetup(0.0, 0.0, 0.0, 0.0);
+      zedTunableTransform = ROS2TunedRigidBodyTransform.toBeTuned(ros2Helper,
+              PerceptionAPI.EXPERIMENTAL_CAMERA_TO_PARENT_TUNING,
+              ROBOT_MODEL.getSensorInformation().getExperimentalCameraTransform());
+      realsenseTunableTransform = ROS2TunedRigidBodyTransform.toBeTuned(ros2Helper,
+              PerceptionAPI.STEPPING_CAMERA_TO_PARENT_TUNING,
+              ROBOT_MODEL.getSensorInformation().getSteppingCameraTransform());
       robotUpdateThread = new RepeatingTaskThread("SyncedRobotUpdate", () ->
       {
+         zedTunableTransform.update();
+         realsenseTunableTransform.update();
          syncedRobot.update();
       }).setFrequencyLimit(30.0);
       robotUpdateThread.startRepeating();
+
+      // Demand graph
+      initializeDemandGraph();
+
+      // Sensors
+      initializeSensors(zedSensor);
 
       // Detections
       detectionManager = new DetectionManager(ros2Helper);
@@ -56,6 +104,46 @@ public class ValkyrieAutonomyProcess
       // Behavior Tree
       behaviorTreeUpdateThread = new ROS2BehaviorTreeUpdateThread(ros2Node, ROBOT_MODEL, sceneGraph, detectionManager);
       behaviorTreeUpdateThread.startRepeating();
+
+      // YOLO
+      initializeYOLO();
+
+      // Planar Regions
+      initializePlanarRegions();
+   }
+
+   private void initializeDemandGraph()
+   {
+      zedDemandNode.addDependents(zedPublishDemandNode, yoloZEDDemandNode);
+
+      planarRegionsDemandNode.addDependents(yoloZEDDemandNode);
+   }
+
+   private void destroyDemandGraph()
+   {
+      zedDemandNode.destroy();
+      zedPublishDemandNode.destroy();
+
+      yoloZEDDemandNode.destroy();
+      yoloAnnotatedImageDemandNode.destroy();
+
+      planarRegionsDemandNode.destroy();
+   }
+
+   private void initializeSensors(ImageSensor zedSensor)
+   {
+      // ZED
+      this.zedSensor = zedSensor;
+      zedSensor.setSensorFrameSupplier(syncedRobot.getReferenceFrames()::getExperimentalCameraFrame);
+      loopOnDemand(zedSensor.getGrabThread(), zedDemandNode);
+      zed2iPublishThread = new ImageSensorPublishThread(ros2Node, zedSensor, ZED_IMAGE_TOPIC_MAP);
+      loopOnDemand(zed2iPublishThread, zedPublishDemandNode);
+   }
+
+   private void destroySensors()
+   {
+      zed2iPublishThread.blockingKill();
+      zedSensor.close();
    }
 
    private void initializeSceneGraph()
@@ -71,14 +159,47 @@ public class ValkyrieAutonomyProcess
       sceneGraph.destroy();
    }
 
+   private void initializeYOLO()
+   {
+      yoloThread = new YOLOv8DetectionThread(ros2Helper, detectionManager, yoloAnnotatedImageDemandNode::isDemanded);
+
+      // Initialize demand node callbacks to work with ZED
+      yoloZEDDemandNode.addDemandChangedCallback(isDemanded ->
+      {
+         if (isDemanded)
+         {  // YOLO demanded with ZED
+            yoloThread.setImageSensor(zedSensor, ZEDImageSensor.LEFT_COLOR_IMAGE_KEY, ZEDImageSensor.DEPTH_IMAGE_KEY);
+            yoloThread.startRepeating();
+         }
+      });
+      if (yoloZEDDemandNode.isDemanded())
+      {
+         yoloThread.setImageSensor(zedSensor, ZEDImageSensor.LEFT_COLOR_IMAGE_KEY, ZEDImageSensor.DEPTH_IMAGE_KEY);
+         yoloThread.startRepeating();
+      }
+   }
+
+   private void initializePlanarRegions()
+   {
+      planarRegionsThread = new RapidPlanarRegionsExtractionThread(ros2Helper, new OpenCLManager(), zedSensor, ZEDImageSensor.DEPTH_IMAGE_KEY);
+      loopOnDemand(planarRegionsThread, planarRegionsDemandNode);
+      sceneGraphUpdateThread.setPlanarRegionsNotification(planarRegionsThread.getNewPlanarRegionsNotification());
+   }
+
    public void close()
    {
       System.out.println("Closing " + getClass().getSimpleName());
       try
       {
+         destroyDemandGraph();
+
          destroySceneGraph();
 
          behaviorTreeUpdateThread.blockingKill();
+         yoloThread.blockingKill();
+         planarRegionsThread.blockingKill();
+
+         destroySensors();
 
          robotUpdateThread.blockingKill();
          syncedRobot.destroy();
