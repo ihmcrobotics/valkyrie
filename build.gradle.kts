@@ -145,10 +145,10 @@ tasks.create("deployNetworkProcessor") {
  * Deploy the installation files to a specific host. Does not use passwords,
  * assumes ssh keys are configured on the system.
  */
-fun deployToHost(ip: String, username: String)
+fun deployToHost(displayName: String, ip: String, username: String)
 {
    println("+------------------------------------------")
-   println("| Deploying to: $username@$ip...")
+   println("| Deploying to: $username@$ip ($displayName)")
    println("+------------------------------------------")
 
    remote.session(ip, username)
@@ -181,12 +181,12 @@ fun deployToAllHosts()
    val local_bronn_ip = valkyrie_bronn_ip
 
    // Control
-   deployToHost(valkyrie_link_ip, valkyrie_realtime_username)
+   deployToHost("link", valkyrie_link_ip, valkyrie_realtime_username)
    // Perception
-   deployToHost(valkyrie_zelda_ip, valkyrie_realtime_username)
+   deployToHost("zelda", valkyrie_zelda_ip, valkyrie_realtime_username)
    // Perception
    if (local_bronn_ip != null)
-      deployToHost(local_bronn_ip, valkyrie_realtime_username)
+      deployToHost("bronn", local_bronn_ip, valkyrie_realtime_username)
 }
 
 val debianName = "valkyrie-simulation-${ihmc.version}"
