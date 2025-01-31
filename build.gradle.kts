@@ -66,8 +66,9 @@ tasks.getByPath("installDist").dependsOn("compositeJar")
 val installDistOutputFolder = "${project.projectDir}/build/install/valkyrie"
 
 app.entrypoint("IHMCValkyrieJoystickApplication", "us.ihmc.valkyrie.joystick.ValkyrieJoystickBasedSteppingApplication")
-app.entrypoint("valkyrie-network-processor", "us.ihmc.valkyrie.ValkyrieNetworkProcessor")
 app.entrypoint("ValkyrieObstacleCourseNoUI", "us.ihmc.valkyrie.ValkyrieObstacleCourseNoUI")
+// On-robot processes
+app.entrypoint("valkyrie-network-processor", "us.ihmc.valkyrie.ValkyrieNetworkProcessor")
 app.entrypoint("ValkyrieHardwareAutonomyProcess", "us.ihmc.valkyrie.perception.ValkyrieHardwareAutonomyProcess")
 
 tasks.create("deployOCUApplications") {
@@ -137,10 +138,6 @@ tasks.create("deploy") {
    }
 }
 
-tasks.create("deployNetworkProcessor") {
-   dependsOn("deploy")
-}
-
 /**
  * Deploy the installation files to a specific host. Does not use passwords,
  * assumes ssh keys are configured on the system.
@@ -166,6 +163,7 @@ fun deployToHost(displayName: String, ip: String, username: String)
       put(file("launchScripts").toString(), installDirectory)
       exec("chmod +x $installDirectory/runNetworkProcessor.sh")
       exec("chmod +x $installDirectory/bin/valkyrie-network-processor")
+      exec("chmod +x $installDirectory/bin/ValkyrieHardwareAutonomyProcess")
 
       // Display install contents
       exec("ls -halp $installDirectory")
