@@ -137,16 +137,6 @@ tasks.create("deploy") {
    }
 }
 
-tasks.create("deployIHMC") {
-   dependsOn("installDist")
-
-   doLast {
-      project.ext["valkyrie_link_ip"] = "link02"
-      project.ext["valkyrie_zelda_ip"] = "zelda02"
-      deployToAllHosts()
-   }
-}
-
 tasks.create("deployNetworkProcessor") {
    dependsOn("deploy")
 }
