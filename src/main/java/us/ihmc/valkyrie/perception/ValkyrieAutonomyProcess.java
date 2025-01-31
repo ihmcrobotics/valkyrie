@@ -24,6 +24,7 @@ import us.ihmc.sensors.zed.ZEDImageSensor;
 import us.ihmc.valkyrie.ValkyrieRobotModel;
 import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 
 public class ValkyrieAutonomyProcess
@@ -48,7 +49,9 @@ public class ValkyrieAutonomyProcess
            = Map.of(ZEDImageSensor.LEFT_COLOR_IMAGE_KEY, PerceptionAPI.SRT_ZED_LEFT_COLOR_STREAM_STATUS,
            ZEDImageSensor.RIGHT_COLOR_IMAGE_KEY, PerceptionAPI.SRT_ZED_RIGHT_COLOR_STREAM_STATUS,
            ZEDImageSensor.DEPTH_IMAGE_KEY, PerceptionAPI.ZED2_DEPTH);
-   private ImageSensorPublishThread zed2iPublishThread;
+   @Nullable
+   private ImageSensorPublishThread zedPublishThread;
+   @Nullable
    private ImageSensor zedSensor;
 
    // Detections
@@ -70,7 +73,7 @@ public class ValkyrieAutonomyProcess
    private final ROS2DemandGraphNode planarRegionsDemandNode = new ROS2DemandGraphNode(ros2Helper, PerceptionAPI.REQUEST_PLANAR_REGIONS);
    private RapidPlanarRegionsExtractionThread planarRegionsThread;
 
-   public ValkyrieAutonomyProcess(ImageSensor zedSensor)
+   public ValkyrieAutonomyProcess(@Nullable ImageSensor zedSensor)
    {
       // Robot
       syncedRobot = new ROS2SyncedRobotModel(ROBOT_MODEL, ros2Node);
@@ -93,7 +96,8 @@ public class ValkyrieAutonomyProcess
       initializeDemandGraph();
 
       // Sensors
-      initializeSensors(zedSensor);
+      if (zedSensor != null)
+         initializeSensors(zedSensor);
 
       // Detections
       detectionManager = new DetectionManager(ros2Helper);
@@ -106,10 +110,12 @@ public class ValkyrieAutonomyProcess
       behaviorTreeUpdateThread.startRepeating();
 
       // YOLO
-      initializeYOLO();
+      if (zedSensor != null)
+         initializeYOLO();
 
       // Planar Regions
-      initializePlanarRegions();
+      if (zedSensor != null)
+         initializePlanarRegions();
    }
 
    private void initializeDemandGraph()
@@ -136,14 +142,17 @@ public class ValkyrieAutonomyProcess
       this.zedSensor = zedSensor;
       zedSensor.setSensorFrameSupplier(syncedRobot.getReferenceFrames()::getExperimentalCameraFrame);
       loopOnDemand(zedSensor.getGrabThread(), zedDemandNode);
-      zed2iPublishThread = new ImageSensorPublishThread(ros2Node, zedSensor, ZED_IMAGE_TOPIC_MAP);
-      loopOnDemand(zed2iPublishThread, zedPublishDemandNode);
+      zedPublishThread = new ImageSensorPublishThread(ros2Node, zedSensor, ZED_IMAGE_TOPIC_MAP);
+      loopOnDemand(zedPublishThread, zedPublishDemandNode);
    }
 
    private void destroySensors()
    {
-      zed2iPublishThread.blockingKill();
-      zedSensor.close();
+      if (zedPublishThread != null)
+         zedPublishThread.blockingKill();
+
+      if (zedSensor != null)
+         zedSensor.close();
    }
 
    private void initializeSceneGraph()

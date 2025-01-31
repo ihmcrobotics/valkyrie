@@ -1,17 +1,27 @@
 package us.ihmc.valkyrie.perception;
 
+import us.ihmc.log.LogTools;
 import us.ihmc.sensors.zed.ZEDImageSensor;
 import us.ihmc.sensors.zed.ZEDModelData;
 import us.ihmc.zed.global.zed;
+import us.ihmc.zed.library.ZEDJavaAPINativeLibrary;
+
+import javax.annotation.Nullable;
 
 public class ValkyrieHardwareAutonomyProcess
 {
-   private final ZEDImageSensor zedSensor;
+   private static final boolean ZED_SDK_LOADED = ZEDJavaAPINativeLibrary.load();
+
+   @Nullable
+   private ZEDImageSensor zedSensor;
    private final ValkyrieAutonomyProcess perceptionAutonomyProcess;
 
    private ValkyrieHardwareAutonomyProcess()
    {
-      zedSensor = new ZEDImageSensor(0, ZEDModelData.ZED_MINI, zed.SL_INPUT_TYPE_USB);
+      if (ZED_SDK_LOADED)
+         zedSensor = new ZEDImageSensor(0, ZEDModelData.ZED_MINI, zed.SL_INPUT_TYPE_USB);
+      else
+         LogTools.error("ZED SDK not found. Not using ZED sensor.");
 
       Runtime.getRuntime().addShutdownHook(new Thread(this::close, getClass().getSimpleName() + "Closer"));
 
