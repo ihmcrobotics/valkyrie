@@ -42,7 +42,7 @@ mainDependencies {
    api("us.ihmc:ihmc-footstep-planning-visualizers:$ihmcOpenRoboticsSoftwareVersion") {
       exclude(group = "us.ihmc", module = "javacpp")
    }
-   api("us.ihmc:ihmc-parameter-tuner:0.15.2")
+   api("us.ihmc:ihmc-parameter-tuner:0.15.3")
 
    // This is required to get the binaries for Linux.
    var javaFXVersion = "17.0.2"
