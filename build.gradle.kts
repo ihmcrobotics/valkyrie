@@ -153,9 +153,6 @@ fun deployToHost(displayName: String, ip: String, username: String)
       // Create install directory if it doesn't exist
       exec("mkdir -p $installDirectory")
 
-      // Clean old install
-      exec("rm -rf $installDirectory/*")
-
       // Copy new install
       put(file("$installDistOutputFolder/lib").toString(), "$installDirectory/lib")
       put(file("$installDistOutputFolder/bin").toString(), "$installDirectory/bin")
