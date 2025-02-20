@@ -100,7 +100,7 @@ public class ValkyrieAutonomyProcess
          initializeSensors(zedSensor);
 
       // Detections
-      detectionManager = new DetectionManager(ros2Helper);
+      detectionManager = new DetectionManager(ros2Node);
 
       // Scene Graph
       initializeSceneGraph();
