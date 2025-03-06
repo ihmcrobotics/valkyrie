@@ -6,6 +6,7 @@ import us.ihmc.behaviors.behaviorTree.ros2.ROS2BehaviorTreeUpdateThread;
 import us.ihmc.commons.thread.RepeatingTaskThread;
 import us.ihmc.communication.ros2.ROS2DemandGraphNode;
 import us.ihmc.communication.ros2.ROS2Helper;
+import us.ihmc.communication.ros2.sync.ROS2PeerClockOffsetEstimator;
 import us.ihmc.perception.detections.DetectionManager;
 import us.ihmc.perception.sceneGraph.ros2.ROS2SceneGraph;
 import us.ihmc.perception.sceneGraph.ros2.ROS2SceneGraphUpdateThread;
@@ -21,6 +22,7 @@ public class ValkyrieAutonomyProcess
    // ROS2
    private final ROS2Node ros2Node = new ROS2NodeBuilder().build(getClass().getSimpleName().toLowerCase() + "_node");
    private final ROS2Helper ros2Helper = new ROS2Helper(ros2Node);
+   private final ROS2PeerClockOffsetEstimator ros2PeerClockOffsetEstimator = new ROS2PeerClockOffsetEstimator(ros2Node);
 
    // Robot
    private final ROS2SyncedRobotModel syncedRobot;
@@ -54,7 +56,7 @@ public class ValkyrieAutonomyProcess
       initializeSceneGraph();
 
       // Behavior Tree
-      behaviorTreeUpdateThread = new ROS2BehaviorTreeUpdateThread(ros2Node, ROBOT_MODEL, sceneGraph, detectionManager);
+      behaviorTreeUpdateThread = new ROS2BehaviorTreeUpdateThread(ros2Node, ros2PeerClockOffsetEstimator, ROBOT_MODEL, sceneGraph, detectionManager);
       behaviorTreeUpdateThread.startRepeating();
    }
 
@@ -83,6 +85,7 @@ public class ValkyrieAutonomyProcess
          robotUpdateThread.blockingKill();
          syncedRobot.destroy();
 
+         ros2PeerClockOffsetEstimator.destroy();
          ros2Node.destroy();
       }
       catch (Exception exception)
