@@ -14,7 +14,7 @@ import us.ihmc.log.LogTools;
 import us.ihmc.mecano.multiBodySystem.interfaces.OneDoFJointBasics;
 import us.ihmc.robotDataLogger.YoVariableServer;
 import us.ihmc.robotModels.FullHumanoidRobotModel;
-import us.ihmc.robotics.math.filters.AlphaFilteredYoVariable;
+import us.ihmc.yoVariables.filters.AlphaFilteredYoVariable;
 import us.ihmc.robotics.math.functionGenerator.YoFunctionGenerator;
 import us.ihmc.robotics.math.functionGenerator.YoFunctionGeneratorMode;
 import us.ihmc.rosControl.EffortJointHandle;

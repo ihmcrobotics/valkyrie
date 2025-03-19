@@ -1,6 +1,6 @@
 package us.ihmc.valkyrieRosControl;
 
-import us.ihmc.robotics.math.filters.DeltaLimitedYoVariable;
+import us.ihmc.yoVariables.filters.DeltaLimitedYoVariable;
 import us.ihmc.valkyrieRosControl.dataHolders.YoPositionJointHandleHolder;
 import us.ihmc.yoVariables.registry.YoRegistry;
 

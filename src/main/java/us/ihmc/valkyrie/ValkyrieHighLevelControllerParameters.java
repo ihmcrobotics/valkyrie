@@ -11,7 +11,7 @@ import us.ihmc.commonWalkingControlModules.controllerCore.parameters.JointAccele
 import us.ihmc.commonWalkingControlModules.controllerCore.parameters.JointAccelerationIntegrationParametersReadOnly;
 import us.ihmc.commonWalkingControlModules.highLevelHumanoidControl.highLevelStates.WholeBodySetpointParameters;
 import us.ihmc.humanoidRobotics.communication.packets.dataobjects.HighLevelControllerName;
-import us.ihmc.robotics.math.filters.AlphaFilteredYoVariable;
+import us.ihmc.yoVariables.filters.AlphaFilteredYoVariable;
 import us.ihmc.robotics.partNames.ArmJointName;
 import us.ihmc.robotics.partNames.LegJointName;
 import us.ihmc.robotics.partNames.NeckJointName;
