@@ -36,8 +36,6 @@ import javax.swing.*;
 
 public class ValkyrieExternalContactEstimationSimulation
 {
-   private boolean useExperimentalPhysicsEngine = true;
-
    private static final double simDT = 2e-4; // normally 6.6e-4. (controlDT=4e-3)
    private static final Vector3D initialForce = new Vector3D(0.0, 0.0, 0.0);
 
@@ -88,15 +86,9 @@ public class ValkyrieExternalContactEstimationSimulation
 
       DRCSimulationStarter simulationStarter = new DRCSimulationStarter(robotModel, new FlatGroundEnvironment());
       simulationStarter.setRunMultiThreaded(true);
-      simulationStarter.getSCSInitialSetup().setUseExperimentalPhysicsEngine(useExperimentalPhysicsEngine);
       simulationStarter.setInitializeEstimatorToActual(true);
       simulationStarter.createSimulation(null, false, false);
       simulationStarter.getSCSInitialSetup().setUsePerfectSensors(true);
-
-      if (useExperimentalPhysicsEngine)
-      {
-         addExternalForcePoints(simulationStarter, Pair.of(jointName, offset));
-      }
 
       double controllerDT = robotModel.getControllerDT();
       RealtimeROS2Node ros2Node = new ROS2NodeBuilder().buildRealtime("valkyrie_wrench_estimation_sim");
@@ -106,7 +98,7 @@ public class ValkyrieExternalContactEstimationSimulation
 
       HumanoidFloatingRootJointRobot scsRobot = simulationStarter.getSDFRobot();
 
-      if (!useExperimentalPhysicsEngine)
+      if (true)
       {
          ExternalForcePoint externalForcePoint = new ExternalForcePoint("efp0", offset, scsRobot);
          Joint scsJoint = scsRobot.getJoint(jointName);

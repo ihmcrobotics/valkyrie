@@ -82,7 +82,6 @@ public class ValkyrieWholeBodyPositionControlSimulation
 //      initialSetup.rootJointOrientation.prependYawRotation(1.35);
 //      initialSetup.rootJointPosition.add(0.2, 0.1, 0);
       simulationStarter.setRobotInitialSetup(initialSetup);
-      simulationStarter.getSCSInitialSetup().setUseExperimentalPhysicsEngine(true);
       simulationStarter.getSCSInitialSetup().setRecordFrequency(10);
       simulationStarter.registerHighLevelControllerState(new HighLevelControllerStateFactory()
       {
