@@ -66,8 +66,9 @@ tasks.getByPath("installDist").dependsOn("compositeJar")
 val installDistOutputFolder = "${project.projectDir}/build/install/valkyrie"
 
 app.entrypoint("IHMCValkyrieJoystickApplication", "us.ihmc.valkyrie.joystick.ValkyrieJoystickBasedSteppingApplication")
-app.entrypoint("valkyrie-network-processor", "us.ihmc.valkyrie.ValkyrieNetworkProcessor")
 app.entrypoint("ValkyrieObstacleCourseNoUI", "us.ihmc.valkyrie.ValkyrieObstacleCourseNoUI")
+// On-robot processes
+app.entrypoint("valkyrie-network-processor", "us.ihmc.valkyrie.ValkyrieNetworkProcessor")
 app.entrypoint("ValkyrieHardwareAutonomyProcess", "us.ihmc.valkyrie.perception.ValkyrieHardwareAutonomyProcess")
 
 tasks.create("deployOCUApplications") {
@@ -127,130 +128,63 @@ tasks.create("deployLocal") {
    }
 }
 
-val directory = "/home/val/valkyrie"
+val installDirectory = "/home/val/valkyrie"
 
 tasks.create("deploy") {
    dependsOn("installDist")
 
    doLast {
-      val valkyrie_link_ip: String by project
-      val valkyrie_realtime_username: String by project
-      val valkyrie_realtime_password: String by project
-
-      remote.session(valkyrie_link_ip, valkyrie_realtime_username, valkyrie_realtime_password) // control
-      {
-         exec("mkdir -p $directory")
-
-         exec("rm -rf $directory/lib")
-         put(file("$installDistOutputFolder/lib").toString(), "$directory/lib")
-         exec("ls -halp $directory/lib")
-
-         put(file("build/libs/valkyrie-$version.jar").toString(), "$directory/ValkyrieController.jar")
-         rsync("build/install/valkyrie/bin", "link02", "$directory/bin")
-         rsync("build/install/valkyrie/lib", "link02", "$directory/lib")
-
-         put(file("launchScripts").toString(), directory)
-         exec("chmod +x $directory/runNetworkProcessor.sh")
-         exec("ls -halp $directory")
-      }
-
-      deployNetworkProcessor()
+      deployToAllHosts()
    }
 }
 
-
-fun rsync(localPath: String, remoteAddress: String, remotePath: String)
+/**
+ * Deploy the installation files to a specific host. Does not use passwords,
+ * assumes ssh keys are configured on the system.
+ */
+fun deployToHost(displayName: String, ip: String, username: String)
 {
-   // https://explainshell.com/explain?cmd=rsync+--compress+--human-readable+--stats+--times+--recursive+--delete
-   // https://man.archlinux.org/man/rsync.1
-   val command = arrayListOf<String>()
-   command += "/usr/bin/rsync"
-   command += "--compress"
-   command += "--human-readable"
-   command += "--stats"
-   command += "--times"
-   command += "--recursive"
-   command += "--delete"
-   command += localPath
-   command += "$remoteAddress:$remotePath"
-   var commandToPrint = ""
-   for (part in command)
+   println("+------------------------------------------")
+   println("| Deploying to: $username@$ip ($displayName)")
+   println("+------------------------------------------")
+
+   remote.session(ip, username)
    {
-      commandToPrint += " $part"
+      // Create install directory if it doesn't exist
+      exec("mkdir -p $installDirectory")
+
+      // Clean old install
+      exec("rm -rf $installDirectory/*")
+
+      // Copy new install
+      put(file("$installDistOutputFolder/lib").toString(), "$installDirectory/lib")
+      put(file("$installDistOutputFolder/bin").toString(), "$installDirectory/bin")
+      put(file("build/libs/valkyrie-$version.jar").toString(), "$installDirectory/ValkyrieController.jar")
+      put(file("launchScripts").toString(), installDirectory)
+      exec("chmod +x $installDirectory/runNetworkProcessor.sh")
+      exec("chmod +x $installDirectory/bin/valkyrie-network-processor")
+      exec("chmod +x $installDirectory/bin/ValkyrieHardwareAutonomyProcess")
+
+      // Display install contents
+      exec("ls -halp $installDirectory")
    }
-   logger.quiet("Running $commandToPrint")
-   val start = System.nanoTime()
-   exec {
-      commandLine(command)
-   }
-   val end = System.nanoTime()
-   logger.quiet("rsync took ${(end - start) / 1e9} s")
 }
 
-tasks.create("deployNetworkProcessor") {
-   dependsOn("installDist")
-
-   doLast {
-      deployNetworkProcessor()
-   }
-}
-
-fun deployNetworkProcessor()
+fun deployToAllHosts()
 {
+   val valkyrie_link_ip: String by project
    val valkyrie_zelda_ip: String by project
    val valkyrie_bronn_ip: String? by project
    val valkyrie_realtime_username: String by project
-   val valkyrie_realtime_password: String by project
    val local_bronn_ip = valkyrie_bronn_ip
 
-   remote.session(valkyrie_zelda_ip, valkyrie_realtime_username, valkyrie_realtime_password) // perception
-   {
-      exec("mkdir -p $directory")
-
-      exec("rm -rf $directory/bin")
-      exec("rm -rf $directory/lib")
-
-      put(file("$installDistOutputFolder/bin").toString(), "$directory/bin")
-      exec("chmod +x $directory/bin/valkyrie-network-processor")
-      put(file("$installDistOutputFolder/lib").toString(), "$directory/lib")
-      exec("ls -halp $directory/lib")
-
-      put(file("build/libs/valkyrie-$version.jar").toString(), "$directory/ValkyrieController.jar")
-      put(file("launchScripts").toString(), directory)
-      exec("chmod +x $directory/runNetworkProcessor.sh")
-      exec("ls -halp $directory")
-
-      exec("rm -rf /home/val/.ihmc/Configurations")
-      exec("mkdir -p /home/val/.ihmc/Configurations")
-      put(file("saved-configurations/defaultREAModuleConfiguration.txt").toString(), ".ihmc/Configurations")
-      exec("ls -halp /home/val/.ihmc/Configurations")
-   }
-
+   // Control
+   deployToHost("link", valkyrie_link_ip, valkyrie_realtime_username)
+   // Perception
+   deployToHost("zelda", valkyrie_zelda_ip, valkyrie_realtime_username)
+   // Perception
    if (local_bronn_ip != null)
-   {
-      remote.session(local_bronn_ip, valkyrie_realtime_username, valkyrie_realtime_password) // perception
-      {
-         exec("mkdir -p $directory")
-
-         exec("rm -rf $directory/bin")
-         exec("rm -rf $directory/lib")
-
-         put(file("$installDistOutputFolder/bin").toString(), "$directory/bin")
-         exec("chmod +x $directory/bin/valkyrie-network-processor")
-         put(file("$installDistOutputFolder/lib").toString(), "$directory/lib")
-         exec("ls -halp $directory/lib")
-
-         put(file("build/libs/valkyrie-$version.jar").toString(), "$directory/ValkyrieController.jar")
-         put(file("launchScripts").toString(), directory)
-         exec("chmod +x $directory/runNetworkProcessor.sh")
-         exec("ls -halp $directory")
-
-         exec("rm -rf /home/val/.ihmc/Configurations")
-         exec("mkdir -p /home/val/.ihmc/Configurations")
-         put(file("saved-configurations/defaultREAModuleConfiguration.txt").toString(), ".ihmc/Configurations")
-         exec("ls -halp /home/val/.ihmc/Configurations")
-      }
-   }
+      deployToHost("bronn", local_bronn_ip, valkyrie_realtime_username)
 }
 
 val debianName = "valkyrie-simulation-${ihmc.version}"
