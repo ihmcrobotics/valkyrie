@@ -88,6 +88,14 @@ public class ValkyrieKinematicsStreamingToolboxModule extends KinematicsStreamin
       KinematicsStreamingToolboxParameters parameters = KinematicsStreamingToolboxParameters.defaultParameters();
       KinematicsStreamingToolboxConfigurationMessage defaultConfiguration = parameters.getDefaultConfiguration();
 
+      parameters.setDefaultAngularRateLimit(5.0);
+      parameters.setInputPoseLPFBreakFrequency(2.0);
+      parameters.setMinimizeAngularMomentum(true);
+      parameters.setMinimizeLinearMomentum(true);
+      parameters.setAngularMomentumWeight(0.25);
+      parameters.setLinearMomentumWeight(0.25);
+      parameters.setUseBBXInputFilter(false);
+
       if (NetworkProcessorVersion.fromEnvironment() == NetworkProcessorVersion.IHMC)
       {
          parameters.setCenterOfMassSafeMargin(0.05);
