@@ -44,10 +44,24 @@ public class ZEDBodyTracking
       initParams.resolution(SL_RESOLUTION_HD1080);
       initParams.input_type(SL_INPUT_TYPE_USB);
       initParams.camera_device_id(CAMERA_ID);
+      initParams.camera_image_flip(zed.SL_FLIP_MODE_AUTO);
+      initParams.camera_disable_self_calib(false);
       initParams.enable_image_enhancement(true);
+      initParams.svo_real_time_mode(true);
       initParams.depth_mode(SL_DEPTH_MODE_PERFORMANCE);
+      initParams.depth_stabilization(1);
+      initParams.depth_maximum_distance(40);
+      initParams.depth_minimum_distance(-1);
       initParams.coordinate_unit(SL_UNIT_METER);
       initParams.coordinate_system(SL_COORDINATE_SYSTEM_LEFT_HANDED_Y_UP);
+      initParams.sdk_gpu_id(-1);
+      initParams.sdk_verbose(0);
+      initParams.sensors_required(false);
+      initParams.enable_right_side_measure(false);
+      initParams.async_grab_camera_recovery(false);
+      initParams.grab_compute_capping_fps(0);
+      initParams.enable_image_validity_check(0);
+
 
       if (sl_open_camera(CAMERA_ID, initParams, 0, "", "", 0, "", "", "") != 0)
       {
@@ -57,8 +71,16 @@ public class ZEDBodyTracking
       SL_PositionalTrackingParameters trackingParams = new SL_PositionalTrackingParameters();
       trackingParams.enable_area_memory(true);
       trackingParams.enable_imu_fusion(true);
+      trackingParams.enable_pose_smothing(false);
+      trackingParams.depth_min_range(-1);
+      //            position.x(0).y(0).z(0);
+      //            rotation.x(0).y(0).z(0).w(1);
+      //            slTrackingParameters.initial_world_position(position);
+      //            slTrackingParameters.initial_world_rotation(rotation);
+      trackingParams.set_as_static(false);
+      trackingParams.set_floor_as_origin(false);
       trackingParams.set_gravity_as_origin(true);
-      trackingParams.mode(SL_POSITIONAL_TRACKING_MODE_GEN_1);
+      trackingParams.mode(zed.SL_POSITIONAL_TRACKING_MODE_GEN_1);
 
       if (sl_enable_positional_tracking(CAMERA_ID, trackingParams, "") != 0)
       {
@@ -66,11 +88,15 @@ public class ZEDBodyTracking
       }
 
       SL_BodyTrackingParameters bodyTrackingParams = new SL_BodyTrackingParameters();
+      bodyTrackingParams.enable_segmentation(false);
       bodyTrackingParams.enable_tracking(true);
       bodyTrackingParams.enable_body_fitting(true);
-      bodyTrackingParams.body_format(SL_BODY_FORMAT_BODY_18);
+      bodyTrackingParams.max_range(40);
       bodyTrackingParams.detection_model(SL_BODY_TRACKING_MODEL_HUMAN_BODY_MEDIUM);
+      bodyTrackingParams.allow_reduced_precision_inference(false);
+      bodyTrackingParams.body_format(SL_BODY_FORMAT_BODY_18);
       bodyTrackingParams.body_selection(SL_BODY_KEYPOINTS_SELECTION_FULL);
+      bodyTrackingParams.instance_module_id(0);
 
       if (sl_enable_body_tracking(CAMERA_ID, bodyTrackingParams) != 0)
       {
@@ -79,8 +105,12 @@ public class ZEDBodyTracking
 
       bodyTrackingRuntimeParameters.detection_confidence_threshold(40);
       bodyTrackingRuntimeParameters.minimum_keypoints_threshold(1);
+      bodyTrackingRuntimeParameters.skeleton_smoothing(0.0f);
 
       slRuntimeParameters.enable_depth(true);
+      slRuntimeParameters.confidence_threshold(95);
+      slRuntimeParameters.reference_frame(zed.SL_REFERENCE_FRAME_CAMERA);
+      slRuntimeParameters.texture_confidence_threshold(100);
       slRuntimeParameters.confidence_threshold(95);
       slRuntimeParameters.remove_saturated_areas(true);
    }
