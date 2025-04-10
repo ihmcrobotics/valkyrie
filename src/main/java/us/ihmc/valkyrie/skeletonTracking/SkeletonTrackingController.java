@@ -10,14 +10,22 @@ import us.ihmc.avatar.networkProcessor.modules.ToolboxController;
 import us.ihmc.communication.controllerAPI.StatusMessageOutputManager;
 import us.ihmc.euclid.referenceFrame.FramePoint3D;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
+import us.ihmc.euclid.tuple3D.Point3D;
+import us.ihmc.graphicsDescription.appearance.YoAppearance;
+import us.ihmc.graphicsDescription.appearance.YoAppearanceMaterial;
+import us.ihmc.graphicsDescription.yoGraphics.YoGraphicPosition;
+import us.ihmc.graphicsDescription.yoGraphics.YoGraphicsListRegistry;
 import us.ihmc.humanoidRobotics.frames.HumanoidReferenceFrames;
 import us.ihmc.mecano.multiBodySystem.interfaces.FloatingJointBasics;
 import us.ihmc.mecano.multiBodySystem.interfaces.OneDoFJointBasics;
 import us.ihmc.robotModels.FullHumanoidRobotModel;
 import us.ihmc.robotics.robotSide.RobotSide;
+import us.ihmc.valkyrie.perception.ZEDBodyTracking;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoBoolean;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static us.ihmc.robotModels.FullRobotModelUtils.getAllJointsExcludingHands;
@@ -38,10 +46,14 @@ public class SkeletonTrackingController extends ToolboxController
    private final KinematicsStreamingToolboxConfigurationMessage kstConfiguration = new KinematicsStreamingToolboxConfigurationMessage();
    private final KinematicsStreamingToolboxInputMessage kstInput = new KinematicsStreamingToolboxInputMessage();
 
+   private final YoFramePoint3D[] keypoints = new YoFramePoint3D[10];
+
+   private final ZEDBodyTracking zedBodyTracking = new ZEDBodyTracking();
    private final FramePoint3D desiredCoM = new FramePoint3D();
 
    public SkeletonTrackingController(FullHumanoidRobotModel fullRobotModel,
                                      StatusMessageOutputManager statusOutputManager,
+                                     YoGraphicsListRegistry yoGraphicsListRegistry,
                                      YoRegistry parentRegistry)
    {
       super(statusOutputManager, parentRegistry);
@@ -53,6 +65,15 @@ public class SkeletonTrackingController extends ToolboxController
 
       kstConfiguration.setLockPelvis(false);
       kstConfiguration.setLockChest(false);
+
+      zedBodyTracking.initialize();
+      zedBodyTracking.enable();
+
+      for (int i = 0; i < keypoints.length; i++)
+      {
+         keypoints[i] = new YoFramePoint3D("keypoint" + i, ReferenceFrame.getWorldFrame(), registry);
+         yoGraphicsListRegistry.registerYoGraphic(getClass().getSimpleName(), new YoGraphicPosition("keypoint" + i + "position", keypoints[i], 0.04, YoAppearance.Red()));
+      }
 
       isInitialized.set(false);
    }
@@ -70,6 +91,17 @@ public class SkeletonTrackingController extends ToolboxController
       {
          isInitialized.set(false);
          return;
+      }
+
+      for (int i = 0; i < keypoints.length; i++)
+      {
+         keypoints[i].setToNaN();
+      }
+
+      List<Point3D> bodyPartLocations = zedBodyTracking.getBodyPartLocations();
+      for (int i = 0; i < bodyPartLocations.size(); i++)
+      {
+         keypoints[i].set(bodyPartLocations.get(i));
       }
 
       RobotConfigurationData robotConfigurationData = this.robotConfigurationData.getAndSet(null);

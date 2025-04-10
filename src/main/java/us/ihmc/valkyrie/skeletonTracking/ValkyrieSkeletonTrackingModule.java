@@ -4,10 +4,13 @@ import controller_msgs.msg.dds.RobotConfigurationData;
 import toolbox_msgs.msg.dds.ExternalForceEstimationOutputStatus;
 import toolbox_msgs.msg.dds.KinematicsStreamingToolboxConfigurationMessage;
 import toolbox_msgs.msg.dds.KinematicsStreamingToolboxInputMessage;
+import toolbox_msgs.msg.dds.ToolboxStateMessage;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.avatar.networkProcessor.modules.ToolboxController;
 import us.ihmc.avatar.networkProcessor.modules.ToolboxModule;
+import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.communication.HumanoidControllerAPI;
+import us.ihmc.communication.ToolboxAPIs;
 import us.ihmc.communication.controllerAPI.command.Command;
 import us.ihmc.euclid.interfaces.Settable;
 import us.ihmc.ros2.ROS2Node;
@@ -28,8 +31,17 @@ public class ValkyrieSkeletonTrackingModule extends ToolboxModule
    public ValkyrieSkeletonTrackingModule(ValkyrieRobotModel robotModel)
    {
       super(robotModel.getSimpleRobotName(), robotModel.createFullRobotModel(), robotModel.getLogModelProvider(), START_YO_VARIABLE_SERVER, UPDATE_PERIOD_MILLIS);
-      skeletonTrackingController = new SkeletonTrackingController(fullRobotModel, statusOutputManager, registry);
-      setTimeWithoutInputsBeforeGoingToSleep(60.0);
+      skeletonTrackingController = new SkeletonTrackingController(fullRobotModel, statusOutputManager, yoGraphicsListRegistry, registry);
+      setTimeWithoutInputsBeforeGoingToSleep(360.0);
+      startYoVariableServer();
+
+      new Thread(() ->
+                 {
+                    ThreadTools.sleep(10000);
+                    ToolboxStateMessage toolboxStateMessage = new ToolboxStateMessage();
+                    toolboxStateMessage.setRequestedToolboxState(ToolboxStateMessage.WAKE_UP);
+                    receivedPacket(toolboxStateMessage);
+                 }).start();
    }
 
    @Override
@@ -69,13 +81,13 @@ public class ValkyrieSkeletonTrackingModule extends ToolboxModule
    @Override
    public ROS2Topic<?> getOutputTopic()
    {
-      return null;
+      return ToolboxAPIs.SKELETON_TRACKING_TOOLBOX.withRobot(robotName).withOutput();
    }
 
    @Override
    public ROS2Topic<?> getInputTopic()
    {
-      return null;
+      return ToolboxAPIs.SKELETON_TRACKING_TOOLBOX.withRobot(robotName).withInput();
    }
 
    public static void main(String[] args)
