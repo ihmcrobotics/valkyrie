@@ -1,5 +1,6 @@
 package us.ihmc.valkyrie.perception;
 
+import us.ihmc.commons.thread.ThreadTools;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.log.LogTools;
 import us.ihmc.sensors.zed.ZEDImageSensor;
@@ -10,6 +11,7 @@ import us.ihmc.zed.library.ZEDJavaAPINativeLibrary;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static us.ihmc.zed.global.zed.*;
 
@@ -17,9 +19,11 @@ public class ZEDBodyTracking
 {
    private static final boolean ZED_SDK_LOADED = ZEDJavaAPINativeLibrary.load();
    private static final int CAMERA_ID = 0;
+   private static final boolean DEBUG = false;
+
    private ZEDImageSensor zedSensor;
    private final SL_Bodies trackedBodies = new SL_Bodies();
-   private final List<Point3D> bodyPartLocations = new ArrayList<>();
+   private final AtomicReference<List<Point3D>> bodyPartLocationsReference = new AtomicReference<>();
    private final SL_BodyTrackingRuntimeParameters bodyTrackingRuntimeParameters = new SL_BodyTrackingRuntimeParameters();
    private final SL_RuntimeParameters slRuntimeParameters = new SL_RuntimeParameters();
    private boolean enabled = false;
@@ -44,7 +48,7 @@ public class ZEDBodyTracking
       initParams.resolution(SL_RESOLUTION_HD1080);
       initParams.input_type(SL_INPUT_TYPE_USB);
       initParams.camera_device_id(CAMERA_ID);
-      initParams.camera_image_flip(zed.SL_FLIP_MODE_AUTO);
+      initParams.camera_image_flip(zed.SL_FLIP_MODE_OFF);
       initParams.camera_disable_self_calib(false);
       initParams.enable_image_enhancement(true);
       initParams.svo_real_time_mode(true);
@@ -53,7 +57,7 @@ public class ZEDBodyTracking
       initParams.depth_maximum_distance(40);
       initParams.depth_minimum_distance(-1);
       initParams.coordinate_unit(SL_UNIT_METER);
-      initParams.coordinate_system(SL_COORDINATE_SYSTEM_LEFT_HANDED_Y_UP);
+      initParams.coordinate_system(SL_COORDINATE_SYSTEM_RIGHT_HANDED_Z_UP_X_FWD);
       initParams.sdk_gpu_id(-1);
       initParams.sdk_verbose(0);
       initParams.sensors_required(false);
@@ -134,33 +138,31 @@ public class ZEDBodyTracking
                     {
                        if (sl_grab(CAMERA_ID, slRuntimeParameters) == 0)
                        {
+                          List<Point3D> bodyPartLocations = new ArrayList<>();
+
                           sl_retrieve_bodies(CAMERA_ID, bodyTrackingRuntimeParameters, trackedBodies, 0);
                           if (trackedBodies.is_new() > 0 && trackedBodies.nb_bodies() > 0)
                           {
-                             bodyPartLocations.clear();
                              SL_BodyData bodyData = trackedBodies.body_list(0);
-                             int[] keypointIndices = {1,2,5,4,7}; // e.g., shoulder, elbow, etc.
 
-                             for (int i : keypointIndices)
+                             int numKeypoints = 14;
+                             for (int i = 0; i < numKeypoints; i++)
                              {
                                 SL_Vector3 kp = bodyData.keypoint(i);
                                 Point3D point = new Point3D(kp.x(), kp.y(), kp.z());
                                 bodyPartLocations.add(point);
-                                System.out.printf("Keypoint %d: (%.2f, %.2f, %.2f)%n", i, kp.x(), kp.y(), kp.z());
+                                if (DEBUG)
+                                   System.out.printf("Keypoint %d: (%.2f, %.2f, %.2f)%n", i, kp.x(), kp.y(), kp.z());
                              }
 
-                             LogTools.info("Tracked Body ID: " + bodyData.id());
+                             if (DEBUG)
+                                LogTools.info("Tracked Body ID: " + bodyData.id());
                           }
+
+                          this.bodyPartLocationsReference.set(bodyPartLocations);
                        }
 
-                       try
-                       {
-                          Thread.sleep(30); // 30 fps
-                       }
-                       catch (InterruptedException e)
-                       {
-                          Thread.currentThread().interrupt();
-                       }
+                       ThreadTools.sleep(30); // 30 fps
                     }
 
                     sl_close_camera(CAMERA_ID);
@@ -169,7 +171,7 @@ public class ZEDBodyTracking
 
    public List<Point3D> getBodyPartLocations()
    {
-      return new ArrayList<>(bodyPartLocations);
+      return bodyPartLocationsReference.get();
    }
 
    public static void main(String[] args)

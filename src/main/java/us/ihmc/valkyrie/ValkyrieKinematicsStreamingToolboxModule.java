@@ -75,9 +75,8 @@ public class ValkyrieKinematicsStreamingToolboxModule extends KinematicsStreamin
 
    public static void main(String[] args)
    {
-      ValkyrieRobotModel robotModel = new ValkyrieRobotModel(RobotTarget.REAL_ROBOT, ValkyrieRosControlController.VERSION);
+      ValkyrieRobotModel robotModel = new ValkyrieRobotModel(RobotTarget.REAL_ROBOT, ValkyrieRobotVersion.ARM_MASS_SIM);
       ValkyrieJointMap jointMap = robotModel.getJointMap();
-      if (DEMO_MODE)
       {
          ValkyrieKinematicsCollisionModel kinematicsCollisionModel = new ValkyrieKinematicsCollisionModel(jointMap);
          kinematicsCollisionModel.setEnableConservativeCollisions(true);
@@ -108,7 +107,6 @@ public class ValkyrieKinematicsStreamingToolboxModule extends KinematicsStreamin
          }
       }
 
-      if (DEMO_MODE)
       {
          // Add safety parameters here
          defaultConfiguration.setLockPelvis(true);
@@ -147,6 +145,11 @@ public class ValkyrieKinematicsStreamingToolboxModule extends KinematicsStreamin
             }
          });
       }
+
+      parameters.getInactiveJoints().clear();
+      parameters.getInactiveJoints().add("lowerNeckPitch");
+      parameters.getInactiveJoints().add("neckYaw");
+      parameters.getInactiveJoints().add("upperNeckPitch");
 
       ValkyrieKinematicsStreamingToolboxModule module = new ValkyrieKinematicsStreamingToolboxModule(robotModel,
                                                                                                      parameters,
