@@ -177,7 +177,7 @@ public class SkeletonTrackingController extends ToolboxController
          handAdjustments.set(robotSide, new YoFrameVector3D("handAdjustment" + robotSide, ReferenceFrame.getWorldFrame(), registry));
       }
 
-//      yoGraphicsListRegistry.registerYoGraphic(getClass().getSimpleName(), new YoGraphicCoordinateSystem("desiredChestPoseViz", desiredChestPose, 0.4));
+      //      yoGraphicsListRegistry.registerYoGraphic(getClass().getSimpleName(), new YoGraphicCoordinateSystem("desiredChestPoseViz", desiredChestPose, 0.4));
       yoGraphicsListRegistry.registerYoGraphic(getClass().getSimpleName(), new YoGraphicCoordinateSystem("currentChestPoseViz", currentChestPose, 0.4));
 
       interpolationAlpha.set(0.05);
