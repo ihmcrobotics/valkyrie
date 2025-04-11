@@ -1,5 +1,6 @@
 package us.ihmc.valkyrie.skeletonTracking;
 
+import controller_msgs.msg.dds.GoHomeMessage;
 import controller_msgs.msg.dds.RobotConfigurationData;
 import toolbox_msgs.msg.dds.KinematicsStreamingToolboxConfigurationMessage;
 import toolbox_msgs.msg.dds.KinematicsStreamingToolboxInputMessage;
@@ -10,6 +11,7 @@ import us.ihmc.avatar.networkProcessor.kinematicsToolboxModule.KinematicsToolbox
 import us.ihmc.avatar.networkProcessor.kinematicsToolboxModule.KinematicsToolboxHelper;
 import us.ihmc.avatar.networkProcessor.kinemtaticsStreamingToolboxModule.KinematicsStreamingToolboxModule;
 import us.ihmc.avatar.networkProcessor.modules.ToolboxController;
+import us.ihmc.communication.HumanoidControllerAPI;
 import us.ihmc.communication.controllerAPI.StatusMessageOutputManager;
 import us.ihmc.euclid.referenceFrame.FramePoint3D;
 import us.ihmc.euclid.referenceFrame.FramePose3D;
@@ -24,6 +26,7 @@ import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicCoordinateSystem;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicPosition;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicsListRegistry;
+import us.ihmc.humanoidRobotics.communication.packets.walking.HumanoidBodyPart;
 import us.ihmc.humanoidRobotics.frames.HumanoidReferenceFrames;
 import us.ihmc.mecano.multiBodySystem.interfaces.FloatingJointBasics;
 import us.ihmc.mecano.multiBodySystem.interfaces.OneDoFJointBasics;
@@ -125,12 +128,14 @@ public class SkeletonTrackingController extends ToolboxController
    private final ROS2Publisher<ToolboxStateMessage> toolboxStatePublisher;
    private final ROS2Publisher<KinematicsToolboxInitialConfigurationMessage> kstConfigPublisher;
    private final ROS2Publisher<KinematicsStreamingToolboxInputMessage> kstInputPublisher;
+   private final ROS2Publisher<GoHomeMessage> goHomePublisher;
 
    private final FramePoint3D desiredCoM = new FramePoint3D();
    private final KinematicsStreamingToolboxConfigurationMessage kstConfiguration = new KinematicsStreamingToolboxConfigurationMessage();
    private final KinematicsStreamingToolboxInputMessage kstInput = new KinematicsStreamingToolboxInputMessage();
 
    private final ToolboxStateMessage toolboxStateMessage = new ToolboxStateMessage();
+   private final GoHomeMessage goHomeMessage = new GoHomeMessage();
 
    public SkeletonTrackingController(String robotName,
                                      FullHumanoidRobotModel fullRobotModel,
@@ -155,10 +160,12 @@ public class SkeletonTrackingController extends ToolboxController
       ROS2Topic<ToolboxStateMessage> toolboxStateTopic = KinematicsStreamingToolboxModule.getInputStateTopic(robotName);
       ROS2Topic<KinematicsToolboxInitialConfigurationMessage> kstConfigTopic = KinematicsStreamingToolboxModule.getInputStreamingInitialConfigurationTopic(robotName);
       ROS2Topic<KinematicsStreamingToolboxInputMessage> kstInputTopic = KinematicsStreamingToolboxModule.getInputCommandTopic(robotName);
+      ROS2Topic<GoHomeMessage> goHomeTopic = HumanoidControllerAPI.getTopic(GoHomeMessage.class, robotName);
 
       toolboxStatePublisher = ros2Node.createPublisher(toolboxStateTopic);
       kstConfigPublisher = ros2Node.createPublisher(kstConfigTopic);
       kstInputPublisher = ros2Node.createPublisher(kstInputTopic);
+      goHomePublisher = ros2Node.createPublisher(goHomeTopic);
 
       for (int i = 0; i < keypoints.length; i++)
       {
@@ -218,6 +225,7 @@ public class SkeletonTrackingController extends ToolboxController
       // take in latest skeleton data and configure KST message
       if (enableSkeletonTracking.getValue())
       {
+         sendGoHomeMessage = false;
          updateUserPositions(bodyPartLocations);
 
          currentChestPose.set(currentUserChestPose);
@@ -358,11 +366,43 @@ public class SkeletonTrackingController extends ToolboxController
          {
             toolboxStateMessage.setRequestedToolboxState(ToolboxStateMessage.SLEEP);
             toolboxStatePublisher.publish(toolboxStateMessage);
+
+            sendGoHomeMessage = true;
+            disableTime = System.currentTimeMillis();
          }
 
          isInitialized.set(false);
       }
+
+      if (sendGoHomeMessage && System.currentTimeMillis() - disableTime > 2.0)
+      {
+         goHome();
+         sendGoHomeMessage = false;
+      }
    }
+
+   private void goHome()
+   {
+      double trajectoryDuration = 3.0;
+      goHomeMessage.setTrajectoryTime(trajectoryDuration);
+
+      goHomeMessage.setHumanoidBodyPart(HumanoidBodyPart.CHEST.toByte());
+      goHomePublisher.publish(goHomeMessage);
+
+      goHomeMessage.setHumanoidBodyPart(HumanoidBodyPart.PELVIS.toByte());
+      goHomePublisher.publish(goHomeMessage);
+
+      goHomeMessage.setHumanoidBodyPart(HumanoidBodyPart.ARM.toByte());
+      goHomeMessage.setRobotSide(RobotSide.LEFT.toByte());
+      goHomePublisher.publish(goHomeMessage);
+
+      goHomeMessage.setHumanoidBodyPart(HumanoidBodyPart.ARM.toByte());
+      goHomeMessage.setRobotSide(RobotSide.RIGHT.toByte());
+      goHomePublisher.publish(goHomeMessage);
+   }
+
+   private boolean sendGoHomeMessage = false;
+   private long disableTime;
 
    private void updateUserPositions(List<Point3D> bodyPartLocations)
    {
