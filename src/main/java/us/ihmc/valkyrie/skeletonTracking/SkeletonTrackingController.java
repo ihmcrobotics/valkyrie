@@ -374,7 +374,7 @@ public class SkeletonTrackingController extends ToolboxController
          isInitialized.set(false);
       }
 
-      if (sendGoHomeMessage && System.currentTimeMillis() - disableTime > 2.0)
+      if (sendGoHomeMessage && System.currentTimeMillis() - disableTime > 2000)
       {
          goHome();
          sendGoHomeMessage = false;

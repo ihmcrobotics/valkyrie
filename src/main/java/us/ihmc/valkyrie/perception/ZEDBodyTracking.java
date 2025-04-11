@@ -108,7 +108,7 @@ public class ZEDBodyTracking
       }
 
       bodyTrackingRuntimeParameters.detection_confidence_threshold(40);
-      bodyTrackingRuntimeParameters.minimum_keypoints_threshold(1);
+      bodyTrackingRuntimeParameters.minimum_keypoints_threshold(12);
       bodyTrackingRuntimeParameters.skeleton_smoothing(0.0f);
 
       slRuntimeParameters.enable_depth(true);
@@ -138,17 +138,24 @@ public class ZEDBodyTracking
                     {
                        if (sl_grab(CAMERA_ID, slRuntimeParameters) == 0)
                        {
-                          List<Point3D> bodyPartLocations = new ArrayList<>();
-
                           sl_retrieve_bodies(CAMERA_ID, bodyTrackingRuntimeParameters, trackedBodies, 0);
                           if (trackedBodies.is_new() > 0 && trackedBodies.nb_bodies() > 0)
                           {
+                             List<Point3D> bodyPartLocations = new ArrayList<>();
                              SL_BodyData bodyData = trackedBodies.body_list(0);
 
-                             int numKeypoints = 14;
+                             int numKeypoints = 18;
                              for (int i = 0; i < numKeypoints; i++)
                              {
                                 SL_Vector3 kp = bodyData.keypoint(i);
+
+                                boolean containsNaN = Double.isNaN(kp.x()) || Double.isNaN(kp.y()) || Double.isNaN(kp.z());
+                                if (containsNaN)
+                                {
+                                   bodyPartLocations.clear();
+                                   break;
+                                }
+
                                 Point3D point = new Point3D(kp.x(), kp.y(), kp.z());
                                 bodyPartLocations.add(point);
                                 if (DEBUG)
@@ -157,9 +164,10 @@ public class ZEDBodyTracking
 
                              if (DEBUG)
                                 LogTools.info("Tracked Body ID: " + bodyData.id());
-                          }
 
-                          this.bodyPartLocationsReference.set(bodyPartLocations);
+                             if (!bodyPartLocations.isEmpty())
+                                this.bodyPartLocationsReference.set(bodyPartLocations);
+                          }
                        }
 
                        ThreadTools.sleep(30); // 30 fps
