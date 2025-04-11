@@ -12,6 +12,8 @@ import us.ihmc.avatar.networkProcessor.kinemtaticsStreamingToolboxModule.Kinemat
 import us.ihmc.avatar.networkProcessor.modules.ToolboxController;
 import us.ihmc.communication.HumanoidControllerAPI;
 import us.ihmc.communication.controllerAPI.StatusMessageOutputManager;
+import us.ihmc.euclid.Axis3D;
+import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.referenceFrame.FramePoint3D;
 import us.ihmc.euclid.referenceFrame.FramePose3D;
 import us.ihmc.euclid.referenceFrame.FrameVector3D;
@@ -20,6 +22,7 @@ import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.tools.EuclidCoreTools;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
+import us.ihmc.euclid.tuple4D.Quaternion;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicCoordinateSystem;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicPosition;
@@ -52,7 +55,7 @@ public class SkeletonTrackingController extends ToolboxController
    private final AtomicReference<RobotConfigurationData> robotConfigurationData = new AtomicReference<>();
    private final HumanoidReferenceFrames referenceFrames;
 
-   private static final boolean ENABLE_CHEST = false;
+   private static final boolean ENABLE_CHEST = true;
    private static final boolean ENABLE_PELVIS = false;
    private static final boolean ENABLE_HANDS = true;
 
@@ -99,6 +102,10 @@ public class SkeletonTrackingController extends ToolboxController
    private final FramePose3D initialUserChestPose = new FramePose3D();
    private final SideDependentList<FramePoint3D> currentUserHandPositions = new SideDependentList<>(new FramePoint3D(), new FramePoint3D());
    private final FramePose3D currentUserChestPose = new FramePose3D();
+   private final SideDependentList<FrameVector3D> currentUserForearms = new SideDependentList<>(new FrameVector3D(), new FrameVector3D());
+   private final SideDependentList<FrameVector3D> currentUpperArms = new SideDependentList<>(new FrameVector3D(), new FrameVector3D());
+   private final SideDependentList<FrameVector3D> currentShoulderToHands = new SideDependentList<>(new FrameVector3D(), new FrameVector3D());
+   private final SideDependentList<YoDouble> currentUserElbowAngles = new SideDependentList<>(new YoDouble("currentLeftElbowAngle", registry), new YoDouble("currentRightElbowAngle", registry));
 
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    ///////////////////////////////////////////////////              ROBOT DATA                //////////////////////////////////////////////////
@@ -343,15 +350,25 @@ public class SkeletonTrackingController extends ToolboxController
 
                kstHandInput.getDesiredPositionInWorld().set(initialRobotHandPoses.get(robotSide).getPosition());
                kstHandInput.getDesiredPositionInWorld().add(handAdjustments.get(robotSide));
-               kstHandInput.getDesiredOrientationInWorld().set(initialRobotHandPoses.get(robotSide).getOrientation());
+
+               userForward.setIncludingFrame(userFrame, Axis3D.X);
+               userForward.changeFrame(ReferenceFrame.getWorldFrame());
+
+               xHand.set(currentUserForearms.get(robotSide));
+               xHand.normalize();
+               yHand.cross(userForward, xHand);
+               yHand.normalize();
+               zHand.cross(xHand, yHand);
+               zHand.normalize();
+               rotationMatrix.setColumns(xHand, yHand, zHand);
 
                kstHandInput.setHasDesiredLinearVelocity(false);
                kstHandInput.getControlFramePositionInEndEffector().set(handControlFramePoses.get(robotSide).getPosition());
-               kstHandInput.getControlFrameOrientationInEndEffector().set(handControlFramePoses.get(robotSide).getOrientation());
+               kstHandInput.getControlFrameOrientationInEndEffector().set(rotationMatrix);
 
-               kstHandInput.getLinearSelectionMatrix().setXSelected(true);
-               kstHandInput.getLinearSelectionMatrix().setYSelected(true);
-               kstHandInput.getLinearSelectionMatrix().setZSelected(true);
+               kstHandInput.getLinearSelectionMatrix().setXSelected(false);
+               kstHandInput.getLinearSelectionMatrix().setYSelected(false);
+               kstHandInput.getLinearSelectionMatrix().setZSelected(false);
                kstHandInput.getAngularSelectionMatrix().setXSelected(true);
                kstHandInput.getAngularSelectionMatrix().setYSelected(true);
                kstHandInput.getAngularSelectionMatrix().setZSelected(true);
@@ -385,6 +402,14 @@ public class SkeletonTrackingController extends ToolboxController
          sendGoHomeMessage = false;
       }
    }
+
+   private final Quaternion tmpQuaternion = new Quaternion();
+   private final FrameVector3D userForward = new FrameVector3D();
+   private final FrameVector3D xHand = new FrameVector3D();
+   private final FrameVector3D yApprox = new FrameVector3D();
+   private final FrameVector3D yHand = new FrameVector3D();
+   private final FrameVector3D zHand = new FrameVector3D();
+   private final RotationMatrix rotationMatrix = new RotationMatrix();
 
    private void goHome()
    {
@@ -423,6 +448,26 @@ public class SkeletonTrackingController extends ToolboxController
       Point3DReadOnly rightHand = keypoints[R_HAND];
       currentUserHandPositions.get(RobotSide.LEFT).set(leftHand);
       currentUserHandPositions.get(RobotSide.RIGHT).set(rightHand);
+
+      Point3DReadOnly leftElbow = keypoints[L_ELBOW];
+      Point3DReadOnly rightElbow = keypoints[R_ELBOW];
+      currentUserForearms.get(RobotSide.LEFT).sub(leftHand, leftElbow);
+      currentUserForearms.get(RobotSide.RIGHT).sub(rightHand, rightElbow);
+      currentUserForearms.get(RobotSide.LEFT).normalize();
+      currentUserForearms.get(RobotSide.RIGHT).normalize();
+
+      currentUpperArms.get(RobotSide.LEFT).sub(leftElbow, leftShoulder);
+      currentUpperArms.get(RobotSide.RIGHT).sub(rightElbow, rightShoulder);
+      currentUpperArms.get(RobotSide.LEFT).normalize();
+      currentUpperArms.get(RobotSide.RIGHT).normalize();
+
+      currentUserElbowAngles.get(RobotSide.LEFT).set(Math.abs(currentUpperArms.get(RobotSide.LEFT).angle(currentUserForearms.get(RobotSide.LEFT))));
+      currentUserElbowAngles.get(RobotSide.RIGHT).set(Math.abs(currentUpperArms.get(RobotSide.RIGHT).angle(currentUserForearms.get(RobotSide.RIGHT))));
+
+      currentShoulderToHands.get(RobotSide.LEFT).sub(leftHand, leftShoulder);
+      currentShoulderToHands.get(RobotSide.RIGHT).sub(rightHand, rightShoulder);
+      currentShoulderToHands.get(RobotSide.LEFT).normalize();
+      currentShoulderToHands.get(RobotSide.RIGHT).normalize();
    }
 
    private void wakeUpToolbox()

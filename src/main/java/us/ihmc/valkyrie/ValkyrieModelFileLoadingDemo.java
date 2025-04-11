@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 
 import us.ihmc.avatar.drcRobot.RobotTarget;
+import us.ihmc.commonWalkingControlModules.parameterEstimation.InertiaVisualizationTools;
+import us.ihmc.commonWalkingControlModules.parameterEstimation.YoInertiaEllipsoid;
 import us.ihmc.commonWalkingControlModules.visualizer.CommonInertiaEllipsoidsVisualizer;
 import us.ihmc.euclid.geometry.tools.EuclidGeometryTools;
 import us.ihmc.euclid.matrix.RotationMatrix;
@@ -19,15 +21,19 @@ import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicsListRegistry;
 import us.ihmc.robotModels.FullHumanoidRobotModel;
 import us.ihmc.robotics.physics.RobotCollisionModel;
+import us.ihmc.robotics.robotSide.RobotSide;
+import us.ihmc.scs2.definition.robot.RigidBodyDefinition;
+import us.ihmc.scs2.definition.robot.RobotDefinition;
+import us.ihmc.scs2.definition.visual.VisualDefinitionFactory;
+import us.ihmc.scs2.definition.yoGraphic.YoGraphicDefinition;
+import us.ihmc.scs2.definition.yoGraphic.YoGraphicGroupDefinition;
+import us.ihmc.scs2.sessionVisualizer.jfx.SessionVisualizer;
+import us.ihmc.scs2.simulation.SimulationSession;
 import us.ihmc.scs2.simulation.collision.Collidable;
 import us.ihmc.scs2.simulation.collision.CollidableHelper;
-import us.ihmc.simulationconstructionset.FloatingRootJointRobot;
-import us.ihmc.simulationconstructionset.Joint;
-import us.ihmc.simulationconstructionset.Link;
-import us.ihmc.simulationconstructionset.OneDegreeOfFreedomJoint;
-import us.ihmc.simulationconstructionset.Robot;
-import us.ihmc.simulationconstructionset.SimulationConstructionSet;
+import us.ihmc.scs2.simulation.robot.Robot;
 import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
+import us.ihmc.valkyrie.parameters.ValkyrieJointMap;
 
 public class ValkyrieModelFileLoadingDemo
 {
@@ -35,158 +41,49 @@ public class ValkyrieModelFileLoadingDemo
    private static final boolean SHOW_COORDINATES_AT_JOINT_ORIGIN = false;
    private static final boolean SHOW_INERTIA_ELLIPSOIDS = false;
    private static final boolean SHOW_KINEMATICS_COLLISIONS = false;
-   private static final boolean SHOW_SIM_COLLISIONS = true;
-
-   private SimulationConstructionSet scs;
+   private static final boolean SHOW_SIM_COLLISIONS = false;
+   private static final boolean SHOW_HAND_CONTROL_FRAME = true;
 
    public ValkyrieModelFileLoadingDemo()
    {
       ValkyrieRobotModel robotModel = new ValkyrieRobotModel(RobotTarget.SCS, ValkyrieRobotVersion.ARM_MASS_SIM);
 
-      FloatingRootJointRobot valkyrieRobot = robotModel.createHumanoidFloatingRootJointRobot(false);
-      valkyrieRobot.setPositionInWorld(new Vector3D());
-
-      if (SHOW_ELLIPSOIDS)
+      if (SHOW_HAND_CONTROL_FRAME)
       {
-         addIntertialEllipsoidsToVisualizer(valkyrieRobot);
+         addHandControlFrames(robotModel.getRobotDefinition(), robotModel.getJointMap());
       }
 
-      if (SHOW_COORDINATES_AT_JOINT_ORIGIN)
-         addJointAxis(valkyrieRobot);
+      SimulationSession session = new SimulationSession();
+      Robot simulationRobot = session.addRobot(robotModel.getRobotDefinition());
 
-      FullHumanoidRobotModel fullRobotModel = robotModel.createFullRobotModel();
-
-      YoGraphicsListRegistry yoGraphicsListRegistry = new YoGraphicsListRegistry();
+      YoGraphicGroupDefinition extraViz = new YoGraphicGroupDefinition("ExtraVisualization", new ArrayList<>());
 
       if (SHOW_INERTIA_ELLIPSOIDS)
       {
-         CommonInertiaEllipsoidsVisualizer inertiaVis = new CommonInertiaEllipsoidsVisualizer(fullRobotModel.getElevator(), yoGraphicsListRegistry);
-         inertiaVis.update();
+         ArrayList<YoInertiaEllipsoid> inertialEllipsoids = InertiaVisualizationTools.createYoInertiaEllipsoids(simulationRobot.getRootBody(),
+                                                                                                                session.getRootRegistry());
+         YoGraphicDefinition ellipsoidGroup = InertiaVisualizationTools.getInertiaEllipsoidGroup(inertialEllipsoids);
+         extraViz.addChild(ellipsoidGroup);
       }
 
-      if (SHOW_KINEMATICS_COLLISIONS)
-         addKinematicsCollisionGraphics(fullRobotModel, valkyrieRobot, robotModel.getHumanoidRobotKinematicsCollisionModel());
-
-      if (SHOW_SIM_COLLISIONS)
-      {
-         RobotCollisionModel collisionModel = robotModel.getSimulationRobotCollisionModel(new CollidableHelper(), "robot", "ground");
-         addKinematicsCollisionGraphics(fullRobotModel, valkyrieRobot, collisionModel);
-      }
-
-      scs = new SimulationConstructionSet(valkyrieRobot);
-      scs.addYoGraphicsListRegistry(yoGraphicsListRegistry);
-      scs.setGroundVisible(false);
-      scs.startOnAThread();
+      session.addYoGraphicDefinitions(extraViz);
+      SessionVisualizer.startSessionVisualizer(session);
    }
 
-   private void addIntertialEllipsoidsToVisualizer(FloatingRootJointRobot valkyrieRobot)
+   private static void addHandControlFrames(RobotDefinition robotDefinition, ValkyrieJointMap jointMap)
    {
-      ArrayList<Joint> joints = new ArrayList<>();
-      joints.add(valkyrieRobot.getRootJoint());
+      double handControlFrameGraphicSize = 0.3;
 
-      HashSet<Link> links = getAllLinks(joints, new HashSet<Link>());
-
-      for (Link l : links)
+      for (RobotSide robotSide : RobotSide.values)
       {
-         AppearanceDefinition appearance = YoAppearance.Green();
-         appearance.setTransparency(0.6);
-         l.addEllipsoidFromMassProperties(appearance);
-         l.addCoordinateSystemToCOM(0.5);
-         //         l.addBoxFromMassProperties(appearance);
-      }
-   }
+         RigidBodyTransform handControlFrameToWristTransform = jointMap.getHandControlFrameToWristTransform(robotSide);
+         RigidBodyDefinition handDefinition = robotDefinition.getRigidBodyDefinition(jointMap.getHandName(robotSide));
 
-   private HashSet<Link> getAllLinks(List<Joint> joints, HashSet<Link> links)
-   {
-      for (Joint j : joints)
-      {
-         links.add(j.getLink());
-
-         if (!j.getChildrenJoints().isEmpty())
-         {
-            links.addAll(getAllLinks(j.getChildrenJoints(), links));
-         }
+         VisualDefinitionFactory visualDefinitionFactory = new VisualDefinitionFactory();
+         visualDefinitionFactory.appendTransform(handControlFrameToWristTransform);
+         visualDefinitionFactory.addCoordinateSystem(handControlFrameGraphicSize);
+         handDefinition.getVisualDefinitions().addAll(visualDefinitionFactory.getVisualDefinitions());
       }
-
-      return links;
-   }
-
-   public static void addJointAxis(FloatingRootJointRobot valkyrieRobot)
-   {
-
-      ArrayList<OneDegreeOfFreedomJoint> joints = new ArrayList<>(Arrays.asList(valkyrieRobot.getOneDegreeOfFreedomJoints()));
-
-      for (OneDegreeOfFreedomJoint joint : joints)
-      {
-         Graphics3DObject linkGraphics = new Graphics3DObject();
-         linkGraphics.addCoordinateSystem(0.5);
-         linkGraphics.combine(joint.getLink().getLinkGraphics());
-         joint.getLink().setLinkGraphics(linkGraphics);
-      }
-   }
-
-   public static void addKinematicsCollisionGraphics(FullHumanoidRobotModel fullRobotModel, Robot robot, RobotCollisionModel collisionModel)
-   {
-      List<Collidable> robotCollidables = collisionModel.getRobotCollidables(fullRobotModel.getElevator());
-
-      for (Collidable collidable : robotCollidables)
-      {
-         Link link = robot.getLink(collidable.getRigidBody().getName());
-         link.getLinkGraphics().combine(getGraphics(collidable));
-      }
-   }
-
-   private static Graphics3DObject getGraphics(Collidable collidable)
-   {
-      Shape3DReadOnly shape = collidable.getShape();
-      RigidBodyTransform transformToParentJoint = collidable.getShape().getReferenceFrame()
-                                                            .getTransformToDesiredFrame(collidable.getRigidBody().getParentJoint().getFrameAfterJoint());
-      Graphics3DObject graphics = new Graphics3DObject();
-      graphics.transform(transformToParentJoint);
-      AppearanceDefinition appearance = YoAppearance.DarkGreen();
-      appearance.setTransparency(0.5);
-
-      if (shape instanceof Sphere3DReadOnly)
-      {
-         Sphere3DReadOnly sphere = (Sphere3DReadOnly) shape;
-         graphics.translate(sphere.getPosition());
-         graphics.addSphere(sphere.getRadius(), appearance);
-      }
-      else if (shape instanceof Capsule3DReadOnly)
-      {
-         Capsule3DReadOnly capsule = (Capsule3DReadOnly) shape;
-         RigidBodyTransform transform = new RigidBodyTransform();
-         EuclidGeometryTools.orientation3DFromZUpToVector3D(capsule.getAxis(), transform.getRotation());
-         transform.getTranslation().set(capsule.getPosition());
-         graphics.transform(transform);
-         graphics.addCapsule(capsule.getRadius(),
-                             capsule.getLength() + 2.0 * capsule.getRadius(), // the 2nd term is removed internally.
-                             appearance);
-      }
-      else if (shape instanceof Box3DReadOnly)
-      {
-         Box3DReadOnly box = (Box3DReadOnly) shape;
-         graphics.translate(box.getPosition());
-         graphics.rotate(new RotationMatrix(box.getOrientation()));
-         graphics.addCube(box.getSizeX(), box.getSizeY(), box.getSizeZ(), true, appearance);
-      }
-      else if (shape instanceof PointShape3DReadOnly)
-      {
-         PointShape3DReadOnly pointShape = (PointShape3DReadOnly) shape;
-         graphics.translate(pointShape);
-         graphics.addSphere(0.01, appearance);
-      }
-      else if (shape instanceof FrameEllipsoid3DReadOnly)
-      {
-         FrameEllipsoid3DReadOnly ellipsoidShape = (FrameEllipsoid3DReadOnly) shape;
-         graphics.transform(new RigidBodyTransform(ellipsoidShape.getPose()));
-         graphics.addEllipsoid(ellipsoidShape.getRadiusX(), ellipsoidShape.getRadiusY(), ellipsoidShape.getRadiusZ(), appearance);
-      }
-      else
-      {
-         throw new UnsupportedOperationException("Unsupported shape: " + shape.getClass().getSimpleName());
-      }
-      return graphics;
    }
 
    public static void main(String[] args)
