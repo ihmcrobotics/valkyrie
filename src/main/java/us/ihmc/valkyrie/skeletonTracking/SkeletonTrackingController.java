@@ -206,7 +206,17 @@ public class SkeletonTrackingController extends ToolboxController
          keypoints[i].setToNaN();
       }
 
+      RobotConfigurationData robotConfigurationData = this.robotConfigurationData.getAndSet(null);
+      if (robotConfigurationData != null)
+      {
+         KinematicsToolboxHelper.setRobotStateFromRobotConfigurationData(robotConfigurationData, rootJoint, oneDoFJoints);
+         referenceFrames.updateFrames();
+      }
+
       List<Point3D> bodyPartLocations = zedBodyTracking.getBodyPartLocations();
+      if (bodyPartLocations == null)
+         return;
+
       for (int i = 0; i < bodyPartLocations.size(); i++)
       {
          Point3D keypoint = bodyPartLocations.get(i);
@@ -215,18 +225,11 @@ public class SkeletonTrackingController extends ToolboxController
          keypoints[i].set(-keypoint.getX(), -keypoint.getY(), keypoint.getZ());
       }
 
-      RobotConfigurationData robotConfigurationData = this.robotConfigurationData.getAndSet(null);
-      if (robotConfigurationData != null)
-      {
-         KinematicsToolboxHelper.setRobotStateFromRobotConfigurationData(robotConfigurationData, rootJoint, oneDoFJoints);
-         referenceFrames.updateFrames();
-      }
-
       // take in latest skeleton data and configure KST message
       if (enableSkeletonTracking.getValue())
       {
          sendGoHomeMessage = false;
-         updateUserPositions(bodyPartLocations);
+         updateUserPositions();
 
          currentChestPose.set(currentUserChestPose);
 
@@ -254,8 +257,9 @@ public class SkeletonTrackingController extends ToolboxController
                initialRobotHandPositions.get(robotSide).changeFrame(ReferenceFrame.getWorldFrame());
             }
 
-            toolboxStateMessage.setRequestedToolboxState(ToolboxStateMessage.WAKE_UP);
-            toolboxStatePublisher.publish(toolboxStateMessage);
+            wakeUpToolbox();
+            reinitializeToolbox();
+            wakeUpToolbox();
 
             heightAdjustment.set(0.0);
             yawAdjustment.set(0.0);
@@ -404,7 +408,7 @@ public class SkeletonTrackingController extends ToolboxController
    private boolean sendGoHomeMessage = false;
    private long disableTime;
 
-   private void updateUserPositions(List<Point3D> bodyPartLocations)
+   private void updateUserPositions()
    {
       Point3DReadOnly chest = keypoints[CHEST];
       Point3DReadOnly leftShoulder = keypoints[L_SHOULDER];
@@ -418,6 +422,18 @@ public class SkeletonTrackingController extends ToolboxController
       Point3DReadOnly rightHand = keypoints[R_HAND];
       currentUserHandPositions.get(RobotSide.LEFT).set(leftHand);
       currentUserHandPositions.get(RobotSide.RIGHT).set(rightHand);
+   }
+
+   private void wakeUpToolbox()
+   {
+      toolboxStateMessage.setRequestedToolboxState(ToolboxStateMessage.WAKE_UP);
+      toolboxStatePublisher.publish(toolboxStateMessage);
+   }
+
+   private void reinitializeToolbox()
+   {
+      toolboxStateMessage.setRequestedToolboxState(ToolboxStateMessage.REINITIALIZE);
+      toolboxStatePublisher.publish(toolboxStateMessage);
    }
 
    public void updateRobotConfigurationData(RobotConfigurationData robotConfigurationData)
