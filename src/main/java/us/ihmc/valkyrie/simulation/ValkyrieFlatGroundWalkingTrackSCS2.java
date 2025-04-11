@@ -14,8 +14,8 @@ import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
 
 public class ValkyrieFlatGroundWalkingTrackSCS2
 {
-   private static boolean createYoVariableServer = System.getProperty("create.yovariable.server") != null
-         && Boolean.parseBoolean(System.getProperty("create.yovariable.server"));
+   private static boolean createYoVariableServer = true; // System.getProperty("create.yovariable.server") != null
+//         && Boolean.parseBoolean(System.getProperty("create.yovariable.server"));
 
    private final RealtimeROS2Node realtimeROS2Node = new ROS2NodeBuilder().buildRealtime("flat_ground_walking_track_simulation");
 

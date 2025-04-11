@@ -166,8 +166,8 @@ public class ValkyriePoseSender
 
    public void sendArmsDown()
    {
-      armPublisher.publish(HumanoidMessageTools.createArmTrajectoryMessage(RobotSide.LEFT, 3.0, new double[]{-0.3, -0.9, 1.3, -1.57}));
-      armPublisher.publish(HumanoidMessageTools.createArmTrajectoryMessage(RobotSide.RIGHT, 3.0, new double[]{-0.3, 0.9, 1.3, 1.57}));
+      armPublisher.publish(HumanoidMessageTools.createArmTrajectoryMessage(RobotSide.LEFT, 3.0, new double[]{-0.5, -1.0, 1.3, -1.57}));
+      armPublisher.publish(HumanoidMessageTools.createArmTrajectoryMessage(RobotSide.RIGHT, 3.0, new double[]{-0.5, 1.0, 1.3, 1.57}));
 
       double pitch = Math.toRadians(20.0);
       FrameQuaternion orientation = new FrameQuaternion(referenceFrames.getMidFeetZUpFrame(), 0.0, pitch, 0.0);
