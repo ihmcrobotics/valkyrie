@@ -7,7 +7,6 @@ import toolbox_msgs.msg.dds.KinematicsStreamingToolboxInputMessage;
 import toolbox_msgs.msg.dds.KinematicsToolboxInitialConfigurationMessage;
 import toolbox_msgs.msg.dds.KinematicsToolboxRigidBodyMessage;
 import toolbox_msgs.msg.dds.ToolboxStateMessage;
-import us.ihmc.avatar.networkProcessor.kinematicsToolboxModule.KinematicsToolboxController.RobotConfigurationDataBasedUpdater;
 import us.ihmc.avatar.networkProcessor.kinematicsToolboxModule.KinematicsToolboxHelper;
 import us.ihmc.avatar.networkProcessor.kinemtaticsStreamingToolboxModule.KinematicsStreamingToolboxModule;
 import us.ihmc.avatar.networkProcessor.modules.ToolboxController;
@@ -20,7 +19,6 @@ import us.ihmc.euclid.referenceFrame.PoseReferenceFrame;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.tools.EuclidCoreTools;
 import us.ihmc.euclid.tuple3D.Point3D;
-import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicCoordinateSystem;
@@ -54,7 +52,7 @@ public class SkeletonTrackingController extends ToolboxController
    private final AtomicReference<RobotConfigurationData> robotConfigurationData = new AtomicReference<>();
    private final HumanoidReferenceFrames referenceFrames;
 
-   private static final boolean ENABLE_CHEST = true;
+   private static final boolean ENABLE_CHEST = false;
    private static final boolean ENABLE_PELVIS = false;
    private static final boolean ENABLE_HANDS = true;
 
@@ -106,8 +104,8 @@ public class SkeletonTrackingController extends ToolboxController
    ///////////////////////////////////////////////////              ROBOT DATA                //////////////////////////////////////////////////
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   private final SideDependentList<FramePoint3D> initialRobotHandPositions = new SideDependentList<>(new FramePoint3D(), new FramePoint3D());
-   private final SideDependentList<FramePoint3D> handControlFramePosition = new SideDependentList<>(new FramePoint3D(), new FramePoint3D());
+   private final SideDependentList<FramePose3D> initialRobotHandPoses = new SideDependentList<>(new FramePose3D(), new FramePose3D());
+   private final SideDependentList<FramePose3D> handControlFramePoses = new SideDependentList<>(new FramePose3D(), new FramePose3D());
    private final FramePose3D initialRobotChestPose = new FramePose3D();
    private final FramePose3D initialRobotPelvisPose = new FramePose3D();
 
@@ -118,12 +116,12 @@ public class SkeletonTrackingController extends ToolboxController
    private final YoDouble heightAdjustment = new YoDouble("heightAdjustment", registry);
    private final YoDouble yawAdjustment = new YoDouble("yawAdjustment", registry);
    private final SideDependentList<YoFrameVector3D> handAdjustments = new SideDependentList<>();
-   private final YoDouble interpolationAlpha = new YoDouble("interpolationAlpha", registry);
+   private final YoDouble filterAlpha = new YoDouble("filterAlpha", registry);
    private final YoFramePose3D desiredChestPose = new YoFramePose3D("desiredChestPose", ReferenceFrame.getWorldFrame(), registry);
    private final YoFramePose3D currentChestPose = new YoFramePose3D("currentChestPose", ReferenceFrame.getWorldFrame(), registry);
 
    private final FrameVector3D tmpVector = new FrameVector3D();
-   private final SideDependentList<YoFramePoint3D> desiredHandPositions = new SideDependentList<>();
+   private final SideDependentList<YoFramePoint3D> desiredHandPoses = new SideDependentList<>();
 
    private final ROS2Publisher<ToolboxStateMessage> toolboxStatePublisher;
    private final ROS2Publisher<KinematicsToolboxInitialConfigurationMessage> kstConfigPublisher;
@@ -176,11 +174,11 @@ public class SkeletonTrackingController extends ToolboxController
 
       for (RobotSide robotSide : RobotSide.values)
       {
-         handControlFramePosition.get(robotSide).setToZero(fullRobotModel.getHandControlFrame(robotSide));
-         handControlFramePosition.get(robotSide).changeFrame(fullRobotModel.getHand(robotSide).getBodyFixedFrame());
+         handControlFramePoses.get(robotSide).setToZero(fullRobotModel.getHandControlFrame(robotSide));
+         handControlFramePoses.get(robotSide).changeFrame(fullRobotModel.getHand(robotSide).getBodyFixedFrame());
 
-         desiredHandPositions.set(robotSide, new YoFramePoint3D("desired" + robotSide + "HandPosition", ReferenceFrame.getWorldFrame(), registry));
-         yoGraphicsListRegistry.registerYoGraphic(getClass().getSimpleName(), new YoGraphicPosition("desired" + robotSide + "HandPositionViz", desiredHandPositions.get(robotSide), 0.04, YoAppearance.Blue()));
+         desiredHandPoses.set(robotSide, new YoFramePoint3D("desired" + robotSide + "HandPose", ReferenceFrame.getWorldFrame(), registry));
+         yoGraphicsListRegistry.registerYoGraphic(getClass().getSimpleName(), new YoGraphicPosition("desired" + robotSide + "HandPoseViz", desiredHandPoses.get(robotSide), 0.04, YoAppearance.Blue()));
 
          handAdjustments.set(robotSide, new YoFrameVector3D("handAdjustment" + robotSide, ReferenceFrame.getWorldFrame(), registry));
       }
@@ -188,7 +186,7 @@ public class SkeletonTrackingController extends ToolboxController
       //      yoGraphicsListRegistry.registerYoGraphic(getClass().getSimpleName(), new YoGraphicCoordinateSystem("desiredChestPoseViz", desiredChestPose, 0.4));
       yoGraphicsListRegistry.registerYoGraphic(getClass().getSimpleName(), new YoGraphicCoordinateSystem("currentChestPoseViz", currentChestPose, 0.4));
 
-      interpolationAlpha.set(0.03);
+      filterAlpha.set(0.01);
 
       isInitialized.set(false);
    }
@@ -254,8 +252,8 @@ public class SkeletonTrackingController extends ToolboxController
             initialRobotPelvisPose.changeFrame(ReferenceFrame.getWorldFrame());
             for (RobotSide robotSide : RobotSide.values)
             {
-               initialRobotHandPositions.get(robotSide).setToZero(fullRobotModel.getHandControlFrame(robotSide));
-               initialRobotHandPositions.get(robotSide).changeFrame(ReferenceFrame.getWorldFrame());
+               initialRobotHandPoses.get(robotSide).setToZero(fullRobotModel.getHandControlFrame(robotSide));
+               initialRobotHandPoses.get(robotSide).changeFrame(ReferenceFrame.getWorldFrame());
             }
 
             wakeUpToolbox();
@@ -290,7 +288,7 @@ public class SkeletonTrackingController extends ToolboxController
             kstChestInput.setEndEffectorHashCode(fullRobotModel.getChest().hashCode());
 
             double yawAdjustment = EuclidCoreTools.angleDifferenceMinusPiToPi(currentUserChestPose.getYaw(), initialUserChestPose.getYaw());
-            this.yawAdjustment.set(EuclidCoreTools.interpolate(this.yawAdjustment.getValue(), yawAdjustment, interpolationAlpha.getValue()));
+            this.yawAdjustment.set(EuclidCoreTools.interpolate(this.yawAdjustment.getValue(), yawAdjustment, filterAlpha.getValue()));
 
             kstChestInput.getDesiredOrientationInWorld().set(initialRobotChestPose.getOrientation());
             kstChestInput.getDesiredOrientationInWorld().appendYawRotation(this.yawAdjustment.getValue());
@@ -313,7 +311,7 @@ public class SkeletonTrackingController extends ToolboxController
             kstPelvisInput.setEndEffectorHashCode(fullRobotModel.getPelvis().hashCode());
 
             double adjustmentZ = currentUserChestPose.getPosition().getZ() - initialUserChestPose.getPosition().getZ();
-            heightAdjustment.set(EuclidCoreTools.interpolate(heightAdjustment.getValue(), adjustmentZ, interpolationAlpha.getValue()));
+            heightAdjustment.set(EuclidCoreTools.interpolate(heightAdjustment.getValue(), adjustmentZ, filterAlpha.getValue()));
 
             kstPelvisInput.getDesiredPositionInWorld().set(initialRobotPelvisPose.getPosition());
             kstPelvisInput.getDesiredPositionInWorld().addZ(heightAdjustment.getValue());
@@ -341,22 +339,24 @@ public class SkeletonTrackingController extends ToolboxController
 
                tmpVector.setReferenceFrame(referenceFrames.getMidFeetZUpFrame());
                tmpVector.changeFrame(ReferenceFrame.getWorldFrame());
-               handAdjustments.get(robotSide).interpolate(tmpVector, interpolationAlpha.getValue());
+               handAdjustments.get(robotSide).interpolate(tmpVector, filterAlpha.getValue());
 
-               kstHandInput.getDesiredPositionInWorld().set(initialRobotHandPositions.get(robotSide));
+               kstHandInput.getDesiredPositionInWorld().set(initialRobotHandPoses.get(robotSide).getPosition());
                kstHandInput.getDesiredPositionInWorld().add(handAdjustments.get(robotSide));
+               kstHandInput.getDesiredOrientationInWorld().set(initialRobotHandPoses.get(robotSide).getOrientation());
 
                kstHandInput.setHasDesiredLinearVelocity(false);
-               kstHandInput.getControlFramePositionInEndEffector().set(handControlFramePosition.get(robotSide));
+               kstHandInput.getControlFramePositionInEndEffector().set(handControlFramePoses.get(robotSide).getPosition());
+               kstHandInput.getControlFrameOrientationInEndEffector().set(handControlFramePoses.get(robotSide).getOrientation());
 
                kstHandInput.getLinearSelectionMatrix().setXSelected(true);
                kstHandInput.getLinearSelectionMatrix().setYSelected(true);
                kstHandInput.getLinearSelectionMatrix().setZSelected(true);
-               kstHandInput.getAngularSelectionMatrix().setXSelected(false);
-               kstHandInput.getAngularSelectionMatrix().setYSelected(false);
-               kstHandInput.getAngularSelectionMatrix().setZSelected(false);
+               kstHandInput.getAngularSelectionMatrix().setXSelected(true);
+               kstHandInput.getAngularSelectionMatrix().setYSelected(true);
+               kstHandInput.getAngularSelectionMatrix().setZSelected(true);
 
-               desiredHandPositions.get(robotSide).set(kstHandInput.getDesiredPositionInWorld());
+               desiredHandPoses.get(robotSide).set(kstHandInput.getDesiredPositionInWorld());
             }
          }
 
