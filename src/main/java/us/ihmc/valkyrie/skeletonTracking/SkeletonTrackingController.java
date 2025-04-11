@@ -55,7 +55,7 @@ public class SkeletonTrackingController extends ToolboxController
    private final HumanoidReferenceFrames referenceFrames;
 
    private static final boolean ENABLE_CHEST = true;
-   private static final boolean ENABLE_PELVIS = true;
+   private static final boolean ENABLE_PELVIS = false;
    private static final boolean ENABLE_HANDS = true;
 
    private static final int HEAD = 0;
@@ -151,8 +151,9 @@ public class SkeletonTrackingController extends ToolboxController
       this.rootJoint = fullRobotModel.getRootJoint();
       this.oneDoFJoints = getAllJointsExcludingHands(fullRobotModel);
 
-      kstConfiguration.setLockPelvis(false);
+      kstConfiguration.setLockPelvis(true);
       kstConfiguration.setLockChest(false);
+      kstConfiguration.setEnableCenterOfMassControl(false);
 
       zedBodyTracking.initialize();
       zedBodyTracking.enable();
@@ -187,7 +188,7 @@ public class SkeletonTrackingController extends ToolboxController
       //      yoGraphicsListRegistry.registerYoGraphic(getClass().getSimpleName(), new YoGraphicCoordinateSystem("desiredChestPoseViz", desiredChestPose, 0.4));
       yoGraphicsListRegistry.registerYoGraphic(getClass().getSimpleName(), new YoGraphicCoordinateSystem("currentChestPoseViz", currentChestPose, 0.4));
 
-      interpolationAlpha.set(0.05);
+      interpolationAlpha.set(0.03);
 
       isInitialized.set(false);
    }

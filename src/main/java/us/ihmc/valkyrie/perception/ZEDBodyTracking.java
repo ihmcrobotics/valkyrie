@@ -109,13 +109,12 @@ public class ZEDBodyTracking
 
       bodyTrackingRuntimeParameters.detection_confidence_threshold(40);
       bodyTrackingRuntimeParameters.minimum_keypoints_threshold(12);
-      bodyTrackingRuntimeParameters.skeleton_smoothing(0.0f);
+      bodyTrackingRuntimeParameters.skeleton_smoothing(0.75f);
 
       slRuntimeParameters.enable_depth(true);
-      slRuntimeParameters.confidence_threshold(95);
+      slRuntimeParameters.confidence_threshold(50);
       slRuntimeParameters.reference_frame(zed.SL_REFERENCE_FRAME_CAMERA);
       slRuntimeParameters.texture_confidence_threshold(100);
-      slRuntimeParameters.confidence_threshold(95);
       slRuntimeParameters.remove_saturated_areas(true);
    }
 
@@ -144,7 +143,9 @@ public class ZEDBodyTracking
                              List<Point3D> bodyPartLocations = new ArrayList<>();
                              SL_BodyData bodyData = trackedBodies.body_list(0);
 
-                             int numKeypoints = 18;
+                             // we only need the first 10 at most. if it doesn't detect the legs or ears, no problem. otherwise don't accept the data
+                             int numKeypoints = 10;
+
                              for (int i = 0; i < numKeypoints; i++)
                              {
                                 SL_Vector3 kp = bodyData.keypoint(i);
