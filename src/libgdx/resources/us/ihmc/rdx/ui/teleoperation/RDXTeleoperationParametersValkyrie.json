@@ -1,0 +1,18 @@
+{
+  "title" : "RDXTeleoperationParameters",
+  "Trajectory time" : 4.0,
+  "Pelvis height change velocity" : 0.05,
+  "Chest orientation velocity" : 1.0,
+  "Swing time" : 0.8,
+  "Transfer time" : 0.4,
+  "Pelvis minimum height" : 0.74,
+  "Pelvis maximum height" : 1.01,
+  "Chest minimum pitch" : 0.0,
+  "Chest maximum pitch" : 0.872665,
+  "Chest minimum yaw" : -0.698132,
+  "Chest maximum yaw" : 0.698132,
+  "Turn aggressiveness" : 0.5,
+  "Is PSI adjustable" : false,
+  "Plan with body path" : false,
+  "Replan swing trajectories on change" : true
+}
