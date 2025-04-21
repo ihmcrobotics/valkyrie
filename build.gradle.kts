@@ -62,6 +62,11 @@ testDependencies {
 }
 
 libgdxDependencies {
+   api("us.ihmc:valkyrie:main") {
+      exclude(group = "org.openjfx")
+      exclude(group = "org.jmonkeyengine")
+      exclude(group = "org.lwjgl.lwjgl") // exclude lwjgl 2
+   }
    api("us.ihmc:ihmc-high-level-behaviors-libgdx:source")
    api("commons-io:commons-io:2.11.0") // IOUtils method was old version without this
 }
