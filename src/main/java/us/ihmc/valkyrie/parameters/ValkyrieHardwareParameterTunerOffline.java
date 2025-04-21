@@ -10,6 +10,8 @@ import us.ihmc.parameterTuner.guiElements.main.ParameterTuningApplication;
 import us.ihmc.parameterTuner.offline.FileInputManager;
 import us.ihmc.valkyrie.ValkyrieRobotModel;
 
+import static javafx.application.Application.launch;
+
 public class ValkyrieHardwareParameterTunerOffline extends ParameterTuningApplication
 {
    @Override

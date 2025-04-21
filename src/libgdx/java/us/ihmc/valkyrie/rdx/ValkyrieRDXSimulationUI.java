@@ -316,7 +316,7 @@ public class ValkyrieRDXSimulationUI
 
    private static ValkyrieRobotModel createRobotModel()
    {
-      return new ValkyrieRobotModel(RobotTarget.SCS, ValkyrieRobotVersion.FINGERLESS);
+      return new ValkyrieRobotModel(RobotTarget.SCS, ValkyrieRobotVersion.ARM_MASS_SIM);
    }
 
    public static void main(String[] args)
