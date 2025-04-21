@@ -4,14 +4,17 @@ import us.ihmc.avatar.drcRobot.ROS2SyncedRobotModel;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.behaviors.behaviorTree.ros2.ROS2BehaviorTreeUpdateThread;
 import us.ihmc.commons.thread.RepeatingTaskThread;
+import us.ihmc.communication.PerceptionAPI;
 import us.ihmc.communication.ros2.ROS2DemandGraphNode;
 import us.ihmc.communication.ros2.ROS2Helper;
 import us.ihmc.communication.ros2.sync.ROS2PeerClockOffsetEstimator;
+import us.ihmc.perception.ImageSensorPublishThread;
 import us.ihmc.perception.detections.DetectionManager;
 import us.ihmc.perception.sceneGraph.ros2.ROS2SceneGraph;
 import us.ihmc.perception.sceneGraph.ros2.ROS2SceneGraphUpdateThread;
 import us.ihmc.ros2.ROS2Node;
 import us.ihmc.ros2.ROS2NodeBuilder;
+import us.ihmc.sensors.zed.ZEDImageSensor;
 import us.ihmc.valkyrie.ValkyrieRobotModel;
 import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
 
@@ -38,7 +41,11 @@ public class ValkyrieAutonomyProcess
    // Behaviors
    private final ROS2BehaviorTreeUpdateThread behaviorTreeUpdateThread;
 
-   public ValkyrieAutonomyProcess()
+   // ZED
+   private final ZEDImageSensor zedImageSensor;
+   private final ImageSensorPublishThread zedPublishThread;
+
+   public ValkyrieAutonomyProcess(ZEDImageSensor zedImageSensor)
    {
       // Robot
       syncedRobot = new ROS2SyncedRobotModel(ROBOT_MODEL, ros2Node);
@@ -58,6 +65,15 @@ public class ValkyrieAutonomyProcess
       // Behavior Tree
       behaviorTreeUpdateThread = new ROS2BehaviorTreeUpdateThread(ros2Node, ros2PeerClockOffsetEstimator, ROBOT_MODEL, sceneGraph, detectionManager);
       behaviorTreeUpdateThread.startRepeating();
+
+      // ZED
+      this.zedImageSensor = zedImageSensor;
+      zedImageSensor.run(true);
+      zedPublishThread = new ImageSensorPublishThread(ros2Node, zedImageSensor);
+      zedPublishThread.addTopic(PerceptionAPI.SRT_ZED_LEFT_COLOR_STREAM_STATUS, ZEDImageSensor.LEFT_COLOR_IMAGE_KEY);
+      zedPublishThread.addTopic(PerceptionAPI.SRT_ZED_RIGHT_COLOR_STREAM_STATUS, ZEDImageSensor.RIGHT_COLOR_IMAGE_KEY);
+      zedPublishThread.addTopic(PerceptionAPI.ZED2_DEPTH, ZEDImageSensor.DEPTH_IMAGE_KEY);
+      zedPublishThread.startRepeating();
    }
 
    private void initializeSceneGraph()

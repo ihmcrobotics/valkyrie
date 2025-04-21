@@ -74,7 +74,7 @@ public class ValkyrieRDXOperatorUI
       syncedRobot = new ROS2SyncedRobotModel(robotModel, ros2Node);
       ros2PeerClockOffsetEstimator = new ROS2PeerClockOffsetEstimator(ros2Node);
 
-      baseUI = new RDXBaseUI("Nadia Operator UI");
+      baseUI = new RDXBaseUI("Valkyrie Operator UI");
 
       visualizers = new ValkyrieRDXPerceptionVisualizersPanel(baseUI, ros2Node, ros2PeerClockOffsetEstimator, syncedRobot);
 
