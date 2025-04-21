@@ -61,6 +61,12 @@ testDependencies {
    }
 }
 
+libgdxDependencies {
+   api(ihmc.sourceSetProject("main"))
+   api("us.ihmc:ihmc-high-level-behaviors-libgdx:source")
+   api("commons-io:commons-io:2.11.0") // IOUtils method was old version without this
+}
+
 ihmc.jarWithLibFolder()
 tasks.getByPath("installDist").dependsOn("compositeJar")
 val installDistOutputFolder = "${project.projectDir}/build/install/valkyrie"

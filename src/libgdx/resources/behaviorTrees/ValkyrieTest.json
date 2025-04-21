@@ -1,0 +1,134 @@
+{
+  "type" : "ActionSequenceDefinition",
+  "name" : "ValkyrieTest.json",
+  "notes" : "",
+  "children" : [ {
+    "type" : "FootstepPlanActionDefinition",
+    "name" : "Step forward",
+    "notes" : "",
+    "children" : [ ],
+    "executeAfterAction" : "Previous",
+    "swingDuration" : 1.2,
+    "transferDuration" : 1.0,
+    "executionMode" : "OVERRIDE",
+    "parentFrame" : "walkingFrame",
+    "goalStancePoint" : {
+      "x" : 0.585,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "goalFocalPoint" : {
+      "x" : 0.982,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "leftGoalFootToGoal" : {
+      "x" : 0.0,
+      "y" : 0.1,
+      "yawInDegrees" : 0.0
+    },
+    "rightGoalFootToGoal" : {
+      "x" : 0.0,
+      "y" : -0.1,
+      "yawInDegrees" : 0.0
+    },
+    "plannerInitialStanceSide" : "LEFT",
+    "plannerPerformAStarSearch" : false,
+    "plannerParameters" : { }
+  }, {
+    "type" : "HandPoseActionDefinition",
+    "name" : "Move right hand",
+    "notes" : "",
+    "children" : [ ],
+    "executeAfterAction" : "Previous",
+    "side" : "right",
+    "trajectoryDuration" : 2.0,
+    "usePredefinedJointAngles" : true,
+    "preset" : "CUSTOM_ANGLES",
+    "j0" : -0.8035473823547363,
+    "j1" : 1.453871726989746,
+    "j2" : 0.5686340928077698,
+    "j3" : 0.7991641163825989,
+    "j4" : 0.0,
+    "j5" : 0.0,
+    "j6" : 0.0,
+    "jointspaceWeight" : -1.0
+  }, {
+    "type" : "WaitDurationActionDefinition",
+    "name" : "Wait to move left hand",
+    "notes" : "",
+    "children" : [ ],
+    "executeAfterAction" : "Step forward",
+    "waitDuration" : 1.0
+  }, {
+    "type" : "HandPoseActionDefinition",
+    "name" : "Move left hand",
+    "notes" : "",
+    "children" : [ ],
+    "executeAfterAction" : "Previous",
+    "side" : "left",
+    "trajectoryDuration" : 2.0,
+    "usePredefinedJointAngles" : true,
+    "preset" : "CUSTOM_ANGLES",
+    "j0" : -0.618151843547821,
+    "j1" : -0.5924054384231567,
+    "j2" : 0.4104881286621094,
+    "j3" : -0.45652249455451965,
+    "j4" : 0.0,
+    "j5" : 0.0,
+    "j6" : 0.0,
+    "jointspaceWeight" : -1.0
+  }, {
+    "type" : "ChestOrientationActionDefinition",
+    "name" : "Pitch chest forward",
+    "notes" : "",
+    "children" : [ ],
+    "executeAfterAction" : "Wait to move left hand",
+    "trajectoryDuration" : 4.0,
+    "holdPoseInWorldLater" : false,
+    "parentFrame" : "midFeetZUp",
+    "x" : -0.022,
+    "y" : -0.0245,
+    "z" : 1.09,
+    "rollInDegrees" : 0.0,
+    "pitchInDegrees" : 44.0,
+    "yawInDegrees" : 0.0
+  }, {
+    "type" : "ChestOrientationActionDefinition",
+    "name" : "Home chest",
+    "notes" : "",
+    "children" : [ ],
+    "executeAfterAction" : "Previous",
+    "trajectoryDuration" : 4.0,
+    "holdPoseInWorldLater" : false,
+    "parentFrame" : "midFeetZUp",
+    "x" : -0.022,
+    "y" : -0.0245,
+    "z" : 1.09,
+    "rollInDegrees" : 0.0,
+    "pitchInDegrees" : 0.0,
+    "yawInDegrees" : 0.0
+  }, {
+    "type" : "HandPoseActionDefinition",
+    "name" : "Home left",
+    "notes" : "",
+    "children" : [ ],
+    "executeAfterAction" : "Pitch chest forward",
+    "side" : "left",
+    "trajectoryDuration" : 4.0,
+    "usePredefinedJointAngles" : true,
+    "preset" : "HOME",
+    "jointspaceWeight" : -1.0
+  }, {
+    "type" : "HandPoseActionDefinition",
+    "name" : "Home right",
+    "notes" : "",
+    "children" : [ ],
+    "executeAfterAction" : "Pitch chest forward",
+    "side" : "right",
+    "trajectoryDuration" : 4.0,
+    "usePredefinedJointAngles" : true,
+    "preset" : "HOME",
+    "jointspaceWeight" : -1.0
+  } ]
+}
