@@ -12,7 +12,7 @@ public class ValkyrieHardwareAutonomyProcess
    {
       Runtime.getRuntime().addShutdownHook(new Thread(this::close, getClass().getSimpleName() + "Closer"));
 
-      ZEDImageSensor zedImageSensor = new ZEDImageSensor(0, ZEDModelData.ZED_MINI, zed.SL_INPUT_TYPE_STREAM, zed.SL_DEPTH_MODE_NEURAL, "127.0.0.1", 30000);
+      ZEDImageSensor zedImageSensor = new ZEDImageSensor(0, ZEDModelData.ZED_MINI, zed.SL_INPUT_TYPE_STREAM, zed.SL_DEPTH_MODE_NEURAL, "127.0.0.1", ValkyrieZEDStreamer.PORT);
       perceptionAutonomyProcess = new ValkyrieAutonomyProcess(zedImageSensor);
    }
 
