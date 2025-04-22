@@ -26,11 +26,11 @@ mainDependencies {
    api("us.ihmc:jinput:2.0.6-ihmc2")
    api("us.ihmc:ihmc-lord-microstrain-drivers:17-0.0.7")
 
-   api("us.ihmc:euclid:0.22.3")
-   api("us.ihmc:euclid-geometry:0.22.3")
-   api("us.ihmc:euclid-frame:0.22.3")
-   api("us.ihmc:euclid-shape:0.22.3")
-   api("us.ihmc:euclid-frame-shape:0.22.3")
+   api("us.ihmc:euclid:0.22.4")
+   api("us.ihmc:euclid-geometry:0.22.4")
+   api("us.ihmc:euclid-frame:0.22.4")
+   api("us.ihmc:euclid-shape:0.22.4")
+   api("us.ihmc:euclid-frame-shape:0.22.4")
    api("us.ihmc:ihmc-realtime:1.7.0")
    api("us.ihmc:ihmc-ros-control:0.7.1")
 
@@ -50,11 +50,11 @@ mainDependencies {
 }
 
 testDependencies {
-   api("us.ihmc:euclid:0.22.3")
-   api("us.ihmc:euclid-geometry:0.22.3")
-   api("us.ihmc:euclid-frame:0.22.3")
-   api("us.ihmc:euclid-shape:0.22.3")
-   api("us.ihmc:euclid-frame-shape:0.22.3")
+   api("us.ihmc:euclid:0.22.4")
+   api("us.ihmc:euclid-geometry:0.22.4")
+   api("us.ihmc:euclid-frame:0.22.4")
+   api("us.ihmc:euclid-shape:0.22.4")
+   api("us.ihmc:euclid-frame-shape:0.22.4")
 
    api("us.ihmc:ihmc-avatar-interfaces-test:$ihmcOpenRoboticsSoftwareVersion") {
       exclude(group = "us.ihmc", module = "javacpp")
