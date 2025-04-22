@@ -65,11 +65,11 @@ public class ValkyrieZEDStreamer
       sl_create_camera(0);
       SL_InitParameters initParameters = new SL_InitParameters();
       initParameters.camera_fps(15);
-      initParameters.resolution(SL_RESOLUTION_VGA);
+      initParameters.resolution(SL_RESOLUTION_HD720);
       initParameters.input_type(SL_INPUT_TYPE_USB);
       initParameters.camera_device_id(0);
       int state = sl_open_camera(0, initParameters, 0, "", "", 0, "", "", "");
-      sl_enable_streaming(0, SL_STREAMING_CODEC_H264, 6000, (short) PORT, -1, 0, 16084, 15);
+      sl_enable_streaming(0, SL_STREAMING_CODEC_H264, 6000, (short) PORT, -1, 0, 16084, 60);
       if (state != 0)
          throw new RuntimeException("Could not initialize ZED");
 
