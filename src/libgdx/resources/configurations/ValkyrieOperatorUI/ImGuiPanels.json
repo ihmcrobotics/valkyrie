@@ -1,0 +1,30 @@
+{
+  "dockspacePanels" : { },
+  "windows" : {
+    "3D View" : true,
+    "Behavior Tree" : false,
+    "Footstep Planner Log 3D View" : false,
+    "Footstep Planner Log Viewer Controls" : false,
+    "Nadia Variables" : false,
+    "Perception Visualizers" : true,
+    "/ihmc/d455/image/color/srt/24266601###us.ihmc.rdx.ui.graphics.RDXOpenCVVideoVisualizer:/ihmc/d455/image/color/srt/24266601" : false,
+    "/ihmc/d455/image/depth###us.ihmc.rdx.ui.graphics.RDXOpenCVVideoVisualizer:/ihmc/d455/image/depth" : false,
+    "/ihmc/yolo/annotated_image###us.ihmc.rdx.ui.graphics.RDXOpenCVVideoVisualizer:/ihmc/yolo/annotated_image" : false,
+    "/ihmc/zed2/color_left/srt/24266601###us.ihmc.rdx.ui.graphics.RDXOpenCVVideoVisualizer:/ihmc/zed2/color_left/srt/24266601" : false,
+    "/ihmc/zed2/color_right/srt/24266601###us.ihmc.rdx.ui.graphics.RDXOpenCVVideoVisualizer:/ihmc/zed2/color_right/srt/24266601" : false,
+    "/ihmc/zed2/depth###us.ihmc.rdx.ui.graphics.RDXOpenCVVideoVisualizer:/ihmc/zed2/depth" : false,
+    "Quick AT Manager" : false,
+    "ROS 2 Stats" : false,
+    "Rapid region extractor parameters" : false,
+    "Scene Graph" : false,
+    "Teleoperation" : false,
+    "Body Path Planner Parameters (Teleoperation)" : false,
+    "Demo Poses" : false,
+    "Footstep Planner Parameters (Teleoperation A*)" : false,
+    "Footstep Planner Parameters (Teleoperation Turn Walk Turn)" : false,
+    "Locomotion Parameters" : false,
+    "Swing Foot Planning Parameters (Teleoperation)" : false,
+    "Teleoperation Parameters" : false,
+    "YoVariableClient" : false
+  }
+}
