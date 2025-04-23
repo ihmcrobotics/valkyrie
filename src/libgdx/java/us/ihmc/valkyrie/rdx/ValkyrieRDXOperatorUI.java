@@ -126,7 +126,7 @@ public class ValkyrieRDXOperatorUI
       baseUI.getImGuiPanelManager().addPanel(new RDXROS2StatsPanel());
 
       // ZED
-      this.zedImageSensor = new ZEDImageSensor(0, ZEDModelData.ZED_MINI, zed.SL_INPUT_TYPE_STREAM, zed.SL_DEPTH_MODE_PERFORMANCE, "192.168.100.21", ValkyrieZEDStreamer.PORT);
+      this.zedImageSensor = new ZEDImageSensor(0, ZEDModelData.ZED_MINI, zed.SL_INPUT_TYPE_STREAM, zed.SL_DEPTH_MODE_NEURAL, "192.168.100.21", ValkyrieZEDStreamer.PORT);
       zedImageSensor.run(true);
       zedPublishThread = new ImageSensorPublishThread(ros2Node, zedImageSensor);
       zedPublishThread.addTopic(PerceptionAPI.ZED2_COLOR_IMAGES.get(RobotSide.LEFT), ZEDImageSensor.LEFT_COLOR_IMAGE_KEY);
