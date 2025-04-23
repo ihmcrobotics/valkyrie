@@ -68,11 +68,11 @@ public class ValkyrieRDXOperatorUI
 
    private final ValkyrieRDXPerceptionVisualizersPanel visualizers;
    private RDXSceneGraphUI sceneGraphUI;
-   private RDXROS2BehaviorTree behaviorTreeUI;
+//   private RDXROS2BehaviorTree behaviorTreeUI;
    private ReferenceFrameLibrary referenceFrameLibrary;
    private RDXFootstepPlannerLogViewer footstepPlannerLogViewer;
    private RDXRobotCollidable chestAvoidanceCollidable;
-   private final RDXQuickATManager quickATPanel;
+//   private final RDXQuickATManager quickATPanel;
    private RDXZEDSVORecorderPanel zedSVORecorderPanel;
 
    public ValkyrieRDXOperatorUI()
@@ -111,8 +111,8 @@ public class ValkyrieRDXOperatorUI
                                                                                                          PerceptionComms.PERSPECTIVE_RAPID_REGION_PARAMETERS);
       baseUI.getImGuiPanelManager().addPanel(rapidRegionsParameterPanel.createPanel());
 
-      quickATPanel = new RDXQuickATManager();
-      baseUI.getImGuiPanelManager().addPanel(quickATPanel);
+//      quickATPanel = new RDXQuickATManager();
+//      baseUI.getImGuiPanelManager().addPanel(quickATPanel);
 
       zedSVORecorderPanel = new RDXZEDSVORecorderPanel(ros2Helper);
 
@@ -164,19 +164,19 @@ public class ValkyrieRDXOperatorUI
 
             footstepPlannerLogViewer = new RDXFootstepPlannerLogViewer(baseUI, robotModel);
 
-            WorkspaceResourceDirectory treeFilesDirectory = new WorkspaceResourceDirectory(getClass(), "/behaviorTrees");
-            behaviorTreeUI = new RDXROS2BehaviorTree(treeFilesDirectory,
-                                                     robotModel,
-                                                     syncedRobot,
-                                                     new ROS2PeerClockOffsetEstimator(ros2Node),
-                                                     selectionCollisionModel,
-                                                     baseUI,
-                                                     baseUI.getPrimary3DPanel(),
-                                                     referenceFrameLibrary,
-                                                     ros2ControllerHelper);
-            behaviorTreeUI.createAndSetupDefault(baseUI);
-
-            quickATPanel.create(teleoperationPanel, sceneGraphUI.getSceneGraph());
+//            WorkspaceResourceDirectory treeFilesDirectory = new WorkspaceResourceDirectory(getClass(), "/behaviorTrees");
+//            behaviorTreeUI = new RDXROS2BehaviorTree(treeFilesDirectory,
+//                                                     robotModel,
+//                                                     syncedRobot,
+//                                                     new ROS2PeerClockOffsetEstimator(ros2Node),
+//                                                     selectionCollisionModel,
+//                                                     baseUI,
+//                                                     baseUI.getPrimary3DPanel(),
+//                                                     referenceFrameLibrary,
+//                                                     ros2ControllerHelper);
+//            behaviorTreeUI.createAndSetupDefault(baseUI);
+//
+//            quickATPanel.create(teleoperationPanel, sceneGraphUI.getSceneGraph());
 
             vrModeManager.create(baseUI,
                                  syncedRobot,
@@ -212,8 +212,8 @@ public class ValkyrieRDXOperatorUI
             footstepPlannerLogViewer.update();
 
             sceneGraphUI.update();
-            quickATPanel.update();
-            behaviorTreeUI.update();
+//            quickATPanel.update();
+//            behaviorTreeUI.update();
 
             visualizers.update();
 
@@ -254,7 +254,7 @@ public class ValkyrieRDXOperatorUI
             }
             zedImageSensor.close();
 
-            behaviorTreeUI.destroy();
+//            behaviorTreeUI.destroy();
             yoVariableClientPanel.destroy();
             yoGraphUI.destroy();
             teleoperationPanel.destroy();
