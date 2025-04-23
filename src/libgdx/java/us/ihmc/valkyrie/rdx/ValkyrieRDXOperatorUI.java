@@ -11,6 +11,7 @@ import us.ihmc.communication.ros2.ROS2Helper;
 import us.ihmc.communication.ros2.sync.ROS2PeerClockOffsetEstimator;
 import us.ihmc.euclid.referenceFrame.FramePoint3D;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
+import us.ihmc.log.LogTools;
 import us.ihmc.perception.ImageSensorPublishThread;
 import us.ihmc.perception.comms.PerceptionComms;
 import us.ihmc.perception.rapidRegions.RapidRegionsExtractorParameters;
@@ -23,6 +24,7 @@ import us.ihmc.rdx.ui.affordances.RDXRobotCollidable;
 import us.ihmc.rdx.ui.affordances.quickATs.RDXQuickATManager;
 import us.ihmc.rdx.ui.behavior.tree.RDXROS2BehaviorTree;
 import us.ihmc.rdx.ui.footstepPlanner.RDXFootstepPlannerLogViewer;
+import us.ihmc.rdx.ui.graphics.ros2.RDXROS2RobotVisualizer;
 import us.ihmc.rdx.ui.teleoperation.RDXTeleoperationManager;
 import us.ihmc.rdx.ui.tools.RDXROS2StatsPanel;
 import us.ihmc.rdx.ui.vr.RDXVRModeManager;
@@ -184,6 +186,16 @@ public class ValkyrieRDXOperatorUI
                                  sceneGraphUI.getSceneGraph(),
                                  true);
             vrModeManager.getHandPlacedFootstepMode().setLocomotionParameters(teleoperationPanel.getLocomotionParameters());
+
+            RDXROS2RobotVisualizer robotVisualizer = new RDXROS2RobotVisualizer(ros2Helper, syncedRobot);
+            ValkyrieRDXROS2InteractableSensors interactableSensors = new ValkyrieRDXROS2InteractableSensors(baseUI,
+                                                                                                            ros2Helper,
+                                                                                                            syncedRobot,
+                                                                                                            syncedRobot.getReferenceFrames(),
+                                                                                                            robotVisualizer);
+            interactableSensors.setupZED2i();
+            interactableSensors.setupRealsenseD455();
+
             baseUI.getPrimaryScene().addRenderableProvider(vrModeManager::getRenderables);
             baseUI.getVRManager().getContext().addVRInputProcessor(vrModeManager::processVRInput);
          }
@@ -231,6 +243,17 @@ public class ValkyrieRDXOperatorUI
          @Override
          public void dispose()
          {
+            zedPublishThread.stopRepeating();
+            try
+            {
+               zedPublishThread.join();
+            }
+            catch (InterruptedException e)
+            {
+               LogTools.error(e);
+            }
+            zedImageSensor.close();
+
             behaviorTreeUI.destroy();
             yoVariableClientPanel.destroy();
             yoGraphUI.destroy();

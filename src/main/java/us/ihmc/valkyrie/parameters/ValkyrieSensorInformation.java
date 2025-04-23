@@ -1,18 +1,12 @@
 package us.ihmc.valkyrie.parameters;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import org.apache.commons.lang3.tuple.ImmutableTriple;
-
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple4D.Quaternion;
 import us.ihmc.euclid.yawPitchRoll.YawPitchRoll;
-import us.ihmc.humanoidRobotics.frames.HumanoidReferenceFrames;
 import us.ihmc.robotics.EuclidCoreMissingTools;
 import us.ihmc.robotics.robotSide.RobotSide;
 import us.ihmc.robotics.robotSide.SideDependentList;
@@ -21,6 +15,9 @@ import us.ihmc.sensorProcessing.parameters.AvatarRobotCameraParameters;
 import us.ihmc.sensorProcessing.parameters.AvatarRobotLidarParameters;
 import us.ihmc.sensorProcessing.parameters.AvatarRobotPointCloudParameters;
 import us.ihmc.sensorProcessing.parameters.HumanoidRobotSensorInformation;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ValkyrieSensorInformation implements HumanoidRobotSensorInformation
 {
@@ -406,6 +403,18 @@ public class ValkyrieSensorInformation implements HumanoidRobotSensorInformation
    public ReferenceFrame getSteppingCameraParentFrame(CommonHumanoidReferenceFrames referenceFrames)
    {
       return referenceFrames.getChestFrame();
+   }
+
+   @Override
+   public ReferenceFrame getExperimentalCameraParentFrame(CommonHumanoidReferenceFrames referenceFrames)
+   {
+      return referenceFrames.getHeadFrame();
+   }
+
+   @Override
+   public RigidBodyTransform getExperimentalCameraTransform()
+   {
+      return ZED_2I_TO_HEAD_TRANSFORM_LEFT_LENS;
    }
 
    @Override
