@@ -152,8 +152,8 @@ public class ValkyrieSensorInformation implements HumanoidRobotSensorInformation
    private static final RigidBodyTransform ZED_2I_TO_HEAD_TRANSFORM_LEFT_LENS = new RigidBodyTransform();
    static
    {
-      ZED_2I_TO_HEAD_TRANSFORM_LEFT_LENS.getTranslation().set(0.21454,  0.00248,  -0.02345);
-      EuclidCoreMissingTools.setYawPitchRollDegrees(ZED_2I_TO_HEAD_TRANSFORM_LEFT_LENS.getRotation(), -0.72647, 25.92193, -0.44585);
+      ZED_2I_TO_HEAD_TRANSFORM_LEFT_LENS.getTranslation().set(0.19380,  -0.00132,  -0.09808);
+      EuclidCoreMissingTools.setYawPitchRollDegrees(ZED_2I_TO_HEAD_TRANSFORM_LEFT_LENS.getRotation(), 2.41978, 7.19678, -0.40136);
    }
 
    private static final RigidBodyTransform ZED_2I_TO_HEAD_TRANSFORM_RIGHT_LENS = new RigidBodyTransform();
