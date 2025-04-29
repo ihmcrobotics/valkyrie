@@ -153,8 +153,8 @@ tasks.create("deploy") {
          exec("ls -halp $directory/lib")
 
          put(file("build/libs/valkyrie-$version.jar").toString(), "$directory/ValkyrieController.jar")
-         rsync("build/install/valkyrie/bin", "link02", "$directory")
-         rsync("build/install/valkyrie/lib", "link02", "$directory")
+         rsync("build/install/valkyrie/bin", valkyrie_link_ip, directory)
+         rsync("build/install/valkyrie/lib", valkyrie_link_ip, directory)
 
          put(file("launchScripts").toString(), directory)
          exec("chmod +x $directory/runNetworkProcessor.sh")
@@ -212,26 +212,6 @@ fun deployNetworkProcessor()
 
    remote.session(valkyrie_zelda_ip, valkyrie_realtime_username, valkyrie_realtime_password) // perception
    {
-//      exec("mkdir -p $directory")
-//
-//      exec("rm -rf $directory/bin")
-//      exec("rm -rf $directory/lib")
-//
-//      put(file("$installDistOutputFolder/bin").toString(), "$directory/bin")
-//      exec("chmod +x $directory/bin/valkyrie-network-processor")
-//      put(file("$installDistOutputFolder/lib").toString(), "$directory/lib")
-//      exec("ls -halp $directory/lib")
-//
-//      put(file("build/libs/valkyrie-$version.jar").toString(), "$directory/ValkyrieController.jar")
-//      put(file("launchScripts").toString(), directory)
-//      exec("chmod +x $directory/runNetworkProcessor.sh")
-//      exec("ls -halp $directory")
-//
-//      exec("rm -rf /home/val/.ihmc/Configurations")
-//      exec("mkdir -p /home/val/.ihmc/Configurations")
-//      put(file("saved-configurations/defaultREAModuleConfiguration.txt").toString(), ".ihmc/Configurations")
-//      exec("ls -halp /home/val/.ihmc/Configurations")
-
       exec("mkdir -p $directory")
 
       exec("rm -rf $directory/lib")
@@ -239,8 +219,8 @@ fun deployNetworkProcessor()
       exec("ls -halp $directory/lib")
 
       put(file("build/libs/valkyrie-$version.jar").toString(), "$directory/ValkyrieController.jar")
-      rsync("build/install/valkyrie/bin", "zelda02", "$directory")
-      rsync("build/install/valkyrie/lib", "zelda02", "$directory")
+      rsync("build/install/valkyrie/bin", valkyrie_zelda_ip, directory)
+      rsync("build/install/valkyrie/lib", valkyrie_zelda_ip, directory)
 
       put(file("launchScripts").toString(), directory)
       exec("chmod +x $directory/runNetworkProcessor.sh")
