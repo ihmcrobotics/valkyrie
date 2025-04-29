@@ -16,12 +16,10 @@ import us.ihmc.perception.ImageSensorPublishThread;
 import us.ihmc.perception.comms.PerceptionComms;
 import us.ihmc.perception.rapidRegions.RapidRegionsExtractorParameters;
 import us.ihmc.rdx.Lwjgl3ApplicationAdapter;
-import us.ihmc.rdx.perception.RDXZEDSVORecorderPanel;
 import us.ihmc.rdx.perception.sceneGraph.RDXSceneGraphUI;
 import us.ihmc.rdx.ui.ImGuiRemoteROS2StoredPropertySet;
 import us.ihmc.rdx.ui.RDXBaseUI;
 import us.ihmc.rdx.ui.affordances.RDXRobotCollidable;
-import us.ihmc.rdx.ui.affordances.quickATs.RDXQuickATManager;
 import us.ihmc.rdx.ui.behavior.tree.RDXROS2BehaviorTree;
 import us.ihmc.rdx.ui.footstepPlanner.RDXFootstepPlannerLogViewer;
 import us.ihmc.rdx.ui.graphics.ros2.RDXROS2RobotVisualizer;
@@ -76,8 +74,6 @@ public class ValkyrieRDXOperatorUI
 
    public ValkyrieRDXOperatorUI()
    {
-
-
       ValkyrieRobotModel robotModel = createRobotModel();
 
       ROS2Node ros2Node = new ROS2NodeBuilder().build("operator_ui");
