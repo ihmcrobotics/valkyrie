@@ -68,12 +68,11 @@ public class ValkyrieRDXOperatorUI
 
    private final ValkyrieRDXPerceptionVisualizersPanel visualizers;
    private RDXSceneGraphUI sceneGraphUI;
-//   private RDXROS2BehaviorTree behaviorTreeUI;
+   private RDXROS2BehaviorTree behaviorTreeUI;
    private ReferenceFrameLibrary referenceFrameLibrary;
    private RDXFootstepPlannerLogViewer footstepPlannerLogViewer;
    private RDXRobotCollidable chestAvoidanceCollidable;
 //   private final RDXQuickATManager quickATPanel;
-   private RDXZEDSVORecorderPanel zedSVORecorderPanel;
 
    public ValkyrieRDXOperatorUI()
    {
@@ -114,8 +113,6 @@ public class ValkyrieRDXOperatorUI
 //      quickATPanel = new RDXQuickATManager();
 //      baseUI.getImGuiPanelManager().addPanel(quickATPanel);
 
-      zedSVORecorderPanel = new RDXZEDSVORecorderPanel(ros2Helper);
-
       vrModeManager = new RDXVRModeManager();
       retargetingParameters = new ValkyrieRetargetingParameters(robotModel.getJointMap(), syncedRobot.getFullRobotModel());
 
@@ -126,7 +123,8 @@ public class ValkyrieRDXOperatorUI
       baseUI.getImGuiPanelManager().addPanel(new RDXROS2StatsPanel());
 
       // ZED
-      this.zedImageSensor = new ZEDImageSensor(0, ZEDModelData.ZED_MINI, zed.SL_INPUT_TYPE_STREAM, zed.SL_DEPTH_MODE_NEURAL, "192.168.100.21", ValkyrieZEDStreamer.PORT);
+      String zeldaAddress = "192.168.100.21";
+      this.zedImageSensor = new ZEDImageSensor(0, ZEDModelData.ZED_MINI, zed.SL_INPUT_TYPE_STREAM, zed.SL_DEPTH_MODE_NEURAL, zeldaAddress, ValkyrieZEDStreamer.PORT);
       zedImageSensor.run(true);
       zedImageSensor.setSensorFrame(syncedRobot.getReferenceFrames().getExperimentalCameraFrame());
       zedPublishThread = new ImageSensorPublishThread(ros2Node, zedImageSensor);
@@ -165,18 +163,18 @@ public class ValkyrieRDXOperatorUI
 
             footstepPlannerLogViewer = new RDXFootstepPlannerLogViewer(baseUI, robotModel);
 
-//            WorkspaceResourceDirectory treeFilesDirectory = new WorkspaceResourceDirectory(getClass(), "/behaviorTrees");
-//            behaviorTreeUI = new RDXROS2BehaviorTree(treeFilesDirectory,
-//                                                     robotModel,
-//                                                     syncedRobot,
-//                                                     new ROS2PeerClockOffsetEstimator(ros2Node),
-//                                                     selectionCollisionModel,
-//                                                     baseUI,
-//                                                     baseUI.getPrimary3DPanel(),
-//                                                     referenceFrameLibrary,
-//                                                     ros2ControllerHelper);
-//            behaviorTreeUI.createAndSetupDefault(baseUI);
-//
+            WorkspaceResourceDirectory treeFilesDirectory = new WorkspaceResourceDirectory(getClass(), "/behaviorTrees");
+            behaviorTreeUI = new RDXROS2BehaviorTree(treeFilesDirectory,
+                                                     robotModel,
+                                                     syncedRobot,
+                                                     new ROS2PeerClockOffsetEstimator(ros2Node),
+                                                     selectionCollisionModel,
+                                                     baseUI,
+                                                     baseUI.getPrimary3DPanel(),
+                                                     referenceFrameLibrary,
+                                                     ros2ControllerHelper);
+            behaviorTreeUI.createAndSetupDefault(baseUI);
+
 //            quickATPanel.create(teleoperationPanel, sceneGraphUI.getSceneGraph());
 
             vrModeManager.create(baseUI,
@@ -195,7 +193,6 @@ public class ValkyrieRDXOperatorUI
                                                                                                             syncedRobot.getReferenceFrames(),
                                                                                                             robotVisualizer);
             interactableSensors.setupZED2i();
-            interactableSensors.setupRealsenseD455();
 
             baseUI.getPrimaryScene().addRenderableProvider(vrModeManager::getRenderables);
             baseUI.getVRManager().getContext().addVRInputProcessor(vrModeManager::processVRInput);
@@ -204,8 +201,6 @@ public class ValkyrieRDXOperatorUI
          @Override
          public void render()
          {
-            zedSVORecorderPanel.update();
-
             syncedRobot.update();
             teleoperationPanel.update();
             vrModeManager.update();
@@ -214,7 +209,7 @@ public class ValkyrieRDXOperatorUI
 
             sceneGraphUI.update();
 //            quickATPanel.update();
-//            behaviorTreeUI.update();
+            behaviorTreeUI.update();
 
             visualizers.update();
 
@@ -255,7 +250,7 @@ public class ValkyrieRDXOperatorUI
             }
             zedImageSensor.close();
 
-//            behaviorTreeUI.destroy();
+            behaviorTreeUI.destroy();
             yoVariableClientPanel.destroy();
             yoGraphUI.destroy();
             teleoperationPanel.destroy();
