@@ -213,7 +213,7 @@
     <axis xyz="0 0 1"/>
     <parent link="pelvis"/>
     <child link="torsoYawLink"/>
-    <limit effort="190" lower="-1.329" upper="1.181" velocity="5.89"/>
+    <limit effort="190" lower="-1.111" upper="1.111" velocity="5.89"/>
     <controller_gains Kd="0.0" Ki="0.0" Kp="0.0"/>
     <dynamics damping="0.1" friction="0.0"/>
   </joint>
