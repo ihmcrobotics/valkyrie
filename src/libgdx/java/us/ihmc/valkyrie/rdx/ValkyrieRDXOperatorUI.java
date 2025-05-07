@@ -120,7 +120,7 @@ public class ValkyrieRDXOperatorUI
 
       // ZED
       String zeldaAddress = "192.168.100.21";
-      this.zedImageSensor = new ZEDImageSensor(0, ZEDModelData.ZED_MINI, zed.SL_INPUT_TYPE_STREAM, zed.SL_DEPTH_MODE_NEURAL, zeldaAddress, ValkyrieZEDStreamer.PORT);
+      this.zedImageSensor = new ZEDImageSensor(0, ZEDModelData.ZED_MINI, zed.SL_DEPTH_MODE_NEURAL, zeldaAddress, ValkyrieZEDStreamer.PORT);
       zedImageSensor.run(true);
       zedImageSensor.setSensorFrame(syncedRobot.getReferenceFrames().getExperimentalCameraFrame());
       zedPublishThread = new ImageSensorPublishThread(ros2Node, zedImageSensor);
