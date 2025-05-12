@@ -189,9 +189,6 @@ public class ValkyrieRDXOperatorUI
                                                                                                             syncedRobot.getReferenceFrames(),
                                                                                                             robotVisualizer);
             interactableSensors.setupZED2i();
-
-            baseUI.getPrimaryScene().addRenderableProvider(vrModeManager::getRenderables);
-            baseUI.getVRManager().getContext().addVRInputProcessor(vrModeManager::processVRInput);
          }
 
          @Override

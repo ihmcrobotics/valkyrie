@@ -234,9 +234,6 @@ public class ValkyrieRDXSimulationUI
                                  sceneGraphUI.getSceneGraph(),
                                  true);
 
-            baseUI.getPrimaryScene().addRenderableProvider(vrModeManager::getRenderables);
-            baseUI.getVRManager().getContext().addVRInputProcessor(vrModeManager::processVRInput);
-
             if (START_KINEMATICS_SIMULATION)
             {
                processManagerPanel.getKinematicsSimulationProcess().start();
