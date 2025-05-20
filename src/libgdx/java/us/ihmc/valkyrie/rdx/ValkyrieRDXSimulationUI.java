@@ -234,6 +234,7 @@ public class ValkyrieRDXSimulationUI
             robotIKModel.setHumanoidRobotKinematicsCollisionModel(kinematicsCollisionModel);
             ValkyrieKinematicsStreamingToolboxParameters kstParameters = new ValkyrieKinematicsStreamingToolboxParameters();
             kstParameters.setDefault(true, robotIKModel);
+
             vrModeManager.create(baseUI,
                                  syncedRobot,
                                  robotGlobalVisualizer,
@@ -241,7 +242,7 @@ public class ValkyrieRDXSimulationUI
                                  retargetingParameters,
                                  sceneGraphUI.getSceneGraph(),
                                  true,
-                    kstParameters);
+                                 kstParameters);
 
             if (START_KINEMATICS_SIMULATION)
             {

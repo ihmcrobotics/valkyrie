@@ -28,9 +28,9 @@ public class ValkyrieKinematicsStreamingToolboxModule extends KinematicsStreamin
 {
    /**
     * The idea is to have a quick way to switch to a safer and more conservative operation mode meant
-    * for a random random person to try out the IK streaming.
+    * for a random person to try out the IK streaming.
     */
-   public static final boolean DEMO_MODE = false;
+   public static final boolean DEMO_MODE = true;
 
    public ValkyrieKinematicsStreamingToolboxModule(DRCRobotModel robotModel,
                                                    KinematicsStreamingToolboxParameters parameters,
@@ -75,7 +75,7 @@ public class ValkyrieKinematicsStreamingToolboxModule extends KinematicsStreamin
 
    public static void main(String[] args)
    {
-      ValkyrieRobotModel robotModel = new ValkyrieRobotModel(RobotTarget.REAL_ROBOT, ValkyrieRosControlController.VERSION);
+      ValkyrieRobotModel robotModel = new ValkyrieRobotModel(RobotTarget.REAL_ROBOT, ValkyrieRobotVersion.ARM_MASS_SIM);
       ValkyrieJointMap jointMap = robotModel.getJointMap();
       if (DEMO_MODE)
       {
@@ -88,6 +88,8 @@ public class ValkyrieKinematicsStreamingToolboxModule extends KinematicsStreamin
       KinematicsStreamingToolboxParameters parameters = KinematicsStreamingToolboxParameters.defaultParameters();
       KinematicsStreamingToolboxConfigurationMessage defaultConfiguration = parameters.getDefaultConfiguration();
 
+      parameters.setOutputJointVelocityScale(0.35);
+      parameters.setOutputLPFBreakFrequency(5.0);
       if (NetworkProcessorVersion.fromEnvironment() == NetworkProcessorVersion.IHMC)
       {
          parameters.setCenterOfMassSafeMargin(0.05);

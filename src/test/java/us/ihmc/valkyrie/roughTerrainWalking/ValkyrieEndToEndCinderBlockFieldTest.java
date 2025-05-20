@@ -87,7 +87,7 @@ public class ValkyrieEndToEndCinderBlockFieldTest extends EndToEndCinderBlockFie
    @Override
    @Tag("humanoid-rough-terrain-slow")
    @Test
-   public void testSteppingStonesB() throws Exception
+   public void testSteppingStonesB()
    {
       removeAnkleJointLimits = true;
       super.testSteppingStonesB();

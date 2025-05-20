@@ -45,6 +45,7 @@ import us.ihmc.valkyrie.ValkyrieRobotModel;
 import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
 import us.ihmc.valkyrie.perception.ValkyrieZEDStreamer;
 import us.ihmc.valkyrieRosControl.ValkyrieRosControlController;
+
 import us.ihmc.zed.global.zed;
 
 import java.util.Collections;
@@ -183,7 +184,7 @@ public class ValkyrieRDXOperatorUI
                                  retargetingParameters,
                                  sceneGraphUI.getSceneGraph(),
                                  true,
-                    kstParameters);
+                                 kstParameters);
 
             RDXROS2RobotVisualizer robotVisualizer = new RDXROS2RobotVisualizer(ros2Helper, syncedRobot);
             ValkyrieRDXROS2InteractableSensors interactableSensors = new ValkyrieRDXROS2InteractableSensors(baseUI,
@@ -204,7 +205,6 @@ public class ValkyrieRDXOperatorUI
             footstepPlannerLogViewer.update();
 
             sceneGraphUI.update();
-//            quickATPanel.update();
             behaviorTreeUI.update();
 
             visualizers.update();
