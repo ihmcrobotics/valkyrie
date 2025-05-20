@@ -47,6 +47,7 @@ import us.ihmc.valkyrie.ValkyrieCollisionBasedSelectionModel;
 import us.ihmc.valkyrie.ValkyrieKinematicsCollisionModel;
 import us.ihmc.valkyrie.ValkyrieRobotModel;
 import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
+import us.ihmc.valkyrie.parameters.ValkyrieKinematicsStreamingToolboxParameters;
 import us.ihmc.valkyrieRosControl.ValkyrieRosControlController;
 
 import java.util.Collections;
