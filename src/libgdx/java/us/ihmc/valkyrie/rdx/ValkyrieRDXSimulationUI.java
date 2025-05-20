@@ -23,7 +23,6 @@ import us.ihmc.rdx.simulation.environment.RDXEnvironmentBuilder;
 import us.ihmc.rdx.simulation.sensors.RDXHighLevelDepthSensorSimulator;
 import us.ihmc.rdx.simulation.sensors.RDXSimulatedSensorFactory;
 import us.ihmc.rdx.ui.RDXBaseUI;
-import us.ihmc.rdx.ui.affordances.quickATs.RDXQuickATManager;
 import us.ihmc.rdx.ui.behavior.tree.RDXROS2BehaviorTree;
 import us.ihmc.rdx.ui.graphics.RDXPerceptionVisualizersPanel;
 import us.ihmc.rdx.ui.graphics.ros2.RDXROS2RobotVisualizer;
@@ -95,7 +94,6 @@ public class ValkyrieRDXSimulationUI
    private ROS2BehaviorTreeExecutor onRobotBehaviorTree;
    private RDXROS2BehaviorTree behaviorTreeUI;
    private ReferenceFrameLibrary referenceFrameLibrary;
-   private final RDXQuickATManager quickATPanel;
    private final ValkyrieCollisionBasedSelectionModel selectionCollisionModel;
 
    public ValkyrieRDXSimulationUI()
@@ -129,9 +127,6 @@ public class ValkyrieRDXSimulationUI
                                                        selectionCollisionModel,
                                                        yoVariableClientPanel.getYoVariableClientHelper());
       baseUI.getImGuiPanelManager().addPanel(teleoperationPanel);
-
-      quickATPanel = new RDXQuickATManager();
-      baseUI.getImGuiPanelManager().addPanel(quickATPanel);
 
       vrROS2ControllerHelper = new ROS2ControllerHelper(ros2Node, robotModel);
       vrModeManager = new RDXVRModeManager();
@@ -167,8 +162,6 @@ public class ValkyrieRDXSimulationUI
 
             sceneGraphUI = new RDXSceneGraphUI(ros2Helper, baseUI);
             referenceFrameLibrary.addDynamicCollection(sceneGraphUI.getSceneGraph().asNewDynamicReferenceFrameCollection());
-
-            quickATPanel.create(teleoperationPanel, sceneGraphUI.getSceneGraph());
 
             onRobotBehaviorTree = new ROS2BehaviorTreeExecutor(ros2ControllerHelper,
                                                                robotModel,
@@ -286,7 +279,6 @@ public class ValkyrieRDXSimulationUI
             }
 
             sceneGraphUI.update();
-            quickATPanel.update();
             behaviorTreeUI.update();
 
             // Pass robot's camera frames to teleporter

@@ -65,8 +65,8 @@ public class ValkyrieRDXOperatorUI
    private final ROS2Helper ros2Helper;
    private final RDXBaseUI baseUI;
 
-   private final ZEDImageSensor zedImageSensor;
-   private final ImageSensorPublishThread zedPublishThread;
+//   private final ZEDImageSensor zedImageSensor;
+//   private final ImageSensorPublishThread zedPublishThread;
 
    private final ValkyrieRDXPerceptionVisualizersPanel visualizers;
    private RDXSceneGraphUI sceneGraphUI;
@@ -112,22 +112,22 @@ public class ValkyrieRDXOperatorUI
       vrModeManager = new RDXVRModeManager();
       retargetingParameters = new ValkyrieRetargetingParameters(robotModel.getJointMap(), syncedRobot.getFullRobotModel());
 
-      yoGraphUI = new ImPlotYoGraphPanel("Nadia Variables", 1000);
+      yoGraphUI = new ImPlotYoGraphPanel("Valkyrie Variables", 1000);
       ValkyrieYoVariableCollections.addYoVariablesToPanel(yoGraphUI);
       baseUI.getImGuiPanelManager().addPanel(yoGraphUI.getWindowName(), yoGraphUI::renderImGuiWidgetsGraphPanel);
 
       baseUI.getImGuiPanelManager().addPanel(new RDXROS2StatsPanel());
 
       // ZED
-      String zeldaAddress = "192.168.100.21";
-      this.zedImageSensor = new ZEDImageSensor(0, ZEDModelData.ZED_MINI, zed.SL_DEPTH_MODE_NEURAL, zeldaAddress, ValkyrieZEDStreamer.PORT);
-      zedImageSensor.run(true);
-      zedImageSensor.setSensorFrame(syncedRobot.getReferenceFrames().getExperimentalCameraFrame());
-      zedPublishThread = new ImageSensorPublishThread(ros2Node, zedImageSensor);
-      zedPublishThread.addTopic(PerceptionAPI.ZED2_COLOR_IMAGES.get(RobotSide.LEFT), ZEDImageSensor.LEFT_COLOR_IMAGE_KEY);
-      zedPublishThread.addTopic(PerceptionAPI.ZED2_COLOR_IMAGES.get(RobotSide.RIGHT), ZEDImageSensor.RIGHT_COLOR_IMAGE_KEY);
-      zedPublishThread.addTopic(PerceptionAPI.ZED2_DEPTH, ZEDImageSensor.DEPTH_IMAGE_KEY);
-      zedPublishThread.startRepeating();
+//      String zeldaAddress = "192.168.100.21";
+//      this.zedImageSensor = new ZEDImageSensor(0, ZEDModelData.ZED_MINI, zed.SL_DEPTH_MODE_NEURAL, zeldaAddress, ValkyrieZEDStreamer.PORT);
+//      zedImageSensor.run(true);
+//      zedImageSensor.setSensorFrame(syncedRobot.getReferenceFrames().getExperimentalCameraFrame());
+//      zedPublishThread = new ImageSensorPublishThread(ros2Node, zedImageSensor);
+//      zedPublishThread.addTopic(PerceptionAPI.ZED2_COLOR_IMAGES.get(RobotSide.LEFT), ZEDImageSensor.LEFT_COLOR_IMAGE_KEY);
+//      zedPublishThread.addTopic(PerceptionAPI.ZED2_COLOR_IMAGES.get(RobotSide.RIGHT), ZEDImageSensor.RIGHT_COLOR_IMAGE_KEY);
+//      zedPublishThread.addTopic(PerceptionAPI.ZED2_DEPTH, ZEDImageSensor.DEPTH_IMAGE_KEY);
+//      zedPublishThread.startRepeating();
 
       baseUI.launchRDXApplication(new Lwjgl3ApplicationAdapter()
       {
@@ -210,19 +210,6 @@ public class ValkyrieRDXOperatorUI
 
             visualizers.update();
 
-            // Hides the graphics that get in the way when operating in VR
-            // TODO: Extract this somehow
-            RDXVRHeadset headset = baseUI.getVRManager().getContext().getHeadset();
-            if (chestAvoidanceCollidable != null && headset.isConnected())
-            {
-               headsetFramePoint.setToZero(headset.getXForwardZUpHeadsetFrame());
-               headsetFramePoint.changeFrame(ReferenceFrame.getWorldFrame());
-               headsetFramePoint.subZ(0.08); // So when you are where the head is, above it, it's also gone
-               headsetFramePoint.changeFrame(chestAvoidanceCollidable.getShape().getReferenceFrame());
-               boolean pointInside = chestAvoidanceCollidable.getShape().isPointInside(headsetFramePoint);
-               visualizers.getRobotVisualizer().getHideChest().set(pointInside);
-            }
-
             // Pass robot's camera frames to teleporter
             baseUI.getVRManager()
                   .getTeleporter()
@@ -236,16 +223,16 @@ public class ValkyrieRDXOperatorUI
          @Override
          public void dispose()
          {
-            zedPublishThread.stopRepeating();
-            try
-            {
-               zedPublishThread.join();
-            }
-            catch (InterruptedException e)
-            {
-               LogTools.error(e);
-            }
-            zedImageSensor.close();
+//            zedPublishThread.stopRepeating();
+//            try
+//            {
+//               zedPublishThread.join();
+//            }
+//            catch (InterruptedException e)
+//            {
+//               LogTools.error(e);
+//            }
+//            zedImageSensor.close();
 
             behaviorTreeUI.destroy();
             yoVariableClientPanel.destroy();
