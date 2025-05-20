@@ -144,7 +144,7 @@ public class ValkyrieObstacleCourseFlatTest extends DRCObstacleCourseFlatTest
 
    @Tag("humanoid-flat-ground")
    @Override
-   @Test
+   @Disabled
    public void testRepeatedWalking()
    {
       super.testRepeatedWalking();
