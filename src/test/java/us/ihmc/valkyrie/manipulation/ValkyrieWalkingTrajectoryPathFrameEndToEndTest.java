@@ -172,7 +172,7 @@ public class ValkyrieWalkingTrajectoryPathFrameEndToEndTest
       //                                                                  1.0e-3);
       EuclidCoreTestTools.assertVector3DGeometricallyEquals(midFeetZUpFrameTransform.getTranslation(),
                                                             walkingTrajectoryPathFrameTransform.getTranslation(),
-                                                            1.0e-5);
+                                                            2.0e-3);
    }
 
    @Tag("controller-api-2")

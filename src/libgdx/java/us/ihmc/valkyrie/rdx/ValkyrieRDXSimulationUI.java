@@ -23,7 +23,6 @@ import us.ihmc.rdx.simulation.environment.RDXEnvironmentBuilder;
 import us.ihmc.rdx.simulation.sensors.RDXHighLevelDepthSensorSimulator;
 import us.ihmc.rdx.simulation.sensors.RDXSimulatedSensorFactory;
 import us.ihmc.rdx.ui.RDXBaseUI;
-import us.ihmc.rdx.ui.affordances.quickATs.RDXQuickATManager;
 import us.ihmc.rdx.ui.behavior.tree.RDXROS2BehaviorTree;
 import us.ihmc.rdx.ui.graphics.RDXPerceptionVisualizersPanel;
 import us.ihmc.rdx.ui.graphics.ros2.RDXROS2RobotVisualizer;
@@ -44,8 +43,11 @@ import us.ihmc.scs2.simulation.collision.CollidableHelper;
 import us.ihmc.tools.io.WorkspaceResourceDirectory;
 import us.ihmc.tools.thread.RestartableThrottledThread;
 import us.ihmc.valkyrie.ValkyrieCollisionBasedSelectionModel;
+import us.ihmc.valkyrie.ValkyrieKinematicsCollisionModel;
 import us.ihmc.valkyrie.ValkyrieRobotModel;
 import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
+import us.ihmc.valkyrie.parameters.ValkyrieKinematicsStreamingToolboxParameters;
+import us.ihmc.valkyrieRosControl.ValkyrieRosControlController;
 
 import java.util.Collections;
 
@@ -92,7 +94,6 @@ public class ValkyrieRDXSimulationUI
    private ROS2BehaviorTreeExecutor onRobotBehaviorTree;
    private RDXROS2BehaviorTree behaviorTreeUI;
    private ReferenceFrameLibrary referenceFrameLibrary;
-   private final RDXQuickATManager quickATPanel;
    private final ValkyrieCollisionBasedSelectionModel selectionCollisionModel;
 
    public ValkyrieRDXSimulationUI()
@@ -126,9 +127,6 @@ public class ValkyrieRDXSimulationUI
                                                        selectionCollisionModel,
                                                        yoVariableClientPanel.getYoVariableClientHelper());
       baseUI.getImGuiPanelManager().addPanel(teleoperationPanel);
-
-      quickATPanel = new RDXQuickATManager();
-      baseUI.getImGuiPanelManager().addPanel(quickATPanel);
 
       vrROS2ControllerHelper = new ROS2ControllerHelper(ros2Node, robotModel);
       vrModeManager = new RDXVRModeManager();
@@ -164,8 +162,6 @@ public class ValkyrieRDXSimulationUI
 
             sceneGraphUI = new RDXSceneGraphUI(ros2Helper, baseUI);
             referenceFrameLibrary.addDynamicCollection(sceneGraphUI.getSceneGraph().asNewDynamicReferenceFrameCollection());
-
-            quickATPanel.create(teleoperationPanel, sceneGraphUI.getSceneGraph());
 
             onRobotBehaviorTree = new ROS2BehaviorTreeExecutor(ros2ControllerHelper,
                                                                robotModel,
@@ -226,13 +222,21 @@ public class ValkyrieRDXSimulationUI
             baseUI.getImGuiPanelManager().addPanel(zed2Simulator);
             baseUI.getPrimaryScene().addRenderableProvider(zed2Simulator::getRenderables);
 
+            ValkyrieRobotModel robotIKModel = new ValkyrieRobotModel(RobotTarget.REAL_ROBOT, ValkyrieRosControlController.VERSION);
+            ValkyrieKinematicsCollisionModel kinematicsCollisionModel = new ValkyrieKinematicsCollisionModel(robotIKModel.getJointMap());
+            kinematicsCollisionModel.setEnableConservativeCollisions(true);
+            robotIKModel.setHumanoidRobotKinematicsCollisionModel(kinematicsCollisionModel);
+            ValkyrieKinematicsStreamingToolboxParameters kstParameters = new ValkyrieKinematicsStreamingToolboxParameters();
+            kstParameters.setDefault(true, robotIKModel);
+
             vrModeManager.create(baseUI,
                                  syncedRobot,
                                  robotGlobalVisualizer,
                                  vrROS2ControllerHelper,
                                  retargetingParameters,
                                  sceneGraphUI.getSceneGraph(),
-                                 true);
+                                 true,
+                                 kstParameters);
 
             if (START_KINEMATICS_SIMULATION)
             {
@@ -275,7 +279,6 @@ public class ValkyrieRDXSimulationUI
             }
 
             sceneGraphUI.update();
-            quickATPanel.update();
             behaviorTreeUI.update();
 
             // Pass robot's camera frames to teleporter
