@@ -1,4 +1,4 @@
-package us.ihmc.avatar.networkProcessor.kinemtaticsStreamingToolboxModule;
+package us.ihmc.avatar.networkProcessor.kinematicsStreamingToolboxModule;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;

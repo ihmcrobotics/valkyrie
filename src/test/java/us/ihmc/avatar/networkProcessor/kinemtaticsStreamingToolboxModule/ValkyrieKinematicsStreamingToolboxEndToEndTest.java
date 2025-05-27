@@ -1,4 +1,4 @@
-package us.ihmc.avatar.networkProcessor.kinemtaticsStreamingToolboxModule;
+package us.ihmc.avatar.networkProcessor.kinematicsStreamingToolboxModule;
 
 import java.io.IOException;
 import java.io.InputStream;
