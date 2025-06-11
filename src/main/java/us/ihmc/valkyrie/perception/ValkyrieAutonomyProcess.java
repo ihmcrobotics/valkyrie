@@ -49,7 +49,7 @@ public class ValkyrieAutonomyProcess
    private static final Map<Integer, ROS2Topic<? extends Packet<?>>> ZED_IMAGE_TOPIC_MAP
          = Map.of(ZEDImageSensor.LEFT_COLOR_IMAGE_KEY, PerceptionAPI.SRT_ZED_LEFT_COLOR_STREAM_STATUS,
                   ZEDImageSensor.RIGHT_COLOR_IMAGE_KEY, PerceptionAPI.SRT_ZED_RIGHT_COLOR_STREAM_STATUS,
-                  ZEDImageSensor.DEPTH_IMAGE_KEY, PerceptionAPI.ZED2_DEPTH);
+                  ZEDImageSensor.DEPTH_IMAGE_KEY, PerceptionAPI.ZED_DEPTH);
    @Nullable
    private ImageSensorPublishThread zedPublishThread;
    @Nullable
