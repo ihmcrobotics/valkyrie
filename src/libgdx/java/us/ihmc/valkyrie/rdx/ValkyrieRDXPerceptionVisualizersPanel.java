@@ -63,7 +63,7 @@ public class ValkyrieRDXPerceptionVisualizersPanel extends RDXPerceptionVisualiz
          d455ColoredPointCloudVisualizer = new RDXROS2ColoredPointCloudVisualizer("D455 Colored Point Cloud",
                                                                                   ros2Node,
                                                                                   PerceptionAPI.D455_DEPTH_IMAGE,
-                                                                                  PerceptionAPI.D455_COLOR_IMAGE_SRT);
+                                                                                  PerceptionAPI.REALSENSE_COLOR_IMAGE_SRT);
          d455ColoredPointCloudVisualizer.setActive(true);
          d455ColoredPointCloudVisualizer.createRequestHeartbeat(ros2Node, PerceptionAPI.REQUEST_REALSENSE_PUBLICATION);
          addVisualizer(d455ColoredPointCloudVisualizer);
@@ -71,7 +71,7 @@ public class ValkyrieRDXPerceptionVisualizersPanel extends RDXPerceptionVisualiz
 
       // Intel Realsense D455 color image visualizer
       {
-         realsenseColorImageVisualizer = new RDXROS2ImageMessageVisualizer("D455 Color Image", ros2Node, PerceptionAPI.D455_COLOR_IMAGE_SRT);
+         realsenseColorImageVisualizer = new RDXROS2ImageMessageVisualizer("D455 Color Image", ros2Node, PerceptionAPI.REALSENSE_COLOR_IMAGE_SRT);
          realsenseColorImageVisualizer.createRequestHeartbeat(ros2Node, PerceptionAPI.REQUEST_REALSENSE_PUBLICATION);
          addVisualizer(realsenseColorImageVisualizer);
       }
