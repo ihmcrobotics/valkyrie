@@ -211,7 +211,7 @@ public class ValkyrieRDXSimulationUI
 
             zed2Simulator = RDXSimulatedSensorFactory.createChestZED2ForObjectDetection(syncedRobot);
             zed2Simulator.setSensorEnabled(ENABLE_ZED);
-            zed2Simulator.setupForROS2ImageMessages(ros2Node, PerceptionAPI.ZED2_DEPTH, PerceptionAPI.ZED2_COLOR_IMAGES.get(RobotSide.RIGHT));
+            zed2Simulator.setupForROS2ImageMessages(ros2Node, PerceptionAPI.ZED_DEPTH, PerceptionAPI.ZED_COLOR_IMAGES.get(RobotSide.RIGHT));
             zed2Simulator.setupForROS2PointCloud(ros2Node, ROS2Tools.IHMC_ROOT.withTypeName(StereoVisionPointCloudMessage.class));
             zed2Simulator.setUseSensorColor(true);
             zed2Simulator.setRenderPointCloudDirectly(true);

@@ -87,8 +87,8 @@ public class ValkyrieRDXPerceptionVisualizersPanel extends RDXPerceptionVisualiz
       {
          zed2ColoredPointCloudVisualizer = new RDXROS2ColoredPointCloudVisualizer("ZED 2 Colored Point Cloud",
                                                                                   ros2Node,
-                                                                                  PerceptionAPI.ZED2_DEPTH,
-                                                                                  PerceptionAPI.ZED2_COLOR_IMAGES.get(RobotSide.LEFT));
+                                                                                  PerceptionAPI.ZED_DEPTH,
+                                                                                  PerceptionAPI.ZED_COLOR_IMAGES.get(RobotSide.LEFT));
          zed2ColoredPointCloudVisualizer.createRequestHeartbeat(ros2Node, PerceptionAPI.REQUEST_ZED_PUBLICATION);
          zed2ColoredPointCloudVisualizer.setActive(true);
          addVisualizer(zed2ColoredPointCloudVisualizer);
@@ -98,7 +98,7 @@ public class ValkyrieRDXPerceptionVisualizersPanel extends RDXPerceptionVisualiz
       {
          zedLeftColorImageVisualizer = new RDXROS2ImageMessageVisualizer("ZED 2 Color Left",
                                                                          ros2Node,
-                                                                         PerceptionAPI.ZED2_COLOR_IMAGES.get(RobotSide.LEFT));
+                                                                         PerceptionAPI.ZED_COLOR_IMAGES.get(RobotSide.LEFT));
          zedLeftColorImageVisualizer.createRequestHeartbeat(ros2Node, PerceptionAPI.REQUEST_ZED_PUBLICATION);
          addVisualizer(zedLeftColorImageVisualizer);
       }
@@ -107,14 +107,14 @@ public class ValkyrieRDXPerceptionVisualizersPanel extends RDXPerceptionVisualiz
       {
          zedRightColorImageVisualizer = new RDXROS2ImageMessageVisualizer("ZED 2 Color Right",
                                                                           ros2Node,
-                                                                          PerceptionAPI.ZED2_COLOR_IMAGES.get(RobotSide.RIGHT));
+                                                                          PerceptionAPI.ZED_COLOR_IMAGES.get(RobotSide.RIGHT));
          zedRightColorImageVisualizer.createRequestHeartbeat(ros2Node, PerceptionAPI.REQUEST_ZED_PUBLICATION);
          addVisualizer(zedRightColorImageVisualizer);
       }
 
       // ZED 2 depth image visualizer
       {
-         zed2DepthImageVisualizer = new RDXROS2ImageMessageVisualizer("ZED 2 Depth Image", ros2Node, PerceptionAPI.ZED2_DEPTH);
+         zed2DepthImageVisualizer = new RDXROS2ImageMessageVisualizer("ZED 2 Depth Image", ros2Node, PerceptionAPI.ZED_DEPTH);
          zed2DepthImageVisualizer.createRequestHeartbeat(ros2Node, PerceptionAPI.REQUEST_ZED_PUBLICATION);
          addVisualizer(zed2DepthImageVisualizer);
       }
