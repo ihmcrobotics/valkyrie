@@ -183,9 +183,9 @@ public class ValkyrieRDXOperatorUI
                                  visualizers.getRobotVisualizer(),
                                  ros2ControllerHelper,
                                  retargetingParameters,
-                                 sceneGraphUI.getSceneGraph(),
                                  true,
-                                 kstParameters);
+                                 kstParameters,
+                                 null);
 
             RDXROS2RobotVisualizer robotVisualizer = new RDXROS2RobotVisualizer(ros2Helper, syncedRobot);
             ValkyrieRDXROS2InteractableSensors interactableSensors = new ValkyrieRDXROS2InteractableSensors(baseUI,

@@ -234,9 +234,9 @@ public class ValkyrieRDXSimulationUI
                                  robotGlobalVisualizer,
                                  vrROS2ControllerHelper,
                                  retargetingParameters,
-                                 sceneGraphUI.getSceneGraph(),
                                  true,
-                                 kstParameters);
+                                 kstParameters,
+                                 null);
 
             if (START_KINEMATICS_SIMULATION)
             {
