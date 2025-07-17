@@ -7,6 +7,7 @@ import com.jme3.math.Vector3f;
 import us.ihmc.avatar.drcRobot.DRCRobotModel;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.avatar.drcRobot.SimulationLowLevelControllerFactory;
+import us.ihmc.avatar.initialSetup.HumanoidRobotInitialSetup;
 import us.ihmc.avatar.initialSetup.RobotInitialSetup;
 import us.ihmc.avatar.reachabilityMap.footstep.StepReachabilityIOHelper;
 import us.ihmc.avatar.ros.RobotROSClockCalculator;
@@ -18,6 +19,7 @@ import us.ihmc.commonWalkingControlModules.dynamicPlanning.bipedPlanning.CoPTraj
 import us.ihmc.commonWalkingControlModules.staticReachability.StepReachabilityData;
 import us.ihmc.communication.HumanoidControllerAPI;
 import us.ihmc.communication.controllerAPI.RobotLowLevelMessenger;
+import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.footstepPlanning.AStarBodyPathPlannerParameters;
 import us.ihmc.footstepPlanning.AStarBodyPathPlannerParametersBasics;
 import us.ihmc.footstepPlanning.LocomotionParameters;
@@ -406,6 +408,21 @@ public class ValkyrieRobotModel implements DRCRobotModel
       if (valkyrieInitialSetup == null)
          valkyrieInitialSetup = new ValkyrieInitialSetup(getRobotDefinition(), getJointMap());
       return valkyrieInitialSetup;
+   }
+
+   @Override
+   public HumanoidRobotInitialSetup getSimulatedRobotInitialSetup()
+   {
+      return new ValkyrieInitialSetup(getRobotDefinition(), getJointMap());
+   }
+
+   public RobotInitialSetup<HumanoidFloatingRootJointRobot> getSimulatedRobotInitialSetup(double groundHeight, double initialYaw, double x, double y, double z)
+   {
+      RobotInitialSetup<HumanoidFloatingRootJointRobot> robotInitialSetup = getSimulatedRobotInitialSetup();
+      robotInitialSetup.setInitialGroundHeight(groundHeight);
+      robotInitialSetup.setInitialYaw(initialYaw);
+      robotInitialSetup.setOffset(new Vector3D(x, y, z));
+      return robotInitialSetup;
    }
 
    public ValkyrieHandModel getHandModel()
