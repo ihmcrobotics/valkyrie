@@ -410,21 +410,6 @@ public class ValkyrieRobotModel implements DRCRobotModel
       return valkyrieInitialSetup;
    }
 
-   @Override
-   public HumanoidRobotInitialSetup getSimulatedRobotInitialSetup()
-   {
-      return new ValkyrieInitialSetup(getRobotDefinition(), getJointMap());
-   }
-
-   public RobotInitialSetup<HumanoidFloatingRootJointRobot> getSimulatedRobotInitialSetup(double groundHeight, double initialYaw, double x, double y, double z)
-   {
-      RobotInitialSetup<HumanoidFloatingRootJointRobot> robotInitialSetup = getSimulatedRobotInitialSetup();
-      robotInitialSetup.setInitialGroundHeight(groundHeight);
-      robotInitialSetup.setInitialYaw(initialYaw);
-      robotInitialSetup.setOffset(new Vector3D(x, y, z));
-      return robotInitialSetup;
-   }
-
    public ValkyrieHandModel getHandModel()
    {
       return getHandModel(null);
