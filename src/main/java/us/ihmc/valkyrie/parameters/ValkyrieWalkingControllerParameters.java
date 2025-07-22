@@ -608,7 +608,7 @@ public class ValkyrieWalkingControllerParameters extends WalkingControllerParame
    {
       WrenchBasedFootSwitchFactory factory = new WrenchBasedFootSwitchFactory();
       factory.setDefaultContactThresholdForce(target == RobotTarget.SCS ? 5.0 : 50.0);
-      factory.setDefaultCoPThresholdFraction(0.01);
+      factory.setDefaultCoPThresholdDistance(2.5e-3);
       factory.setDefaultSecondContactThresholdForceIgnoringCoP(75.0);
       return factory;
    }
