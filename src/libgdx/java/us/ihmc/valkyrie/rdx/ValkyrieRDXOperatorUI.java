@@ -185,7 +185,7 @@ public class ValkyrieRDXOperatorUI
                                  retargetingParameters,
                                  true,
                                  kstParameters,
-                                 null);
+                                 false);
 
             RDXROS2RobotVisualizer robotVisualizer = new RDXROS2RobotVisualizer(ros2Helper, syncedRobot);
             ValkyrieRDXROS2InteractableSensors interactableSensors = new ValkyrieRDXROS2InteractableSensors(baseUI,

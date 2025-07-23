@@ -236,7 +236,7 @@ public class ValkyrieRDXSimulationUI
                                  retargetingParameters,
                                  true,
                                  kstParameters,
-                                 null);
+                                 false);
 
             if (START_KINEMATICS_SIMULATION)
             {
