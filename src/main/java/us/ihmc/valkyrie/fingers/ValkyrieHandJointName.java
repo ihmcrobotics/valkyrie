@@ -1,9 +1,9 @@
 package us.ihmc.valkyrie.fingers;
 
-import us.ihmc.humanoidRobotics.communication.packets.dataobjects.HandJointName;
 import us.ihmc.mecano.multiBodySystem.RevoluteJoint;
 import us.ihmc.robotModels.FullRobotModel;
 import us.ihmc.robotics.partNames.FingerName;
+import us.ihmc.robotics.partNames.HandJointName;
 import us.ihmc.robotics.robotSide.RobotSide;
 import us.ihmc.simulationconstructionset.FloatingRootJointRobot;
 import us.ihmc.simulationconstructionset.PinJoint;
