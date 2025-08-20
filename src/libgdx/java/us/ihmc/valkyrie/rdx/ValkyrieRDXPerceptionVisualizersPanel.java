@@ -4,10 +4,8 @@ import us.ihmc.avatar.drcRobot.ROS2SyncedRobotModel;
 import us.ihmc.communication.PerceptionAPI;
 import us.ihmc.communication.ros2.ROS2Helper;
 import us.ihmc.communication.ros2.sync.ROS2PeerClockOffsetEstimator;
-import us.ihmc.perception.imageMessage.CompressionType;
-import us.ihmc.perception.streaming.ROS2SRTVideoStreamImageMessageRelay;
 import us.ihmc.rdx.ui.RDXBaseUI;
-import us.ihmc.rdx.ui.graphics.RDXPerceptionVisualizersPanel;
+import us.ihmc.rdx.ui.graphics.RDXRobotPerceptionVisualizersPanel;
 import us.ihmc.rdx.ui.graphics.ros2.RDXDetectionManagerSettings;
 import us.ihmc.rdx.ui.graphics.ros2.RDXROS2FramePlanarRegionsVisualizer;
 import us.ihmc.rdx.ui.graphics.ros2.RDXROS2ImageMessageVisualizer;
@@ -20,53 +18,23 @@ import us.ihmc.ros2.ROS2Node;
 /**
  * A common set of visualizers specific to sensors on Valkyrie
  */
-public class ValkyrieRDXPerceptionVisualizersPanel extends RDXPerceptionVisualizersPanel
+public class ValkyrieRDXPerceptionVisualizersPanel extends RDXRobotPerceptionVisualizersPanel
 {
-   private final ROS2SyncedRobotModel syncedRobot;
-   private final ROS2Helper ros2Helper;
-
-   private final RDXROS2RobotVisualizer robotVisualizer;
-   private final RDXROS2ColoredPointCloudVisualizer d455ColoredPointCloudVisualizer;
-   private final RDXROS2ImageMessageVisualizer realsenseColorImageVisualizer;
-   private final RDXROS2ImageMessageVisualizer realsenseDepthImageVisualizer;
-   private final RDXROS2ColoredPointCloudVisualizer zed2ColoredPointCloudVisualizer;
-   private final RDXROS2ImageMessageVisualizer zedLeftColorImageVisualizer;
-   private final RDXROS2ImageMessageVisualizer zedRightColorImageVisualizer;
-   private final RDXROS2ImageMessageVisualizer zed2DepthImageVisualizer;
-   private final RDXROS2ImageMessageVisualizer yoloAnnotatedImageVisualizer;
-   private final RDXROS2FramePlanarRegionsVisualizer planarRegionsVisualizer;
-   private final RDXDetectionManagerSettings detectionManagerSettings;
-
-   private final ROS2SRTVideoStreamImageMessageRelay videoStreamImageMessageRelay;
-
-   public ValkyrieRDXPerceptionVisualizersPanel(RDXBaseUI baseUI,
-                                                ROS2Node ros2Node,
+   public ValkyrieRDXPerceptionVisualizersPanel(ROS2Node ros2Node,
                                                 ROS2PeerClockOffsetEstimator ros2PeerClockOffsetEstimator,
                                                 ROS2SyncedRobotModel syncedRobot)
    {
-      this.syncedRobot = syncedRobot;
-
-      ros2Helper = new ROS2Helper(ros2Node);
-
-      videoStreamImageMessageRelay = new ROS2SRTVideoStreamImageMessageRelay(PerceptionAPI.SRT_STREAM_IMAGE_MESSAGE_TOPIC_PAIRS, ros2Node, CompressionType.UNCOMPRESSED);
-
-      // Robot visualizer
-      {
-         robotVisualizer = new RDXROS2RobotVisualizer(ros2Helper, syncedRobot);
-         robotVisualizer.setPinned(true);
-         robotVisualizer.setActive(true);
-         addVisualizer(robotVisualizer);
-      }
+      super(ros2Node, syncedRobot, ros2PeerClockOffsetEstimator);
 
       // Intel Realsense D455 colored point cloud visualizer
       {
-         d455ColoredPointCloudVisualizer = new RDXROS2ColoredPointCloudVisualizer("D455 Colored Point Cloud",
+         realsenseColoredPointCloudVisualizer = new RDXROS2ColoredPointCloudVisualizer("D455 Colored Point Cloud",
                                                                                   ros2Node,
                                                                                   PerceptionAPI.D455_DEPTH_IMAGE,
                                                                                   PerceptionAPI.REALSENSE_COLOR_IMAGE_SRT);
-         d455ColoredPointCloudVisualizer.setActive(true);
-         d455ColoredPointCloudVisualizer.createRequestHeartbeat(ros2Node, PerceptionAPI.REQUEST_REALSENSE_PUBLICATION);
-         addVisualizer(d455ColoredPointCloudVisualizer);
+         realsenseColoredPointCloudVisualizer.setActive(true);
+         realsenseColoredPointCloudVisualizer.createRequestHeartbeat(ros2Node, PerceptionAPI.REQUEST_REALSENSE_PUBLICATION);
+         addVisualizer(realsenseColoredPointCloudVisualizer);
       }
 
       // Intel Realsense D455 color image visualizer
@@ -85,13 +53,13 @@ public class ValkyrieRDXPerceptionVisualizersPanel extends RDXPerceptionVisualiz
 
       // ZED2 colored point cloud visualizer
       {
-         zed2ColoredPointCloudVisualizer = new RDXROS2ColoredPointCloudVisualizer("ZED 2 Colored Point Cloud",
-                                                                                  ros2Node,
-                                                                                  PerceptionAPI.ZED_DEPTH,
-                                                                                  PerceptionAPI.ZED_COLOR_IMAGES.get(RobotSide.LEFT));
-         zed2ColoredPointCloudVisualizer.createRequestHeartbeat(ros2Node, PerceptionAPI.REQUEST_ZED_PUBLICATION);
-         zed2ColoredPointCloudVisualizer.setActive(true);
-         addVisualizer(zed2ColoredPointCloudVisualizer);
+         zedColoredPointCloudVisualizer = new RDXROS2ColoredPointCloudVisualizer("ZED 2 Colored Point Cloud",
+                                                                                 ros2Node,
+                                                                                 PerceptionAPI.ZED_DEPTH,
+                                                                                 PerceptionAPI.ZED_COLOR_IMAGES.get(RobotSide.LEFT));
+         zedColoredPointCloudVisualizer.createRequestHeartbeat(ros2Node, PerceptionAPI.REQUEST_ZED_PUBLICATION);
+         zedColoredPointCloudVisualizer.setActive(true);
+         addVisualizer(zedColoredPointCloudVisualizer);
       }
 
       // ZED left color visualizer
@@ -114,9 +82,9 @@ public class ValkyrieRDXPerceptionVisualizersPanel extends RDXPerceptionVisualiz
 
       // ZED 2 depth image visualizer
       {
-         zed2DepthImageVisualizer = new RDXROS2ImageMessageVisualizer("ZED 2 Depth Image", ros2Node, PerceptionAPI.ZED_DEPTH);
-         zed2DepthImageVisualizer.createRequestHeartbeat(ros2Node, PerceptionAPI.REQUEST_ZED_PUBLICATION);
-         addVisualizer(zed2DepthImageVisualizer);
+         zedDepthImageVisualizer = new RDXROS2ImageMessageVisualizer("ZED 2 Depth Image", ros2Node, PerceptionAPI.ZED_DEPTH);
+         zedDepthImageVisualizer.createRequestHeartbeat(ros2Node, PerceptionAPI.REQUEST_ZED_PUBLICATION);
+         addVisualizer(zedDepthImageVisualizer);
       }
 
       // YOLOv8 settings visualizer
@@ -131,11 +99,9 @@ public class ValkyrieRDXPerceptionVisualizersPanel extends RDXPerceptionVisualiz
 
       // YOLOv8 annotated image visualizer
       {
-         yoloAnnotatedImageVisualizer = new RDXROS2ImageMessageVisualizer("YOLOv8 Annotated Image",
-                                                                          ros2Node,
-                                                                          PerceptionAPI.YOLO_ANNOTATED_IMAGE);
-         yoloAnnotatedImageVisualizer.createRequestHeartbeat(ros2Node, PerceptionAPI.REQUEST_YOLO_ANNOTATED_IMAGE);
-         addVisualizer(yoloAnnotatedImageVisualizer);
+         yoloVisualizer = new RDXROS2YOLOv8Visualizer("YOLOv8", ros2Node, ros2PeerClockOffsetEstimator, PerceptionAPI.YOLO_ANNOTATED_IMAGE);
+         yoloVisualizer.createRequestHeartbeat(ros2Node, PerceptionAPI.REQUEST_YOLO_ANNOTATED_IMAGE);
+         addVisualizer(yoloVisualizer);
       }
 
       // Planar regions visualizer
@@ -151,58 +117,6 @@ public class ValkyrieRDXPerceptionVisualizersPanel extends RDXPerceptionVisualiz
          detectionManagerSettings = new RDXDetectionManagerSettings("Detection Manager Settings", ros2Node);
          addVisualizer(detectionManagerSettings);
       }
-   }
-
-   @Override
-   public void destroy()
-   {
-      super.destroy();
-      videoStreamImageMessageRelay.destroy();
-   }
-
-   public RDXROS2RobotVisualizer getRobotVisualizer()
-   {
-      return robotVisualizer;
-   }
-
-   public RDXROS2ColoredPointCloudVisualizer getD455ColoredPointCloudVisualizer()
-   {
-      return d455ColoredPointCloudVisualizer;
-   }
-
-   public RDXROS2ImageMessageVisualizer getRealsenseDepthImageVisualizer()
-   {
-      return realsenseDepthImageVisualizer;
-   }
-
-   public RDXROS2ColoredPointCloudVisualizer getZed2ColoredPointCloudVisualizer()
-   {
-      return zed2ColoredPointCloudVisualizer;
-   }
-
-   public RDXROS2ImageMessageVisualizer getZedLeftColorImageVisualizer()
-   {
-      return zedLeftColorImageVisualizer;
-   }
-
-   public RDXROS2ImageMessageVisualizer getZedRightColorImageVisualizer()
-   {
-      return zedRightColorImageVisualizer;
-   }
-
-   public RDXROS2ImageMessageVisualizer getZed2DepthImageVisualizer()
-   {
-      return zed2DepthImageVisualizer;
-   }
-
-   public RDXROS2ImageMessageVisualizer getYoloAnnotatedImageVisualizer()
-   {
-      return yoloAnnotatedImageVisualizer;
-   }
-
-   public RDXROS2FramePlanarRegionsVisualizer getPlanarRegionsVisualizer()
-   {
-      return planarRegionsVisualizer;
    }
 }
 

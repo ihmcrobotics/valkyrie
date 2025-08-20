@@ -87,7 +87,7 @@ public class ValkyrieRDXOperatorUI
 
       baseUI = new RDXBaseUI("Valkyrie Operator UI");
 
-      visualizers = new ValkyrieRDXPerceptionVisualizersPanel(baseUI, ros2Node, ros2PeerClockOffsetEstimator, syncedRobot);
+      visualizers = new ValkyrieRDXPerceptionVisualizersPanel(ros2Node, ros2PeerClockOffsetEstimator, syncedRobot);
 
       yoVariableClientPanel = new RDXYoVariableClientPanel("Controller",
                                                            NetworkParameters.getHost(NetworkParameterKeys.robotController),
@@ -180,7 +180,7 @@ public class ValkyrieRDXOperatorUI
 
             vrModeManager.create(baseUI,
                                  syncedRobot,
-                                 visualizers.getRobotVisualizer(),
+                                 visualizers,
                                  ros2ControllerHelper,
                                  retargetingParameters,
                                  true,
@@ -202,7 +202,6 @@ public class ValkyrieRDXOperatorUI
             syncedRobot.update();
             teleoperationPanel.update();
             vrModeManager.update();
-            vrModeManager.render();
             footstepPlannerLogViewer.update();
 
             sceneGraphUI.update();

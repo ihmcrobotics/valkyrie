@@ -25,6 +25,7 @@ import us.ihmc.rdx.simulation.sensors.RDXSimulatedSensorFactory;
 import us.ihmc.rdx.ui.RDXBaseUI;
 import us.ihmc.rdx.ui.behavior.tree.RDXROS2BehaviorTree;
 import us.ihmc.rdx.ui.graphics.RDXPerceptionVisualizersPanel;
+import us.ihmc.rdx.ui.graphics.RDXRobotPerceptionVisualizersPanel;
 import us.ihmc.rdx.ui.graphics.ros2.RDXROS2RobotVisualizer;
 import us.ihmc.rdx.ui.teleoperation.RDXTeleoperationManager;
 import us.ihmc.rdx.ui.tools.RDXROS2StatsPanel;
@@ -69,14 +70,14 @@ public class ValkyrieRDXSimulationUI
    private ROS2SyncedRobotModel syncedRobot;
    private final ROS2Helper ros2Helper;
    private final ROS2ControllerHelper ros2ControllerHelper;
-   private RDXROS2RobotVisualizer robotGlobalVisualizer;
-   private final RDXPerceptionVisualizersPanel perceptionVisualizersPanel;
+   private final ValkyrieRDXPerceptionVisualizersPanel perceptionVisualizersPanel;
    private final RDXTeleoperationManager teleoperationPanel;
    private final RDXYoVariableClientPanel yoVariableClientPanel;
    private final ImPlotYoGraphPanel yoGraphUI;
    private final RDXEnvironmentBuilder environmentBuilder;
    private final ValkyrieRDXProcessManagerPanel processManagerPanel;
    private final ROS2ControllerHelper vrROS2ControllerHelper;
+   private final ROS2PeerClockOffsetEstimator peerClockOffsetEstimator;
    private final RDXVRModeManager vrModeManager;
    private final ValkyrieRetargetingParameters retargetingParameters;
    private RDXHighLevelDepthSensorSimulator d455Simulator;
@@ -104,12 +105,13 @@ public class ValkyrieRDXSimulationUI
 
       ros2Helper = new ROS2Helper(ros2Node);
       ros2ControllerHelper = new ROS2ControllerHelper(ros2Node, robotModel);
+      peerClockOffsetEstimator = new ROS2PeerClockOffsetEstimator(ros2Node);
       realtimeRos2Node.spin();
       syncedRobot = new ROS2SyncedRobotModel(robotModel, ros2Node);
 
       baseUI = new RDXBaseUI("Valkyrie Simulation UI");
 
-      perceptionVisualizersPanel = new RDXPerceptionVisualizersPanel();
+      perceptionVisualizersPanel = new ValkyrieRDXPerceptionVisualizersPanel(ros2Node, peerClockOffsetEstimator, syncedRobot);
 
       yoVariableClientPanel = new RDXYoVariableClientPanel("Controller",
                                                            NetworkParameters.getHost(NetworkParameterKeys.robotController),
@@ -166,7 +168,7 @@ public class ValkyrieRDXSimulationUI
             onRobotBehaviorTree = new ROS2BehaviorTreeExecutor(ros2ControllerHelper,
                                                                robotModel,
                                                                syncedRobot,
-                                                               new ROS2PeerClockOffsetEstimator(ros2Node),
+                                                               peerClockOffsetEstimator,
                                                                referenceFrameLibrary,
                                                                sceneGraphUI.getSceneGraph(),
                                                                detectionManager);
@@ -175,7 +177,7 @@ public class ValkyrieRDXSimulationUI
             behaviorTreeUI = new RDXROS2BehaviorTree(treeFilesDirectory,
                                                      robotModel,
                                                      syncedRobot,
-                                                     new ROS2PeerClockOffsetEstimator(ros2Node),
+                                                     peerClockOffsetEstimator,
                                                      selectionCollisionModel,
                                                      baseUI,
                                                      baseUI.getPrimary3DPanel(),
@@ -191,8 +193,6 @@ public class ValkyrieRDXSimulationUI
                                                                                                             robotVisualizer);
             interactableSensors.setupZED2i();
             interactableSensors.setupRealsenseD455();
-            perceptionVisualizersPanel.addVisualizer(robotGlobalVisualizer = robotVisualizer);
-            robotGlobalVisualizer.setActive(true);
 
             perceptionVisualizersPanel.create(baseUI);
 
@@ -231,7 +231,7 @@ public class ValkyrieRDXSimulationUI
 
             vrModeManager.create(baseUI,
                                  syncedRobot,
-                                 robotGlobalVisualizer,
+                                 perceptionVisualizersPanel,
                                  vrROS2ControllerHelper,
                                  retargetingParameters,
                                  true,
