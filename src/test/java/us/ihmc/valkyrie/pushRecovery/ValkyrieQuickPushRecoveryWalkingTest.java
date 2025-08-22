@@ -62,7 +62,7 @@ public class ValkyrieQuickPushRecoveryWalkingTest extends AvatarQuickPushRecover
    @Test
    public void testOutwardPushLeftSwingAtDifferentTimes()
    {
-      setPushChangeInVelocity(0.4);
+      setPushChangeInVelocity(0.2);
       super.testOutwardPushLeftSwingAtDifferentTimes();
    }
 

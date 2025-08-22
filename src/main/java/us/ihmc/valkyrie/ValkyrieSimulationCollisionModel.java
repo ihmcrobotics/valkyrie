@@ -225,41 +225,48 @@ public class ValkyrieSimulationCollisionModel implements RobotCollisionModel
          }
 
          { // Thigh
-            RigidBodyBasics thigh = RobotCollisionModel.findJoint(jointMap.getLegJointName(robotSide, LegJointName.KNEE_PITCH), multiBodySystem)
-                                                       .getPredecessor();
-            if (thigh != null)
+            JointBasics knee = RobotCollisionModel.findJoint(jointMap.getLegJointName(robotSide, LegJointName.KNEE_PITCH), multiBodySystem);
+            if (knee != null)
             {
-               MovingReferenceFrame thighFrame = thigh.getParentJoint().getFrameAfterJoint();
-               FrameCapsule3D thighUpperShape = new FrameCapsule3D(thighFrame, 0.2 * modelScale, 0.1 * modelScale);
-               thighUpperShape.getPosition().set(0.0195, robotSide.negateIfRightSide(0.086), -0.093);
-               thighUpperShape.getPosition().scale(modelScale);
-               thighUpperShape.getAxis().set(new Vector3D(-0.15, robotSide.negateIfRightSide(-0.05), 1.0));
-               collidables.add(new Collidable(thigh, collisionMask, collisionGroup, thighUpperShape));
+               RigidBodyBasics thigh = knee.getPredecessor();
+               if (thigh != null)
+               {
+                  MovingReferenceFrame thighFrame = thigh.getParentJoint().getFrameAfterJoint();
+                  FrameCapsule3D thighUpperShape = new FrameCapsule3D(thighFrame, 0.2 * modelScale, 0.1 * modelScale);
+                  thighUpperShape.getPosition().set(0.0195, robotSide.negateIfRightSide(0.086), -0.093);
+                  thighUpperShape.getPosition().scale(modelScale);
+                  thighUpperShape.getAxis().set(new Vector3D(-0.15, robotSide.negateIfRightSide(-0.05), 1.0));
+                  collidables.add(new Collidable(thigh, collisionMask, collisionGroup, thighUpperShape));
 
-               FrameCapsule3D thighFrontShape = new FrameCapsule3D(thighFrame, 0.15 * modelScale, 0.095 * modelScale);
-               thighFrontShape.getPosition().set(0.0424, robotSide.negateIfRightSide(0.081), -0.258);
-               thighFrontShape.getPosition().scale(modelScale);
-               thighFrontShape.getAxis().set(new Vector3D(0.1, 0.0, 1.0));
-               collidables.add(new Collidable(thigh, collisionMask, collisionGroup, thighFrontShape));
+                  FrameCapsule3D thighFrontShape = new FrameCapsule3D(thighFrame, 0.15 * modelScale, 0.095 * modelScale);
+                  thighFrontShape.getPosition().set(0.0424, robotSide.negateIfRightSide(0.081), -0.258);
+                  thighFrontShape.getPosition().scale(modelScale);
+                  thighFrontShape.getAxis().set(new Vector3D(0.1, 0.0, 1.0));
+                  collidables.add(new Collidable(thigh, collisionMask, collisionGroup, thighFrontShape));
 
-               FrameCapsule3D thighLowerShape = new FrameCapsule3D(thighFrame, 0.25 * modelScale, 0.09 * modelScale);
-               thighLowerShape.getPosition().set(0.017, robotSide.negateIfRightSide(0.091), -0.288);
-               thighLowerShape.getPosition().scale(modelScale);
-               thighLowerShape.getAxis().set(new Vector3D(0.1, robotSide.negateIfRightSide(0.05), 1.0));
-               collidables.add(new Collidable(thigh, collisionMask, collisionGroup, thighLowerShape));
+                  FrameCapsule3D thighLowerShape = new FrameCapsule3D(thighFrame, 0.25 * modelScale, 0.09 * modelScale);
+                  thighLowerShape.getPosition().set(0.017, robotSide.negateIfRightSide(0.091), -0.288);
+                  thighLowerShape.getPosition().scale(modelScale);
+                  thighLowerShape.getAxis().set(new Vector3D(0.1, robotSide.negateIfRightSide(0.05), 1.0));
+                  collidables.add(new Collidable(thigh, collisionMask, collisionGroup, thighLowerShape));
+                  }
             }
          }
 
          { // Shin
-            RigidBodyBasics shin = RobotCollisionModel.findJoint(jointMap.getLegJointName(robotSide, LegJointName.KNEE_PITCH), multiBodySystem).getSuccessor();
-            if (shin != null)
+            JointBasics knee = RobotCollisionModel.findJoint(jointMap.getLegJointName(robotSide, LegJointName.KNEE_PITCH), multiBodySystem);
+            if (knee != null)
             {
-               MovingReferenceFrame shinFrame = shin.getParentJoint().getFrameAfterJoint();
-               FrameCapsule3D shinShape = new FrameCapsule3D(shinFrame, 0.3 * modelScale, 0.08 * modelScale);
-               shinShape.getPosition().set(0.008, 0.0, -0.189);
-               shinShape.getPosition().scale(modelScale);
-               shinShape.getAxis().set(new Vector3D(0.1, 0.0, 1.0));
-               collidables.add(new Collidable(shin, collisionMask, collisionGroup, shinShape));
+               RigidBodyBasics shin = knee.getSuccessor();
+               if (shin != null)
+               {
+                  MovingReferenceFrame shinFrame = shin.getParentJoint().getFrameAfterJoint();
+                  FrameCapsule3D shinShape = new FrameCapsule3D(shinFrame, 0.3 * modelScale, 0.08 * modelScale);
+                  shinShape.getPosition().set(0.008, 0.0, -0.189);
+                  shinShape.getPosition().scale(modelScale);
+                  shinShape.getAxis().set(new Vector3D(0.1, 0.0, 1.0));
+                  collidables.add(new Collidable(shin, collisionMask, collisionGroup, shinShape));
+               }
             }
          }
 

@@ -1,4 +1,4 @@
-package us.ihmc.valkyrie.rdx;
+package us.ihmc.valkyrie.rdx.apps;
 
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.rdx.ui.modelViewer.RDXRobotModelViewer;
@@ -6,9 +6,9 @@ import us.ihmc.valkyrie.ValkyrieRobotModel;
 import us.ihmc.valkyrie.ValkyrieSimulationCollisionModel;
 import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
 
-public class ValkyrieRDXRobotModelViewerUI
+public class ValkyrieRDXModelViewer
 {
-   public ValkyrieRDXRobotModelViewerUI()
+   public ValkyrieRDXModelViewer()
    {
       ValkyrieRobotModel robotModel = new ValkyrieRobotModel(RobotTarget.SCS, ValkyrieRobotVersion.ARM_MASS_SIM);
       ValkyrieSimulationCollisionModel simulationCollisionModel = new ValkyrieSimulationCollisionModel(robotModel.getJointMap(), true);
@@ -17,6 +17,6 @@ public class ValkyrieRDXRobotModelViewerUI
 
    public static void main(String[] args)
    {
-      new ValkyrieRDXRobotModelViewerUI();
+      new ValkyrieRDXModelViewer();
    }
 }
