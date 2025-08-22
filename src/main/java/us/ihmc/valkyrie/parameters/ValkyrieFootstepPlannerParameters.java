@@ -14,7 +14,6 @@ public class ValkyrieFootstepPlannerParameters extends StoredPropertySet impleme
    {
       super(DefaultFootstepPlannerParameters.keys, ValkyrieFootstepPlannerParameters.class, versionSuffix);
 
-      setUseGPU(false);
       setCheckForBodyBoxCollisions(false);
       setIdealFootstepWidth(0.2);
       setIdealFootstepLength(0.2);
