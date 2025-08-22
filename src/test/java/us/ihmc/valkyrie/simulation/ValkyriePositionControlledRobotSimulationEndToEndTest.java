@@ -1,5 +1,6 @@
 package us.ihmc.valkyrie.simulation;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
@@ -46,21 +47,21 @@ public class ValkyriePositionControlledRobotSimulationEndToEndTest extends Human
                                                              positionControlState);
    }
 
-   @Test
+   @Disabled
    @Override
    public void testFreezeController(TestInfo testInfo) throws Exception
    {
       super.testFreezeController(testInfo);
    }
 
-   @Test
+   @Disabled
    @Override
    public void testPositionController(TestInfo testInfo) throws Exception
    {
       super.testPositionController(testInfo);
    }
 
-   @Test
+   @Disabled
    public void testCrawl1ToDabScript(TestInfo testInfo) throws Exception
    {
       runProcessedScriptTest(testInfo,

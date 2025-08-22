@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import us.ihmc.avatar.drcRobot.RobotTarget;
@@ -34,7 +35,7 @@ public class ValkyrieModelComparisonTest
    private static final double MASS_EPS = 1.0e-5;
    private static final double LIMIT_EPS = 1.0e-4;
 
-   @Test
+   @Disabled // Default Val fingers are not available, Psyonic Ability hand is used
    public void testDefaultModel()
    {
       testURDFAgainsSDF(ValkyrieRobotVersion.DEFAULT, "models/val_description/urdf/valkyrie_sim.urdf", "models/val_description/sdf/valkyrie_sim.sdf");

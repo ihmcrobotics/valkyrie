@@ -1,18 +1,15 @@
-package us.ihmc.valkyrie.rdx;
+package us.ihmc.valkyrie.rdx.apps;
 
 import us.ihmc.avatar.drcRobot.ROS2SyncedRobotModel;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.avatar.ros2.ROS2ControllerHelper;
 import us.ihmc.behaviors.tools.CommunicationHelper;
-import us.ihmc.communication.PerceptionAPI;
 import us.ihmc.communication.configuration.NetworkParameterKeys;
 import us.ihmc.communication.configuration.NetworkParameters;
 import us.ihmc.communication.ros2.ROS2Helper;
 import us.ihmc.communication.ros2.sync.ROS2PeerClockOffsetEstimator;
 import us.ihmc.euclid.referenceFrame.FramePoint3D;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
-import us.ihmc.log.LogTools;
-import us.ihmc.perception.ImageSensorPublishThread;
 import us.ihmc.perception.comms.PerceptionComms;
 import us.ihmc.perception.rapidRegions.RapidRegionsExtractorParameters;
 import us.ihmc.rdx.Lwjgl3ApplicationAdapter;
@@ -22,13 +19,11 @@ import us.ihmc.rdx.ui.RDXBaseUI;
 import us.ihmc.rdx.ui.affordances.RDXRobotCollidable;
 import us.ihmc.rdx.ui.behavior.tree.RDXROS2BehaviorTree;
 import us.ihmc.rdx.ui.footstepPlanner.RDXFootstepPlannerLogViewer;
-import us.ihmc.rdx.ui.graphics.ros2.RDXROS2RobotVisualizer;
 import us.ihmc.rdx.ui.teleoperation.RDXTeleoperationManager;
 import us.ihmc.rdx.ui.tools.RDXROS2StatsPanel;
 import us.ihmc.rdx.ui.vr.RDXVRModeManager;
 import us.ihmc.rdx.ui.yo.ImPlotYoGraphPanel;
 import us.ihmc.rdx.ui.yo.RDXYoVariableClientPanel;
-import us.ihmc.rdx.vr.RDXVRHeadset;
 import us.ihmc.robotDataLogger.logger.DataServerSettings;
 import us.ihmc.robotics.physics.RobotCollisionModel;
 import us.ihmc.robotics.referenceFrames.ReferenceFrameLibrary;
@@ -36,18 +31,16 @@ import us.ihmc.robotics.robotSide.RobotSide;
 import us.ihmc.ros2.ROS2Node;
 import us.ihmc.ros2.ROS2NodeBuilder;
 import us.ihmc.scs2.simulation.collision.CollidableHelper;
-import us.ihmc.sensors.zed.ZEDImageSensor;
-import us.ihmc.sensors.zed.ZEDModelData;
 import us.ihmc.tools.io.WorkspaceResourceDirectory;
 import us.ihmc.valkyrie.ValkyrieCollisionBasedSelectionModel;
 import us.ihmc.valkyrie.ValkyrieKinematicsCollisionModel;
 import us.ihmc.valkyrie.ValkyrieRobotModel;
 import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
 import us.ihmc.valkyrie.parameters.ValkyrieKinematicsStreamingToolboxParameters;
-import us.ihmc.valkyrie.perception.ValkyrieZEDStreamer;
+import us.ihmc.valkyrie.parameters.ValkyrieRetargetingParameters;
+import us.ihmc.valkyrie.rdx.ValkyrieRDXPerceptionVisualizersPanel;
+import us.ihmc.valkyrie.rdx.ValkyrieYoVariableCollections;
 import us.ihmc.valkyrieRosControl.ValkyrieRosControlController;
-
-import us.ihmc.zed.global.zed;
 
 import java.util.Collections;
 
@@ -87,7 +80,7 @@ public class ValkyrieRDXOperatorUI
 
       baseUI = new RDXBaseUI("Valkyrie Operator UI");
 
-      visualizers = new ValkyrieRDXPerceptionVisualizersPanel(baseUI, ros2Node, ros2PeerClockOffsetEstimator, syncedRobot);
+      visualizers = new ValkyrieRDXPerceptionVisualizersPanel(ros2Node, syncedRobot, ros2PeerClockOffsetEstimator);
 
       yoVariableClientPanel = new RDXYoVariableClientPanel("Controller",
                                                            NetworkParameters.getHost(NetworkParameterKeys.robotController),
@@ -180,20 +173,12 @@ public class ValkyrieRDXOperatorUI
 
             vrModeManager.create(baseUI,
                                  syncedRobot,
-                                 visualizers.getRobotVisualizer(),
+                                 visualizers,
                                  ros2ControllerHelper,
                                  retargetingParameters,
                                  true,
                                  kstParameters,
                                  false);
-
-            RDXROS2RobotVisualizer robotVisualizer = new RDXROS2RobotVisualizer(ros2Helper, syncedRobot);
-            ValkyrieRDXROS2InteractableSensors interactableSensors = new ValkyrieRDXROS2InteractableSensors(baseUI,
-                                                                                                            ros2Helper,
-                                                                                                            syncedRobot,
-                                                                                                            syncedRobot.getReferenceFrames(),
-                                                                                                            robotVisualizer);
-            interactableSensors.setupZED2i();
          }
 
          @Override
@@ -202,7 +187,6 @@ public class ValkyrieRDXOperatorUI
             syncedRobot.update();
             teleoperationPanel.update();
             vrModeManager.update();
-            vrModeManager.render();
             footstepPlannerLogViewer.update();
 
             sceneGraphUI.update();
