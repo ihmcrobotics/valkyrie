@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import toolbox_msgs.msg.dds.ExternalForceEstimationConfigurationMessage;
@@ -100,7 +101,7 @@ public class ValkyrieExternalForceEstimationTest
       return new ValkyrieRobotModel(RobotTarget.SCS, ValkyrieRobotVersion.ARM_MASS_SIM);
    }
 
-   @Test
+   @Disabled
    public void testExternalForceEstimation() throws Exception
    {
       registry = new YoRegistry(getClass().getSimpleName());

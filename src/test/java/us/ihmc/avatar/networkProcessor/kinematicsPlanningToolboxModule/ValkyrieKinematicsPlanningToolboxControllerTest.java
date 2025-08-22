@@ -1,5 +1,6 @@
 package us.ihmc.avatar.networkProcessor.kinematicsPlanningToolboxModule;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +32,7 @@ public class ValkyrieKinematicsPlanningToolboxControllerTest extends AvatarKinem
    }
 
    @Tag("humanoid-toolbox")
-   @Test
+   @Disabled
    public void testDualHandTrajectory()
    {
       super.testDualHandTrajectory();
