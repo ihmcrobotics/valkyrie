@@ -15,6 +15,7 @@ public class ValkyrieKinematicsSimulationProcess extends RestartableProcess
    private final Supplier<ValkyrieRobotModel> robotModelSupplier;
    private final EnvironmentInitialSetup environmentInitialSetup;
    private HumanoidKinematicsSimulation kinematicsSimulation;
+   private final HumanoidKinematicsSimulationParameters kinematicsSimulationParameters = new HumanoidKinematicsSimulationParameters();
 
    public ValkyrieKinematicsSimulationProcess(Supplier<Boolean> logToFile,
                                               Supplier<ValkyrieRobotModel> robotModelSupplier,
@@ -50,5 +51,10 @@ public class ValkyrieKinematicsSimulationProcess extends RestartableProcess
    public String getName()
    {
       return "Kinematics simulation";
+   }
+
+   public HumanoidKinematicsSimulationParameters getKinematicsSimulationParameters()
+   {
+      return kinematicsSimulationParameters;
    }
 }

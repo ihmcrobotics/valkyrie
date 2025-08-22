@@ -23,7 +23,7 @@ public class ValkyrieRDXProcessManagerPanel extends RDXProcessManagerPanel
       }
    }
 
-   private final RestartableProcess kinematicsSimulationProcess;
+   private final ValkyrieKinematicsSimulationProcess kinematicsSimulationProcess;
 
    public ValkyrieRDXProcessManagerPanel(ValkyrieRobotModel valkyrieRobotModel)
    {
@@ -83,7 +83,7 @@ public class ValkyrieRDXProcessManagerPanel extends RDXProcessManagerPanel
       this.robotTarget.set(robotTarget.ordinal());
    }
 
-   public RestartableProcess getKinematicsSimulationProcess()
+   public ValkyrieKinematicsSimulationProcess getKinematicsSimulationProcess()
    {
       return kinematicsSimulationProcess;
    }

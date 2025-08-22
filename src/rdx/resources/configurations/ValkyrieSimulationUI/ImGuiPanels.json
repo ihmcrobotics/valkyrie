@@ -3,14 +3,14 @@
   "windows" : {
     "3D View" : true,
     "Behavior Tree" : true,
-    "D455 RealSense Simulator###java.lang.Integer:D455 RealSense Simulator" : true,
-    "D455 RealSense Color###RDXLowLevelDepthSensorSimulator0:D455 RealSense Color" : false,
-    "D455 RealSense Depth###RDXLowLevelDepthSensorSimulator0:D455 RealSense Depth" : false,
     "Environment" : false,
     "Pose3D Gizmo Tuner (RDXEnvironmentBuilder)" : false,
     "Perception Visualizers" : true,
+    "/ihmc/yolo/annotated_image###us.ihmc.rdx.ui.graphics.RDXOpenCVVideoVisualizer:/ihmc/yolo/annotated_image" : false,
+    "/ihmc/zed/depth###us.ihmc.rdx.ui.graphics.RDXOpenCVVideoVisualizer:/ihmc/zed/depth" : false,
+    "/ihmc/zed/left_color###us.ihmc.rdx.ui.graphics.RDXOpenCVVideoVisualizer:/ihmc/zed/left_color" : false,
+    "/ihmc/zed/right_color###us.ihmc.rdx.ui.graphics.RDXOpenCVVideoVisualizer:/ihmc/zed/right_color" : false,
     "Process Manager" : false,
-    "Quick AT Manager" : false,
     "ROS 2 Stats" : false,
     "Scene Graph" : true,
     "Teleoperation" : true,
@@ -21,10 +21,8 @@
     "Locomotion Parameters" : false,
     "Swing Foot Planning Parameters (Teleoperation)" : false,
     "Teleoperation Parameters" : false,
+    "VR mode controls" : false,
     "Valkyrie Variables" : false,
-    "YoVariableClient" : false,
-    "ZED 2 Simulator###java.lang.Integer:ZED 2 Simulator" : true,
-    "ZED 2 Color###RDXLowLevelDepthSensorSimulator1:ZED 2 Color" : false,
-    "ZED 2 Depth###RDXLowLevelDepthSensorSimulator1:ZED 2 Depth" : false
+    "YoVariableClient" : false
   }
 }

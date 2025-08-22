@@ -61,10 +61,9 @@ testDependencies {
    }
 }
 
-libgdxDependencies {
+rdxDependencies {
    api(ihmc.sourceSetProject("main"))
    api("us.ihmc:ihmc-high-level-behaviors-libgdx:source")
-   api("commons-io:commons-io:2.11.0") // IOUtils method was old version without this
 }
 
 ihmc.jarWithLibFolder()
