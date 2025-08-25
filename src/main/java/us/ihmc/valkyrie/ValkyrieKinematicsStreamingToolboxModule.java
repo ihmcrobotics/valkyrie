@@ -19,7 +19,6 @@ import us.ihmc.simulationConstructionSetTools.util.HumanoidFloatingRootJointRobo
 import us.ihmc.valkyrie.ValkyrieNetworkProcessor.NetworkProcessorVersion;
 import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
 import us.ihmc.valkyrie.parameters.ValkyrieJointMap;
-import us.ihmc.valkyrieRosControl.ValkyrieRosControlController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +36,7 @@ public class ValkyrieKinematicsStreamingToolboxModule extends KinematicsStreamin
                                                    boolean startYoVariableServer)
    {
       super(robotModel, parameters, startYoVariableServer);
-      controller.setInitialRobotConfigurationNamedMap(createInitialConfiguration(robotModel));
+      controller.setInitialRobotConfigurationNamedMap(parameters.getInitialConfigurationMap());
    }
 
    @Override
