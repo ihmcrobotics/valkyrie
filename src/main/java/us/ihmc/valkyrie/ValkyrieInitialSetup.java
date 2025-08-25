@@ -15,10 +15,11 @@ public class ValkyrieInitialSetup extends HumanoidRobotInitialSetup
 
       for (RobotSide robotSide : RobotSide.values)
       {
+         setJoint(robotSide, LegJointName.HIP_YAW, 0.0);
          setJoint(robotSide, LegJointName.HIP_ROLL, 0.0);
-         setJoint(robotSide, LegJointName.HIP_PITCH, -0.6);
-         setJoint(robotSide, LegJointName.KNEE_PITCH, 1.3);
-         setJoint(robotSide, LegJointName.ANKLE_PITCH, -0.7);
+         setJoint(robotSide, LegJointName.HIP_PITCH, -0.41);
+         setJoint(robotSide, LegJointName.KNEE_PITCH, 0.88);
+         setJoint(robotSide, LegJointName.ANKLE_PITCH, -0.52);
          setJoint(robotSide, LegJointName.ANKLE_ROLL, 0.0);
 
          setJoint(robotSide, ArmJointName.SHOULDER_ROLL, robotSide.negateIfRightSide(-1.2));

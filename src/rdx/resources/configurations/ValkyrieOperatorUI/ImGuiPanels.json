@@ -2,19 +2,18 @@
   "dockspacePanels" : { },
   "windows" : {
     "3D View" : true,
+    "Behavior Tree" : true,
     "Footstep Planner Log 3D View" : false,
     "Footstep Planner Log Viewer Controls" : false,
-    "Nadia Variables" : false,
+    "H1 Variables" : false,
     "Perception Visualizers" : true,
-    "/ihmc/d455/image/color/srt/639c5ac6###us.ihmc.rdx.ui.graphics.RDXOpenCVVideoVisualizer:/ihmc/d455/image/color/srt/639c5ac6" : false,
-    "/ihmc/d455/image/depth###us.ihmc.rdx.ui.graphics.RDXOpenCVVideoVisualizer:/ihmc/d455/image/depth" : false,
     "/ihmc/yolo/annotated_image###us.ihmc.rdx.ui.graphics.RDXOpenCVVideoVisualizer:/ihmc/yolo/annotated_image" : false,
-    "/ihmc/zed2/depth###us.ihmc.rdx.ui.graphics.RDXOpenCVVideoVisualizer:/ihmc/zed2/depth" : false,
-    "/ihmc/zed2/left_color###us.ihmc.rdx.ui.graphics.RDXOpenCVVideoVisualizer:/ihmc/zed2/left_color" : false,
-    "/ihmc/zed2/right_color###us.ihmc.rdx.ui.graphics.RDXOpenCVVideoVisualizer:/ihmc/zed2/right_color" : false,
+    "/ihmc/zed/depth###us.ihmc.rdx.ui.graphics.RDXOpenCVVideoVisualizer:/ihmc/zed/depth" : false,
+    "/ihmc/zed/left_color###us.ihmc.rdx.ui.graphics.RDXOpenCVVideoVisualizer:/ihmc/zed/left_color" : false,
+    "/ihmc/zed/right_color###us.ihmc.rdx.ui.graphics.RDXOpenCVVideoVisualizer:/ihmc/zed/right_color" : false,
     "ROS 2 Stats" : false,
     "Rapid region extractor parameters" : false,
-    "Scene Graph" : false,
+    "Scene Graph" : true,
     "Teleoperation" : true,
     "Body Path Planner Parameters (Teleoperation)" : false,
     "Demo Poses" : false,
@@ -23,6 +22,7 @@
     "Locomotion Parameters" : false,
     "Swing Foot Planning Parameters (Teleoperation)" : false,
     "Teleoperation Parameters" : false,
+    "VR mode controls" : false,
     "YoVariableClient" : false
   }
 }
