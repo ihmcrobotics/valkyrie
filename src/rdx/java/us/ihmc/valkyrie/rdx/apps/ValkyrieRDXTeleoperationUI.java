@@ -29,13 +29,13 @@ import us.ihmc.ros2.ROS2NodeBuilder;
 import us.ihmc.ros2.ROS2Topic;
 import us.ihmc.ros2.RealtimeROS2Node;
 import us.ihmc.scs2.simulation.collision.CollidableHelper;
+import us.ihmc.valkyrie.ValkyrieRobotModel;
+import us.ihmc.valkyrie.ValkyrieSimulationCollisionModel;
+import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
 import us.ihmc.valkyrie.parameters.ValkyrieKinematicsStreamingToolboxParameters;
 import us.ihmc.valkyrie.parameters.ValkyrieRetargetingParameters;
 import us.ihmc.valkyrie.rdx.ValkyrieRDXPerceptionVisualizersPanel;
 import us.ihmc.valkyrie.rdx.ValkyrieRDXProcessManagerPanel;
-import us.ihmc.valkyrie.ValkyrieRobotModel;
-import us.ihmc.valkyrie.ValkyrieSimulationCollisionModel;
-import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +75,7 @@ public class ValkyrieRDXTeleoperationUI
 
       baseUI = new RDXBaseUI("Valkyrie Teleoperation UI");
 
-      perceptionVisualizersPanel = new ValkyrieRDXPerceptionVisualizersPanel(ros2Node, syncedRobot, new ROS2PeerClockOffsetEstimator(ros2Node));
+      perceptionVisualizersPanel = new ValkyrieRDXPerceptionVisualizersPanel(baseUI, ros2Node, new ROS2PeerClockOffsetEstimator(ros2Node), syncedRobot);
 
       yoVariableClientPanel = new RDXYoVariableClientPanel("Controller",
                                                            NetworkParameters.getHost(NetworkParameterKeys.robotController),
@@ -130,7 +130,7 @@ public class ValkyrieRDXTeleoperationUI
 
             vrModeManager.create(baseUI,
                                  syncedRobot,
-                                 perceptionVisualizersPanel,
+                                 perceptionVisualizersPanel.getRobotVisualizer(),
                                  vrROS2ControllerHelper,
                                  retargetingParameters,
                                  USE_SIMULATION,

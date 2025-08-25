@@ -5,9 +5,6 @@ import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.avatar.ros2.ROS2ControllerHelper;
 import us.ihmc.behaviors.tools.CommunicationHelper;
 import us.ihmc.commons.thread.Throttler;
-import us.ihmc.rdx.simulation.environment.RDXCustomSceneLoader;
-import us.ihmc.rdx.simulation.environment.RDXCustomSceneLoader.RDXDemoScene;
-import us.ihmc.rdx.ui.yo.CommonYoVariableCollections;
 import us.ihmc.communication.configuration.NetworkParameterKeys;
 import us.ihmc.communication.configuration.NetworkParameters;
 import us.ihmc.communication.ros2.ROS2Helper;
@@ -15,12 +12,15 @@ import us.ihmc.communication.ros2.sync.ROS2PeerClockOffsetEstimator;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.rdx.Lwjgl3ApplicationAdapter;
 import us.ihmc.rdx.perception.sceneGraph.RDXSceneGraphUI;
+import us.ihmc.rdx.simulation.environment.RDXCustomSceneLoader;
+import us.ihmc.rdx.simulation.environment.RDXCustomSceneLoader.RDXDemoScene;
 import us.ihmc.rdx.simulation.environment.RDXEnvironmentBuilder;
 import us.ihmc.rdx.ui.RDXBaseUI;
 import us.ihmc.rdx.ui.behavior.tree.RDXROS2BehaviorTree;
 import us.ihmc.rdx.ui.teleoperation.RDXTeleoperationManager;
 import us.ihmc.rdx.ui.tools.RDXROS2StatsPanel;
 import us.ihmc.rdx.ui.vr.RDXVRModeManager;
+import us.ihmc.rdx.ui.yo.CommonYoVariableCollections;
 import us.ihmc.rdx.ui.yo.ImPlotYoGraphPanel;
 import us.ihmc.rdx.ui.yo.RDXYoVariableClientPanel;
 import us.ihmc.robotDataLogger.logger.DataServerSettings;
@@ -32,14 +32,14 @@ import us.ihmc.ros2.ROS2NodeBuilder;
 import us.ihmc.ros2.RealtimeROS2Node;
 import us.ihmc.scs2.simulation.collision.CollidableHelper;
 import us.ihmc.tools.io.WorkspaceResourceDirectory;
+import us.ihmc.valkyrie.ValkyrieRobotModel;
+import us.ihmc.valkyrie.ValkyrieSimulationCollisionModel;
 import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
 import us.ihmc.valkyrie.parameters.ValkyrieKinematicsStreamingToolboxParameters;
 import us.ihmc.valkyrie.parameters.ValkyrieRetargetingParameters;
 import us.ihmc.valkyrie.rdx.ValkyrieRDXPerceptionVisualizersPanel;
 import us.ihmc.valkyrie.rdx.ValkyrieRDXProcessManagerPanel;
 import us.ihmc.valkyrie.rdx.ValkyrieRDXSimulatedAutonomyProcess;
-import us.ihmc.valkyrie.ValkyrieRobotModel;
-import us.ihmc.valkyrie.ValkyrieSimulationCollisionModel;
 
 import java.util.Collections;
 
@@ -101,7 +101,7 @@ public class ValkyrieRDXSimulationUI
 
       autonomyProcess = new ValkyrieRDXSimulatedAutonomyProcess(robotModel);
 
-      perceptionVisualizersPanel = new ValkyrieRDXPerceptionVisualizersPanel(ros2Node, syncedRobot, peerClockEstimator);
+      perceptionVisualizersPanel = new ValkyrieRDXPerceptionVisualizersPanel(baseUI, ros2Node, peerClockEstimator, syncedRobot);
 
       yoVariableClientPanel = new RDXYoVariableClientPanel("Controller",
                                                            NetworkParameters.getHost(NetworkParameterKeys.robotController),
@@ -180,7 +180,7 @@ public class ValkyrieRDXSimulationUI
 
             vrModeManager.create(baseUI,
                                  syncedRobot,
-                                 perceptionVisualizersPanel,
+                                 perceptionVisualizersPanel.getRobotVisualizer(),
                                  vrROS2ControllerHelper,
                                  retargetingParameters,
                                  true,

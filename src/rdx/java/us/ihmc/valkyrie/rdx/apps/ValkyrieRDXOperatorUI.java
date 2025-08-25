@@ -74,7 +74,7 @@ public class ValkyrieRDXOperatorUI
 
       baseUI = new RDXBaseUI("Valkyrie Operator UI");
 
-      visualizers = new ValkyrieRDXPerceptionVisualizersPanel(ros2Node, syncedRobot, peerClockEstimator);
+      visualizers = new ValkyrieRDXPerceptionVisualizersPanel(baseUI, ros2Node, peerClockEstimator, syncedRobot);
 
       yoVariableClientPanel = new RDXYoVariableClientPanel("Controller",
                                                            NetworkParameters.getHost(NetworkParameterKeys.robotController),
@@ -153,7 +153,7 @@ public class ValkyrieRDXOperatorUI
             kstParameters.setDefault(false, robotIKModel);
             vrModeManager.create(baseUI,
                                  syncedRobot,
-                                 visualizers,
+                                 visualizers.getRobotVisualizer(),
                                  vrROS2ControllerHelper,
                                  retargetingParameters,
                                  true,
