@@ -18,7 +18,6 @@ import us.ihmc.robotics.partNames.ArmJointName;
 import us.ihmc.robotics.partNames.LegJointName;
 import us.ihmc.robotics.physics.RobotCollisionModel;
 import us.ihmc.robotics.robotSide.RobotSide;
-import us.ihmc.robotics.robotSide.SideDependentList;
 import us.ihmc.robotics.partNames.HumanoidJointNameMap;
 import us.ihmc.scs2.simulation.collision.Collidable;
 import us.ihmc.scs2.simulation.collision.CollidableHelper;
@@ -110,15 +109,15 @@ public class ValkyrieSimulationCollisionModel implements RobotCollisionModel
          }
 
          boolean hasHands = false;
+         if (!jointMap.getHandName(robotSide).contains("Elbow"))
+            hasHands = true;
          { // Hand
-            RigidBodyBasics hand = RobotCollisionModel.findRigidBody(jointMap.getHandName(robotSide), multiBodySystem);
-            if (hand != null)
+            if (hasHands)
             {
-               MovingReferenceFrame handFrame = hand.getParentJoint().getFrameAfterJoint();
-               if (handFrame.getName().contains("wrist"))
-                  hasHands = true;
-               if (hasHands)
+               RigidBodyBasics hand = RobotCollisionModel.findRigidBody(jointMap.getHandName(robotSide), multiBodySystem);
+               if (hand != null)
                {
+                  MovingReferenceFrame handFrame = hand.getParentJoint().getFrameAfterJoint();
                   FrameCapsule3D handShape = new FrameCapsule3D(handFrame, 0.02 * modelScale, 0.055 * modelScale);
                   handShape.getPosition().set(-0.007, robotSide.negateIfRightSide(0.062), -0.01);
                   handShape.getPosition().scale(modelScale);
@@ -135,7 +134,7 @@ public class ValkyrieSimulationCollisionModel implements RobotCollisionModel
                MovingReferenceFrame elbowFrame = elbow.getFrameAfterJoint();
                if (hasHands)
                {
-                  FrameCapsule3D forearmShape = new FrameCapsule3D(elbowFrame, 0.15 * modelScale, 0.075 * modelScale);
+                  FrameCapsule3D forearmShape = new FrameCapsule3D(elbowFrame, 0.1, 0.075 * modelScale);
                   forearmShape.getPosition().set(-0.02, robotSide.negateIfRightSide(0.14), 0.0);
                   forearmShape.getPosition().scale(modelScale);
                   forearmShape.getAxis().set(Axis3D.Y);

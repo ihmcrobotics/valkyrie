@@ -74,7 +74,7 @@ public class ValkyrieKinematicsStreamingToolboxModule extends KinematicsStreamin
 
    public static void main(String[] args)
    {
-      ValkyrieRobotModel robotModel = new ValkyrieRobotModel(RobotTarget.REAL_ROBOT, ValkyrieRobotVersion.ARM_MASS_SIM);
+      ValkyrieRobotModel robotModel = new ValkyrieRobotModel(RobotTarget.REAL_ROBOT, ValkyrieRobotVersion.PHYSICAL_REALITY);
       ValkyrieJointMap jointMap = robotModel.getJointMap();
       if (DEMO_MODE)
       {

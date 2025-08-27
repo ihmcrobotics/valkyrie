@@ -22,14 +22,9 @@ import us.ihmc.robotics.robotSide.RobotSide;
 import us.ihmc.ros2.ROS2Node;
 import us.ihmc.ros2.ROS2NodeBuilder;
 import us.ihmc.ros2.ROS2NodeBuilder.SpecialTransportMode;
-import us.ihmc.ros2.ROS2Topic;
 import us.ihmc.sensors.ImageSensor;
 import us.ihmc.sensors.zed.ZEDImageSensor;
 import us.ihmc.valkyrie.ValkyrieRobotModel;
-import us.ihmc.valkyrie.configuration.ValkyrieRobotVersion;
-
-import javax.annotation.Nullable;
-import java.util.Map;
 
 public class ValkyrieAutonomyProcess
 {

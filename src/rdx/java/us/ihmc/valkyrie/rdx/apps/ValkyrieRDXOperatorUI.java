@@ -156,7 +156,7 @@ public class ValkyrieRDXOperatorUI
                                  visualizers,
                                  vrROS2ControllerHelper,
                                  retargetingParameters,
-                                 true,
+                                 false,
                                  kstParameters,
                                  false);
 
@@ -207,7 +207,7 @@ public class ValkyrieRDXOperatorUI
 
    private static ValkyrieRobotModel createRobotModel()
    {
-      return new ValkyrieRobotModel(RobotTarget.SCS, ValkyrieRobotVersion.ARM_MASS_SIM);
+      return new ValkyrieRobotModel(RobotTarget.SCS, ValkyrieRobotVersion.PHYSICAL_REALITY);
    }
 
    public static void main(String[] args)

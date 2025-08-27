@@ -82,7 +82,7 @@ public class ValkyrieRDXSimulationUI
 
    private static ValkyrieRobotModel createRobotModel()
    {
-      return new ValkyrieRobotModel(RobotTarget.SCS, ValkyrieRobotVersion.FINGERLESS);
+      return new ValkyrieRobotModel(RobotTarget.SCS, ValkyrieRobotVersion.PHYSICAL_REALITY);
    }
 
    public ValkyrieRDXSimulationUI()

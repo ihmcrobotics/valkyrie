@@ -61,7 +61,7 @@ public class ValkyrieRDXTeleoperationUI
 
    private static ValkyrieRobotModel createRobotModel()
    {
-      return new ValkyrieRobotModel(RobotTarget.REAL_ROBOT, ValkyrieRobotVersion.ARM_MASS_SIM);
+      return new ValkyrieRobotModel(RobotTarget.REAL_ROBOT, ValkyrieRobotVersion.PHYSICAL_REALITY);
    }
 
    public ValkyrieRDXTeleoperationUI()

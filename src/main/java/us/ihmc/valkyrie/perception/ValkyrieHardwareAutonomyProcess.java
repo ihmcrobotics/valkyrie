@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 
 public class ValkyrieHardwareAutonomyProcess
 {
-   private static final ValkyrieRobotModel ROBOT_MODEL = new ValkyrieRobotModel(RobotTarget.REAL_ROBOT, ValkyrieRobotVersion.FINGERLESS);
+   private static final ValkyrieRobotModel ROBOT_MODEL = new ValkyrieRobotModel(RobotTarget.REAL_ROBOT, ValkyrieRobotVersion.PHYSICAL_REALITY);
    private static final boolean ZED_SDK_LOADED = ZEDJavaAPINativeLibrary.load();
 
    @Nullable

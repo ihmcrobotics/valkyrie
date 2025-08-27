@@ -10,7 +10,7 @@ public class ValkyrieRDXModelViewer
 {
    public ValkyrieRDXModelViewer()
    {
-      ValkyrieRobotModel robotModel = new ValkyrieRobotModel(RobotTarget.SCS, ValkyrieRobotVersion.ARM_MASS_SIM);
+      ValkyrieRobotModel robotModel = new ValkyrieRobotModel(RobotTarget.SCS, ValkyrieRobotVersion.PHYSICAL_REALITY);
       ValkyrieSimulationCollisionModel simulationCollisionModel = new ValkyrieSimulationCollisionModel(robotModel.getJointMap(), true);
       new RDXRobotModelViewer(robotModel, simulationCollisionModel);
    }

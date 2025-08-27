@@ -10,6 +10,7 @@ public enum ValkyrieRobotVersion implements RobotVersion
    ARM_MASS_SIM,
    ARMLESS;
 
+   public static final ValkyrieRobotVersion PHYSICAL_REALITY = FINGERLESS;
    public static final String ROBOT_VERSION_ENVIRONMENT_VARIABLE_NAME = "IHMC_VALKYRIE_ROBOT_VERSION";
 
    public static ValkyrieRobotVersion fromEnvironment()
