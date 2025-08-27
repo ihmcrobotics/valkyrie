@@ -1,6 +1,5 @@
 package us.ihmc.valkyrie.simulation;
 
-import us.ihmc.avatar.DRCFlatGroundWalkingTrack;
 import us.ihmc.avatar.drcRobot.DRCRobotModel;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.avatar.initialSetup.DRCGuiInitialSetup;
@@ -11,6 +10,7 @@ import us.ihmc.commonWalkingControlModules.highLevelHumanoidControl.factories.Wa
 import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
 import us.ihmc.simulationConstructionSetTools.util.HumanoidFloatingRootJointRobot;
 import us.ihmc.simulationconstructionset.util.ground.FlatGroundProfile;
+import us.ihmc.valkyrie.DRCFlatGroundWalkingTrack;
 import us.ihmc.valkyrie.ValkyrieRobotModel;
 
 
@@ -39,8 +39,8 @@ public class ValkyrieFlatGroundWalkingTrack
       
       HeadingAndVelocityEvaluationScriptParameters walkingScriptParameters = new HeadingAndVelocityEvaluationScriptParameters();
       new DRCFlatGroundWalkingTrack(robotInitialSetup, guiInitialSetup, scsInitialSetup,
-            useVelocityAndHeadingScript, cheatWithGroundHeightAtForFootstep, robotModel,
-            WalkingProvider.VELOCITY_HEADING_COMPONENT, walkingScriptParameters);
+                                    useVelocityAndHeadingScript, cheatWithGroundHeightAtForFootstep, robotModel,
+                                    WalkingProvider.VELOCITY_HEADING_COMPONENT, walkingScriptParameters);
       
 //      SimulationConstructionSet scs = flatGroundWalkingTrack.getSimulationConstructionSet();
 //     

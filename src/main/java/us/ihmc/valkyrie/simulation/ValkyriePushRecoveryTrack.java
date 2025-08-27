@@ -2,7 +2,6 @@ package us.ihmc.valkyrie.simulation;
 
 import com.martiansoftware.jsap.JSAPException;
 
-import us.ihmc.avatar.DRCFlatGroundWalkingTrack;
 import us.ihmc.avatar.drcRobot.DRCRobotModel;
 import us.ihmc.avatar.drcRobot.RobotTarget;
 import us.ihmc.avatar.initialSetup.DRCGuiInitialSetup;
@@ -13,6 +12,7 @@ import us.ihmc.jMonkeyEngineToolkit.GroundProfile3D;
 import us.ihmc.robotModels.FullHumanoidRobotModel;
 import us.ihmc.robotics.dataStructures.validation.YoVariableThreadAccessValidator;
 import us.ihmc.simulationConstructionSetTools.util.HumanoidFloatingRootJointRobot;
+import us.ihmc.valkyrie.DRCFlatGroundWalkingTrack;
 import us.ihmc.yoVariables.variable.YoBoolean;
 import us.ihmc.simulationToolkit.controllers.PushRobotController;
 import us.ihmc.simulationconstructionset.FloatingRootJointRobot;
@@ -45,7 +45,7 @@ public class ValkyriePushRecoveryTrack
       boolean cheatWithGroundHeightAtForFootstep = false;
 
       DRCFlatGroundWalkingTrack track = new DRCFlatGroundWalkingTrack(robotInitialSetup, guiInitialSetup, scsInitialSetup, useVelocityAndHeadingScript,
-            cheatWithGroundHeightAtForFootstep, model);
+                                                                      cheatWithGroundHeightAtForFootstep, model);
 
       FloatingRootJointRobot robot = track.getAvatarSimulation().getHumanoidFloatingRootJointRobot();
       FullHumanoidRobotModel fullRobotModel = model.createFullRobotModel();

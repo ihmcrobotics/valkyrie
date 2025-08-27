@@ -12,7 +12,6 @@ import us.ihmc.avatar.networkProcessor.HumanoidNetworkProcessorParameters;
 import us.ihmc.avatar.networkProcessor.time.SimulationRosClockPPSTimestampOffsetProvider;
 import us.ihmc.avatar.ros.RobotROSClockCalculator;
 import us.ihmc.avatar.ros.RobotROSClockCalculatorFromPPSOffset;
-import us.ihmc.avatar.simulationStarter.DRCSimulationStarter;
 import us.ihmc.avatar.simulationStarter.DRCSimulationTools;
 import us.ihmc.communication.net.LocalObjectCommunicator;
 import us.ihmc.robotDataLogger.logger.DataServerSettings;
@@ -66,7 +65,7 @@ public class ValkyrieObstacleCourseNoUI {
 			}
 		};
 		DRCSimulationStarter simulationStarter = new DRCSimulationStarter(robotModel,
-				new DefaultCommonAvatarEnvironment()) {
+                                                                        new DefaultCommonAvatarEnvironment()) {
 			   protected void startNetworkProcessor(HumanoidNetworkProcessorParameters networkModuleParams)
 			   {
 			      if (networkModuleParams.isUseROSModule() || networkModuleParams.isUseSensorModule())
