@@ -15,7 +15,7 @@ ihmc {
    configurePublications()
 }
 
-val ihmcOpenRoboticsSoftwareVersion = "0.14.0-250815"
+val ihmcOpenRoboticsSoftwareVersion = "source"
 
 mainDependencies {
    api("com.martiansoftware:jsap:2.1")
@@ -63,7 +63,7 @@ testDependencies {
 
 rdxDependencies {
    api(ihmc.sourceSetProject("main"))
-   api("us.ihmc:ihmc-high-level-behaviors-libgdx:$ihmcOpenRoboticsSoftwareVersion")
+   api("us.ihmc:ihmc-high-level-behaviors-libgdx:source")
 }
 
 ihmc.jarWithLibFolder()

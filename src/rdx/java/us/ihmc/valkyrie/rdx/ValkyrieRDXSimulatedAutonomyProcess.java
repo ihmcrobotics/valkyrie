@@ -14,7 +14,7 @@ public class ValkyrieRDXSimulatedAutonomyProcess
 
    public ValkyrieRDXSimulatedAutonomyProcess(ValkyrieRobotModel robotModel)
    {
-      zedSensor = RDXSimulatedSensorFactory.createZED2iImageSensor();
+      zedSensor = RDXSimulatedSensorFactory.createZEDMiniImageSensor();
 
       perceptionAutonomyProcess = new ValkyrieAutonomyProcess(robotModel, zedSensor);
    }

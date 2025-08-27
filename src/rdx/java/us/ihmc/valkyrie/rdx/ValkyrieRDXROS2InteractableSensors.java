@@ -8,6 +8,8 @@ import us.ihmc.rdx.ui.RDXBaseUI;
 import us.ihmc.rdx.ui.graphics.ros2.RDXROS2RobotVisualizer;
 import us.ihmc.rdx.ui.interactable.RDXInteractableRealsenseD455;
 import us.ihmc.rdx.ui.interactable.RDXInteractableZED2i;
+import us.ihmc.rdx.ui.interactable.RDXInteractableZEDMini;
+import us.ihmc.rdx.ui.interactable.RDXInteractableZEDXMini;
 
 public class ValkyrieRDXROS2InteractableSensors
 {
@@ -33,29 +35,14 @@ public class ValkyrieRDXROS2InteractableSensors
       this.robotVisualizer = robotVisualizer;
    }
 
-   public void setupRealsenseD455()
+   public void setupZEDMini()
    {
-      RDXInteractableRealsenseD455 interactableRealsenseD455 = new RDXInteractableRealsenseD455(baseUI.getPrimary3DPanel(),
-                                                                                                referenceFramesToUseForSensors.getSteppingCameraFrame(),
-                                                                                                syncedRobot.getRobotModel()
-                                                                                                           .getSensorInformation()
-                                                                                                           .getSteppingCameraTransform());
-      interactableRealsenseD455.getInteractableFrameModel()
-                               .addRemoteTuning(ros2,
-                                                PerceptionAPI.STEPPING_CAMERA_TO_PARENT_TUNING,
-                                                syncedRobot.getRobotModel().getSensorInformation().getSteppingCameraTransform());
-      robotVisualizer.attachInteractableFrameModel(interactableRealsenseD455.getInteractableFrameModel());
-   }
-
-   public void setupZED2i()
-   {
-      RDXInteractableZED2i interactableZED2i = new RDXInteractableZED2i(baseUI.getPrimary3DPanel(),
-                                                                        referenceFramesToUseForSensors.getExperimentalCameraFrame(),
-                                                                        syncedRobot.getRobotModel().getSensorInformation().getExperimentalCameraTransform());
-      interactableZED2i.getInteractableFrameModel()
-                       .addRemoteTuning(ros2,
-                                        PerceptionAPI.EXPERIMENTAL_CAMERA_TO_PARENT_TUNING,
-                                        syncedRobot.getRobotModel().getSensorInformation().getExperimentalCameraTransform());
-      robotVisualizer.attachInteractableFrameModel(interactableZED2i.getInteractableFrameModel());
+      RDXInteractableZEDMini interactableZEDMini = new RDXInteractableZEDMini(baseUI.getPrimary3DPanel(),
+                                                                               referenceFramesToUseForSensors.getExperimentalCameraFrame(),
+                                                                               syncedRobot.getRobotModel().getSensorInformation().getExperimentalCameraTransform());
+      interactableZEDMini.getInteractableFrameModel().addRemoteTuning(ros2,
+                                                                       PerceptionAPI.EXPERIMENTAL_CAMERA_TO_PARENT_TUNING,
+                                                                       syncedRobot.getRobotModel().getSensorInformation().getExperimentalCameraTransform());
+      robotVisualizer.attachInteractableFrameModel(interactableZEDMini.getInteractableFrameModel());
    }
 }
