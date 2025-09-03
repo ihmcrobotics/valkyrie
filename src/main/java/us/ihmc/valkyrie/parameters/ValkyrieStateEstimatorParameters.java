@@ -383,7 +383,7 @@ public class ValkyrieStateEstimatorParameters extends StateEstimatorParameters
    {
       WrenchBasedFootSwitchFactory footSwitchFactory = new WrenchBasedFootSwitchFactory();
       footSwitchFactory.setDefaultContactThresholdForce(120.0);
-      footSwitchFactory.setDefaultCoPThresholdFraction(0.02);
+      footSwitchFactory.setDefaultCoPThresholdDistance(4.0e-3);
       footSwitchFactory.setDefaultSecondContactThresholdForceIgnoringCoP(Double.POSITIVE_INFINITY);
       return footSwitchFactory;
    }
