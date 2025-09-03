@@ -9,6 +9,7 @@ import us.ihmc.robotics.robotSide.SideDependentList;
  */
 public class ValkyriePresetArmConfigurations
 {
+   //TODO Set configurations, only stand prep and n-pose are correct
    private static final SideDependentList<double[]> INITIAL_SETUP = new SideDependentList<>();
    private static final SideDependentList<double[]> STAND_PREP = new SideDependentList<>();
    private static final SideDependentList<double[]> HOME = new SideDependentList<>();
@@ -43,7 +44,7 @@ public class ValkyriePresetArmConfigurations
       {
          case INITIAL_SETUP -> System.arraycopy(INITIAL_SETUP.get(side), 0, jointAnglesToPack, 0, INITIAL_SETUP.get(side).length);
          case STAND_PREP -> System.arraycopy(STAND_PREP.get(side), 0, jointAnglesToPack, 0, STAND_PREP.get(side).length);
-         case HOME -> System.arraycopy(HOME.get(side), 0, jointAnglesToPack, 0, HOME.get(side).length);
+         case HOME, N_POSE -> System.arraycopy(HOME.get(side), 0, jointAnglesToPack, 0, HOME.get(side).length);
          case TUCKED_UP_ARMS -> System.arraycopy(TUCKED_UP_ARMS.get(side), 0, jointAnglesToPack, 0, TUCKED_UP_ARMS.get(side).length);
       }
    }
