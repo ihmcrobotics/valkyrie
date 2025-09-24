@@ -38,6 +38,7 @@ import us.ihmc.euclid.tuple4D.Quaternion;
 import us.ihmc.rdx.BufferBasedColorProvider;
 import us.ihmc.rdx.RDXPointCloudRendererOld;
 import us.ihmc.rdx.imgui.ImGuiTools;
+import us.ihmc.rdx.imgui.ImGuiUniqueLabelMap;
 import us.ihmc.rdx.sceneManager.RDXRenderableProvider;
 import us.ihmc.rdx.sceneManager.RDXSceneLevel;
 import us.ihmc.rdx.ui.graphics.RDXFootstepPlanGraphic;
@@ -53,7 +54,7 @@ import us.ihmc.tools.io.WorkspacePathTools;
 
 public class RDXStepReachabilityPanel implements RDXRenderableProvider
 {
-   private final String windowName = ImGuiTools.uniqueLabel(this, "Step Reachability");
+   private final String windowName = "Step Reachability";
    private DRCRobotModel robotModel;
    private RDXMultiBodyGraphic ikRobot;
    private FullHumanoidRobotModel ikFullRobotModel;
@@ -65,6 +66,7 @@ public class RDXStepReachabilityPanel implements RDXRenderableProvider
    private RDXPointGraphic comObjective;
    private RDXPointGraphic comPose;
    private RDXPointCloudRendererOld reachabilityPointCloud;
+   private final ImGuiUniqueLabelMap labels = new ImGuiUniqueLabelMap(getClass());
    private ImBoolean pointCloudCreated = new ImBoolean(false);
 
    private ImBoolean showPointCloud = new ImBoolean(true);
@@ -167,7 +169,7 @@ public class RDXStepReachabilityPanel implements RDXRenderableProvider
          comPose.render();
       }
 
-      ImGui.begin(ImGuiTools.uniqueLabel(this, "Scripts"));
+      ImGui.begin(labels.get("Scripts"));
       if (!loadedDatasetsOnce)
       {
          loadedDatasetsOnce = true;
@@ -246,7 +248,7 @@ public class RDXStepReachabilityPanel implements RDXRenderableProvider
       ImGui.pushItemWidth(100.0f);
 
       boolean keyFrameSelected = false;
-      keyFrameSelected |= ImGui.dragInt(ImGuiTools.uniqueLabel(this, "Keyframe"), selectedKeyframe.getData(), 0.1f, 0, editedScript.size());
+      keyFrameSelected |= ImGui.dragInt(labels.get("Keyframe"), selectedKeyframe.getData(), 0.1f, 0, editedScript.size());
       if (keyFrameSelected)
       {
          if (selectedKeyframe.get() > editedScript.size() - 1)
@@ -274,10 +276,10 @@ public class RDXStepReachabilityPanel implements RDXRenderableProvider
       ImGui.text("Step selection");
       ImGui.text("Solve robot configuration for step:");
       ImGui.pushItemWidth(100.0f);
-      ImGui.inputDouble(ImGuiTools.uniqueLabel(this, "X"), footX);
-      ImGui.inputDouble(ImGuiTools.uniqueLabel(this, "Y"), footY);
-      ImGui.inputDouble(ImGuiTools.uniqueLabel(this, "Z"), footZ);
-      ImGui.inputDouble(ImGuiTools.uniqueLabel(this, "Yaw"), footYaw);
+      ImGui.inputDouble(labels.get("X"), footX);
+      ImGui.inputDouble(labels.get("Y"), footY);
+      ImGui.inputDouble(labels.get("Z"), footZ);
+      ImGui.inputDouble(labels.get("Yaw"), footYaw);
 
       int scriptIndexOfStep = getScriptIndexOfStep();
       if (scriptIndexOfStep == -1)
@@ -286,7 +288,7 @@ public class RDXStepReachabilityPanel implements RDXRenderableProvider
       }
       else
       {
-         ImGui.dragFloat(ImGuiTools.uniqueLabel(this, "Set reachability threshold"), reachabilityThreshold.getData(), 0.03f, 0, 50);
+         ImGui.dragFloat(labels.get("Set reachability threshold"), reachabilityThreshold.getData(), 0.03f, 0, 50);
 
          selectedStep = scriptIndexOfStep;
          selectedKeyframe.set(scriptIndexOfStep);
@@ -294,11 +296,11 @@ public class RDXStepReachabilityPanel implements RDXRenderableProvider
          ImGui.text("Solution quality: " + solutionQuality);
          if (solutionQuality > reachabilityThreshold.get())
          {
-            boolean getClosestFeasibleStepButtonClicked = (imgui.internal.ImGui.button(ImGuiTools.uniqueLabel(this, "Snap to closest feasible step")));
-            ImGui.checkbox(ImGuiTools.uniqueLabel(this, "Preserve X axis"), preserveX);
-            ImGui.checkbox(ImGuiTools.uniqueLabel(this, "Preserve Y axis"), preserveY);
-            ImGui.checkbox(ImGuiTools.uniqueLabel(this, "Preserve Z axis"), preserveZ);
-            ImGui.checkbox(ImGuiTools.uniqueLabel(this, "Preserve Yaw"), preserveYaw);
+            boolean getClosestFeasibleStepButtonClicked = (imgui.internal.ImGui.button(labels.get("Snap to closest feasible step")));
+            ImGui.checkbox(labels.get("Preserve X axis"), preserveX);
+            ImGui.checkbox(labels.get("Preserve Y axis"), preserveY);
+            ImGui.checkbox(labels.get("Preserve Z axis"), preserveZ);
+            ImGui.checkbox(labels.get("Preserve Yaw"), preserveYaw);
             if (getClosestFeasibleStepButtonClicked)
             {
                snapToClosestFeasibleStep();
@@ -314,21 +316,21 @@ public class RDXStepReachabilityPanel implements RDXRenderableProvider
       ImGui.begin("View Options");
 
       ImGui.text("Script");
-      ImGui.checkbox(ImGuiTools.uniqueLabel(this, "Show feasible steps in script"), showFeasibleSteps);
-      ImGui.checkbox(ImGuiTools.uniqueLabel(this, "Show infeasible steps in script"), showInfeasibleSteps);
+      ImGui.checkbox(labels.get("Show feasible steps in script"), showFeasibleSteps);
+      ImGui.checkbox(labels.get("Show infeasible steps in script"), showInfeasibleSteps);
 
       ImGui.newLine();
       ImGui.text("Objectives");
-      ImGui.checkbox(ImGuiTools.uniqueLabel(this, "Show foot objectives"), showFootsteps);
-      ImGui.checkbox(ImGuiTools.uniqueLabel(this, "Show chest objective"), showChestObjective);
-      ImGui.checkbox(ImGuiTools.uniqueLabel(this, "Show head objective"), showHeadObjective);
-      ImGui.checkbox(ImGuiTools.uniqueLabel(this, "Show center of mass objective"), showCoMObjective);
+      ImGui.checkbox(labels.get("Show foot objectives"), showFootsteps);
+      ImGui.checkbox(labels.get("Show chest objective"), showChestObjective);
+      ImGui.checkbox(labels.get("Show head objective"), showHeadObjective);
+      ImGui.checkbox(labels.get("Show center of mass objective"), showCoMObjective);
       ImGui.text("Desired in blue, actual in red");
 
       ImGui.newLine();
       ImGui.text("Point Cloud");
-      ImGui.checkbox(ImGuiTools.uniqueLabel(this, "Show feasible steps"), showFeasibleStepsInPointCloud);
-      ImGui.checkbox(ImGuiTools.uniqueLabel(this, "Show infeasible steps"), showInfeasibleStepsInPointCloud);
+      ImGui.checkbox(labels.get("Show feasible steps"), showFeasibleStepsInPointCloud);
+      ImGui.checkbox(labels.get("Show infeasible steps"), showInfeasibleStepsInPointCloud);
 
       ImGui.end();
    }

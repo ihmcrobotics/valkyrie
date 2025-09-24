@@ -186,9 +186,7 @@ fun rsync(localPath: String, remoteAddress: String, remotePath: String)
    }
    logger.quiet("Running $commandToPrint")
    val start = System.nanoTime()
-   exec {
-      commandLine(command)
-   }
+   ihmc.exec(ProcessBuilder(command))
    val end = System.nanoTime()
    logger.quiet("rsync took ${(end - start) / 1e9} s")
 }
@@ -327,16 +325,9 @@ tasks.create("buildDebianSimulationPackage") {
 
       if (Os.isFamily(Os.FAMILY_UNIX))
       {
-         exec {
-            commandLine("chmod", "+x", "$baseFolder/DEBIAN/postinst")
-         }
-         exec {
-            commandLine("chmod", "+x", "$sourceFolder/bin/$simulationApplicationName")
-         }
-         exec {
-            workingDir(File(debianFolder))
-            commandLine("dpkg", "--build", debianName)
-         }
+         ihmc.exec(ProcessBuilder("chmod", "+x", "$baseFolder/DEBIAN/postinst"))
+         ihmc.exec(ProcessBuilder("chmod", "+x", "$sourceFolder/bin/$simulationApplicationName"))
+         ihmc.exec(ProcessBuilder("dpkg", "--build", debianName).directory(File(debianFolder)))
       }
    }
 }
